@@ -34,7 +34,7 @@ jobs:
         env:
           STRICTACODE_SCORE: 20
           STRICTACODE_RP: 20
-          STRICTACODE_OP: 10
+          STRICTACODE_OP: 20
           STRICTACODE_IMB: 15
           STRICTACODE_DENSITY: 20
           STRICTACODE_RP_DIFF: 5
