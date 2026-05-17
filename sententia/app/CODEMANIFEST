@@ -1,0 +1,65 @@
+Imports:
+  - Types:
+      - RESTResource
+      - MCPTool
+    From: sententia/endpoints
+
+Usages:
+  conventions: .goga/usages/conventions.md
+  fastapi: .goga/usages/cooks/fastapi.md
+  mcp: .goga/usages/cooks/mcp.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Клетка описывает FastAPI приложение — HTTP-сервер.
+  Не знает о доменных зависимостях. Сборка компонентов происходит в корневой ячейке.
+  Использовать практику `fastapi` для создания приложения и маршрутов.
+
+  Использовать практику `mcp` для создания MCP Server и регистрации tools.
+  Если зарегистрированы tools — run() запускает MCP Server (Streamable HTTP).
+  Если зарегистрированы resources — run() запускает FastAPI (текущее поведение).
+  Режимы взаимоисключающие.
+
+---
+
+"SententiaApp()":
+  location: app.py
+  annotations: |
+    FastAPI приложение. HTTP-контейнер.
+    Принимает REST-ресурсы и MCP инструменты, запускает сервер.
+
+    Использовать практику `fastapi` для создания экземпляра приложения.
+  methods:
+    "add_rest_resource(resource: RESTResource) -> void:None": |
+      Регистрация REST-ресурса.
+
+      `resource`: экземпляр мутированного `RESTResource`.
+      URL-путь определяется свойством `resource`.
+
+      Использовать практику `fastapi` для создания маршрута.
+    "add_mcp_tool(tool: MCPTool) -> void:None": |
+      Регистрация MCP tool.
+
+      `tool`: экземпляр мутированного `MCPTool`.
+
+      Использовать практику `mcp` для регистрации tool через декоратор.
+    "run(host: str = '0.0.0.0', port: int = 8000) -> void:None": |
+      Запуск сервера.
+
+      `host`: адрес привязки. По умолчанию "0.0.0.0".
+      `port`: порт сервера. По умолчанию 8000.
+
+      Если зарегистрированы tools — запуск MCP Server (Streamable HTTP).
+      Использовать практику `mcp` для настройки и запуска MCP Server.
+      Настроить mcp.settings.host и mcp.settings.port перед вызовом mcp.run().
+
+      Если зарегистрированы resources — запуск FastAPI через uvicorn (текущее поведение).
+      Использовать практику `fastapi` для запуска через uvicorn.
+
+---
+
+Author: Goga
+CreatedAt: 16/05/26
+Description: |
+  Точка входа сервиса Sententia. Сборка и запуск всех компонентов.

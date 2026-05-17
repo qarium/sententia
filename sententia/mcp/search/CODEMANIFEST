@@ -1,0 +1,68 @@
+Imports:
+  - Types:
+      - MCPTool
+    From: sententia/endpoints
+  - Types:
+      - Index
+    Usages:
+      - searching
+    From: sententia/index
+
+Usages:
+  conventions: .goga/usages/conventions.md
+  pydantic: .goga/usages/cooks/pydantic.md
+  hexagonal: .goga/usages/cooks/hexagonal.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  MCP tool для семантического поиска по базе знаний.
+  Использовать практику `hexagonal` для понимания роли адаптера.
+  Использовать практику `searching` для поиска и понимания формата результатов.
+
+---
+
+"SearchToolResult()":
+  location: models.py
+  annotations: |
+    Модель результата поиска для MCP tool.
+    Использовать `pydantic` для реализации (conventions: kw_only=True, дефолты).
+  properties:
+    text -> str: |
+      Фрагмент текста. Значение по умолчанию — пустая строка.
+    source -> str: |
+      Путь к файлу. Значение по умолчанию — пустая строка.
+    score -> float: |
+      Оценка релевантности. Значение по умолчанию — 0.0.
+
+"MCPTool::SearchTool(index: Index)":
+  location: search.py
+  annotations: |
+    MCP tool для семантического поиска.
+
+    `index`: экземпляр `Index`.
+
+    Использовать практику `searching` для поиска.
+    Использовать практику `hexagonal` для понимания роли адаптера.
+  properties:
+    name -> str: |
+      "search"
+    description -> str: |
+      "Search for relevant documents in the knowledge base"
+  methods:
+    "execute(query: str, top: int = 10) -> results:list[SearchToolResult]": |
+      Поиск релевантных фрагментов.
+
+      `query`: текст поискового запроса.
+      `top`: количество возвращаемых результатов.
+
+      `results`: список `SearchToolResult`, отсортированных по убыванию релевантности.
+
+      Использовать практику `searching` для поиска.
+
+---
+
+Author: Goga
+CreatedAt: 16/05/26
+Description: |
+  MCP tool поиска — search.

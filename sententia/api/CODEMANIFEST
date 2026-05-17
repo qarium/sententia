@@ -1,0 +1,33 @@
+Imports:
+  - Types:
+      - SearchResource
+    From: sententia/api/search
+  - Types:
+      - AskResource
+    From: sententia/api/ask
+  - Types:
+      - FilesResource
+    From: sententia/api/files
+
+Usages:
+  conventions: .goga/usages/conventions.md
+  fastapi: .goga/usages/cooks/fastapi.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Фасад клетки api. Re-export REST ресурсов.
+  Использовать `fastapi` для регистрации маршрутов.
+
+---
+
+->SearchResource: {}
+->AskResource: {}
+->FilesResource: {}
+
+---
+
+Author: Goga
+CreatedAt: 16/05/26
+Description: |
+  Фасад API адаптера. Re-export REST ресурсов.

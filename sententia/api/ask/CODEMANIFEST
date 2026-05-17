@@ -1,0 +1,84 @@
+Imports:
+  - Types:
+      - RESTResource
+    From: sententia/endpoints
+  - Types:
+      - Index
+    From: sententia/index
+  - Types:
+      - OpenaiProvider
+      - AnthropicProvider
+    Usages:
+      - llm_generating
+    From: sententia/llm
+  - Usages:
+      - asking
+    From: sententia/rag
+
+Usages:
+  conventions: .goga/usages/conventions.md
+  pydantic: .goga/usages/cooks/pydantic.md
+  hexagonal: .goga/usages/cooks/hexagonal.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Адаптер POST /ask — генерация ответа на основе RAG.
+  Использовать практику `pydantic` для моделей запроса и ответа.
+  Использовать практику `hexagonal` для понимания роли адаптера.
+  Использовать практику `asking` для выполнения RAG pipeline.
+  Использовать практику `llm_generating` для понимания работы с LLM-провайдерами.
+
+---
+
+"AskRequest()":
+  location: models.py
+  annotations: |
+    Модель запроса для POST /ask.
+    Использовать `pydantic` для реализации.
+  properties:
+    query -> str: |
+      Текст вопроса пользователя. Значение по умолчанию — пустая строка.
+
+"AskResponse()":
+  location: models.py
+  annotations: |
+    Модель ответа для POST /ask.
+    Использовать `pydantic` для реализации.
+  properties:
+    answer -> str: |
+      Сгенерированный ответ. Значение по умолчанию — пустая строка.
+    sources -> list: |
+      Список файлов-источников. Значение по умолчанию — пустой список.
+
+"RESTResource::AskResource(index: Index, llm_provider: OpenaiProvider | AnthropicProvider, top: int = 10)":
+  location: ask.py
+  annotations: |
+    REST ресурс POST /ask — генерация ответа на основе RAG.
+
+    `index`: экземпляр `Index`.
+    `llm_provider`: сконфигурированный LLM-провайдер (`OpenaiProvider` или `AnthropicProvider`).
+    `top`: количество чанков для контекста. По умолчанию 10.
+
+    Использовать практику `asking` для выполнения RAG pipeline.
+    Использовать практику `pydantic` для конвертации данных.
+    Использовать практику `hexagonal` для понимания роли адаптера.
+  properties:
+    url_rule -> str: |
+      "/ask"
+  methods:
+    "post(request: AskRequest) -> response:AskResponse": |
+      Обработка POST /ask.
+
+      `request`: pydantic модель запроса с полем query.
+      `response`: pydantic модель ответа с полями answer и sources.
+
+      Использовать практику `asking` для выполнения RAG pipeline.
+      Использовать практику `pydantic` для конвертации данных.
+
+---
+
+Author: Goga
+CreatedAt: 16/05/26
+Description: |
+  API адаптер вопроса — POST /ask.

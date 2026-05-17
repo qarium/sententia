@@ -1,0 +1,41 @@
+Usages:
+  conventions: .goga/usages/conventions.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Клетка отвечает за доступ к Markdown-файлам из проиндексированной директории:
+  листинг файлов и чтение их содержимого.
+
+---
+
+"Storage(directory_path: str)":
+  location: storage.py
+  annotations: |
+    Хранилище файлов. Фиксирует корневую директорию при создании.
+
+    `directory_path`: абсолютный путь к корневой директории с Markdown-файлами.
+
+  methods:
+    "list_files() -> files:list": |
+      Рекурсивный обход директории. Возвращает список относительных путей
+      всех .md файлов внутри directory_path.
+
+      `files`: список относительных путей (например ["docs/auth.md", "guide.md"]).
+
+    "read_file(file_path: str) -> content:dict": |
+      Чтение содержимого файла по относительному пути внутри проиндексированной директории.
+
+      `file_path`: относительный путь к файлу внутри директории (например "docs/auth.md").
+
+      `content`: {"text": str, "source": str} — содержимое файла и его полный путь.
+
+      Если файл не найден — выбрасывает FileNotFoundError.
+      Путь не должен выходить за пределы корневой директории (защита от path traversal).
+
+---
+
+Author: Goga
+CreatedAt: 07/05/26
+Description: |
+  Чтение содержимого Markdown-файлов по пути.

@@ -1,0 +1,40 @@
+Imports:
+  - Types:
+      - Provider
+    From: sententia/llm/provider
+
+Usages:
+  conventions: .goga/usages/conventions.md
+  anthropic_api: .goga/usages/cooks/anthropic_api.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Провайдер для Anthropic Claude.
+  Использовать `anthropic_api` для вызова Anthropic API.
+
+---
+
+"Provider::AnthropicProvider(url: str, model: str, token: str | None = None)":
+  location: provider.py
+  annotations: |
+    LLM-провайдер для Anthropic Claude.
+
+    `url`: базовый URL API endpoint.
+    `model`: идентификатор модели.
+    `token`: API-ключ. Обязателен для Anthropic.
+  methods:
+    "generate(prompt: str) -> answer:str": |
+      Генерация через Anthropic API (POST {url}/v1/messages).
+
+      `prompt`: полный текст промпта.
+      `answer`: текст сгенерированного ответа.
+
+      Использовать практику `anthropic_api` для реализации.
+
+---
+
+Author: Goga
+CreatedAt: 16/05/26
+Description: |
+  LLM-провайдер для Anthropic Claude.

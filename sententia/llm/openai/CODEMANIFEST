@@ -1,0 +1,43 @@
+Imports:
+  - Types:
+      - Provider
+    From: sententia/llm/provider
+
+Usages:
+  conventions: .goga/usages/conventions.md
+  openai_api: .goga/usages/cooks/openai_api.md
+  ollama_api: .goga/usages/cooks/ollama_api.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Провайдер для OpenAI и Ollama (совместимый API).
+  Использовать `openai_api` для вызова OpenAI API.
+  Использовать `ollama_api` для вызова Ollama (та же реализация, без авторизации).
+
+---
+
+"Provider::OpenaiProvider(url: str, model: str, token: str | None = None)":
+  location: provider.py
+  annotations: |
+    LLM-провайдер для OpenAI и Ollama (совместимый API).
+
+    `url`: базовый URL API endpoint.
+    `model`: идентификатор модели.
+    `token`: API-ключ. Если None — авторизация не отправляется (Ollama).
+  methods:
+    "generate(prompt: str) -> answer:str": |
+      Генерация через OpenAI-совместимый API (POST {url}/v1/chat/completions).
+
+      `prompt`: полный текст промпта.
+      `answer`: текст сгенерированного ответа.
+
+      Использовать практику `openai_api` для реализации.
+      Если token is None — авторизация не отправляется (`ollama_api`).
+
+---
+
+Author: Goga
+CreatedAt: 16/05/26
+Description: |
+  LLM-провайдер для OpenAI и Ollama (совместимый API).

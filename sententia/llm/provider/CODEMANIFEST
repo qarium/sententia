@@ -1,0 +1,39 @@
+Usages:
+  conventions: .goga/usages/conventions.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Базовый интерфейс LLM-провайдера.
+  Мутируется конкретными реализациями (OpenAI, Anthropic).
+
+---
+
+"Provider(url: str, model: str, token: str | None = None)":
+  location: provider.py
+  annotations: |
+    Базовый интерфейс LLM-провайдера.
+
+    `url`: базовый URL API endpoint провайдера (без версии в url path).
+    `model`: идентификатор модели (например "gpt-4", "claude-3-sonnet", "llama3").
+    `token`: API-ключ авторизации. Опциональный — для Ollama не требуется.
+  properties:
+    url -> str: |
+      Базовый URL API endpoint провайдера (без версии в url path).
+    model -> str: |
+      Идентификатор модели.
+    token -> str | None: |
+      API-ключ авторизации. Опциональный.
+  methods:
+    "generate(prompt: str) -> answer:str": |
+      Генерация ответа на основе промпта.
+
+      `prompt`: полный текст промпта включая системную инструкцию и контекст.
+      `answer`: текст сгенерированного ответа от LLM.
+
+---
+
+Author: Goga
+CreatedAt: 16/05/26
+Description: |
+  Базовый интерфейс LLM-провайдера.

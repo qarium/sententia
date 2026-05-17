@@ -1,0 +1,28 @@
+Imports:
+  - Types:
+      - OpenaiProvider
+    From: sententia/llm/openai
+  - Types:
+      - AnthropicProvider
+    From: sententia/llm/anthropic
+
+Usages:
+  conventions: .goga/usages/conventions.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Фасад клетки llm. Re-export провайдеров для потребителей.
+  Инициализация провайдера: openai/ollama → `OpenaiProvider`, anthropic → `AnthropicProvider`.
+
+---
+
+->OpenaiProvider: {}
+->AnthropicProvider: {}
+
+---
+
+Author: Goga
+CreatedAt: 16/05/26
+Description: |
+  Фасад LLM провайдеров. Re-export OpenaiProvider и AnthropicProvider.

@@ -1,0 +1,66 @@
+Imports:
+  - Types:
+      - RESTResource
+    From: sententia/endpoints
+  - Types:
+      - Storage
+    Usages:
+      - reading
+    From: sententia/storage
+
+Usages:
+  conventions: .goga/usages/conventions.md
+  pydantic: .goga/usages/cooks/pydantic.md
+  hexagonal: .goga/usages/cooks/hexagonal.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Адаптер GET /files/<path> — получение содержимого файла.
+  Использовать практику `pydantic` для моделей ответа.
+  Использовать практику `hexagonal` для понимания роли адаптера.
+  Использовать практику `reading` для чтения файлов.
+
+---
+
+"FileResponse()":
+  location: models.py
+  annotations: |
+    Модель ответа для GET /files/<path>.
+    Использовать `pydantic` для реализации.
+  properties:
+    text -> str: |
+      Содержимое файла. Значение по умолчанию — пустая строка.
+    source -> str: |
+      Путь к файлу. Значение по умолчанию — пустая строка.
+
+"RESTResource::FilesResource(storage: Storage)":
+  location: files.py
+  annotations: |
+    REST ресурс GET /files/<path> — получение содержимого файла.
+
+    `storage`: экземпляр `Storage` для чтения файлов.
+
+    Использовать практику `reading` для чтения файлов.
+    Использовать практику `pydantic` для конвертации данных.
+    Использовать практику `hexagonal` для понимания роли адаптера.
+  properties:
+    url_rule -> str: |
+      "/files/{path:path}"
+  methods:
+    "get(path: str) -> response:FileResponse": |
+      Обработка GET /files/<path>.
+
+      `path`: относительный путь к файлу из URL.
+      `response`: pydantic модель ответа с полями text и source.
+
+      Если файл не найден — HTTP 404.
+      Использовать практику `reading` для чтения файлов.
+      Использовать практику `pydantic` для конвертации данных.
+
+---
+
+Author: Goga
+CreatedAt: 16/05/26
+Description: |
+  API адаптер файлов — GET /files/<path>.

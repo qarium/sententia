@@ -1,0 +1,33 @@
+Imports:
+  - Types:
+      - SearchTool
+    From: sententia/mcp/search
+  - Types:
+      - AskTool
+    From: sententia/mcp/ask
+  - Types:
+      - FilesTool
+    From: sententia/mcp/files
+
+Usages:
+  conventions: .goga/usages/conventions.md
+  mcp: .goga/usages/cooks/mcp.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Фасад клетки mcp. Re-export MCP инструментов.
+  Использовать `mcp` для регистрации инструментов через MCP SDK.
+
+---
+
+->SearchTool: {}
+->AskTool: {}
+->FilesTool: {}
+
+---
+
+Author: Goga Brainstorm
+CreatedAt: 16/05/26
+Description: |
+  Фасад MCP адаптера. Re-export MCP инструментов.
