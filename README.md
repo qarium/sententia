@@ -1,1 +1,1 @@
-# Knowage API
+# Sententia
