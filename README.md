@@ -2,6 +2,8 @@
 
 FastAPI-based search and RAG engine for local Markdown files, powered by FAISS and multilingual E5 embeddings.
 
+**Documentation:** [qarium.github.io/sententia](https://qarium.github.io/sententia/)
+
 ## Quick Start
 
 Install:
