@@ -40,7 +40,7 @@ Application parameters are passed via command-line arguments.
 ### With persistent index
 
 ```bash
-python -m sententia /data/docs \
+sententia /data/docs \
   --index-path /data/index.faiss \
   --llm-protocol openai \
   --llm-url https://api.openai.com \
@@ -51,7 +51,7 @@ python -m sententia /data/docs \
 ### In-memory index
 
 ```bash
-python -m sententia /data/docs \
+sententia /data/docs \
   --llm-protocol ollama \
   --llm-url http://localhost:11434 \
   --llm-model llama3
@@ -60,7 +60,7 @@ python -m sententia /data/docs \
 ### MCP Server
 
 ```bash
-python -m sententia /data/docs \
+sententia /data/docs \
   --llm-protocol anthropic \
   --llm-url https://api.anthropic.com \
   --llm-model claude-3-sonnet \
