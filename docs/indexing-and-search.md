@@ -4,25 +4,29 @@ Markdown file indexing and semantic search powered by FAISS + Sentence-Transform
 
 ## Creation
 
-=== "Persistent mode"
-    ```python
-    from sententia.storage import Storage
-    from sententia.index import Index
+### Persistent mode
 
-    storage = Storage("/path/to/markdown/docs")
-    index = Index(storage, "/path/to/index.faiss")
-    ```
-    On creation, the index is loaded from the file if it exists.
+```python
+from sententia.storage import Storage
+from sententia.index import Index
 
-=== "In-memory mode"
-    ```python
-    from sententia.storage import Storage
-    from sententia.index import Index
+storage = Storage("/path/to/markdown/docs")
+index = Index(storage, "/path/to/index.faiss")
+```
 
-    storage = Storage("/path/to/markdown/docs")
-    index = Index(storage)
-    ```
-    The index is built from scratch each time. `save()` and `load()` are unavailable.
+On creation, the index is loaded from the file if it exists.
+
+### In-memory mode
+
+```python
+from sententia.storage import Storage
+from sententia.index import Index
+
+storage = Storage("/path/to/markdown/docs")
+index = Index(storage)
+```
+
+The index is built from scratch each time. `save()` and `load()` are unavailable.
 
 ## Constructor Parameters
 

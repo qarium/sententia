@@ -55,21 +55,24 @@ python -m sententia /path/to/markdown/docs \
 
 After starting in REST mode:
 
-=== "Search"
-    ```bash
-    curl -X POST http://localhost:8000/search \
-      -H "Content-Type: application/json" \
-      -d '{"query": "how to set up authentication", "top": 5}'
-    ```
+### Search
 
-=== "Ask (RAG)"
-    ```bash
-    curl -X POST http://localhost:8000/ask \
-      -H "Content-Type: application/json" \
-      -d '{"query": "how to set up authentication?"}'
-    ```
+```bash
+curl -X POST http://localhost:8000/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "how to set up authentication", "top": 5}'
+```
 
-=== "Files"
-    ```bash
-    curl http://localhost:8000/files/docs/auth.md
-    ```
+### Ask (RAG)
+
+```bash
+curl -X POST http://localhost:8000/ask \
+  -H "Content-Type: application/json" \
+  -d '{"query": "how to set up authentication?"}'
+```
+
+### Files
+
+```bash
+curl http://localhost:8000/files/docs/auth.md
+```

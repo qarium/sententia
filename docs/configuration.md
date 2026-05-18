@@ -37,30 +37,33 @@ Application parameters are passed via command-line arguments.
 
 ## Examples
 
-=== "With persistent index"
-    ```bash
-    python -m sententia /data/docs \
-      --index-path /data/index.faiss \
-      --llm-protocol openai \
-      --llm-url https://api.openai.com \
-      --llm-model gpt-4 \
-      --llm-token "$OPENAI_API_KEY"
-    ```
+### With persistent index
 
-=== "In-memory index"
-    ```bash
-    python -m sententia /data/docs \
-      --llm-protocol ollama \
-      --llm-url http://localhost:11434 \
-      --llm-model llama3
-    ```
+```bash
+python -m sententia /data/docs \
+  --index-path /data/index.faiss \
+  --llm-protocol openai \
+  --llm-url https://api.openai.com \
+  --llm-model gpt-4 \
+  --llm-token "$OPENAI_API_KEY"
+```
 
-=== "MCP Server"
-    ```bash
-    python -m sententia /data/docs \
-      --llm-protocol anthropic \
-      --llm-url https://api.anthropic.com \
-      --llm-model claude-3-sonnet \
-      --mcp \
-      --port 9000
-    ```
+### In-memory index
+
+```bash
+python -m sententia /data/docs \
+  --llm-protocol ollama \
+  --llm-url http://localhost:11434 \
+  --llm-model llama3
+```
+
+### MCP Server
+
+```bash
+python -m sententia /data/docs \
+  --llm-protocol anthropic \
+  --llm-url https://api.anthropic.com \
+  --llm-model claude-3-sonnet \
+  --mcp \
+  --port 9000
+```
