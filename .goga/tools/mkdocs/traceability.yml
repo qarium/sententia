@@ -1,0 +1,46 @@
+docs/index.md:
+  - sententia/CODEMANIFEST
+docs/getting-started.md:
+  - sententia/.usages/getting_started.md
+  - sententia/CODEMANIFEST
+  - sententia/app/.usages/configuration.md
+  - sententia/app/.usages/running.md
+docs/configuration.md:
+  - sententia/app/.usages/configuration.md
+  - sententia/CODEMANIFEST
+docs/rest-api.md:
+  - sententia/.usages/api_reference.md
+  - sententia/api/.usages/search_resource.md
+  - sententia/api/.usages/ask_resource.md
+  - sententia/api/.usages/files_resource.md
+  - sententia/api/CODEMANIFEST
+  - sententia/api/search/CODEMANIFEST
+  - sententia/api/ask/CODEMANIFEST
+  - sententia/api/files/CODEMANIFEST
+docs/mcp-tools.md:
+  - sententia/.usages/mcp_reference.md
+  - sententia/mcp/.usages/search_tool.md
+  - sententia/mcp/.usages/ask_tool.md
+  - sententia/mcp/.usages/files_tool.md
+  - sententia/mcp/CODEMANIFEST
+  - sententia/mcp/search/CODEMANIFEST
+  - sententia/mcp/ask/CODEMANIFEST
+  - sententia/mcp/files/CODEMANIFEST
+docs/storage.md:
+  - sententia/storage/.usages/reading.md
+  - sententia/storage/CODEMANIFEST
+docs/indexing-and-search.md:
+  - sententia/index/.usages/indexing.md
+  - sententia/index/.usages/searching.md
+  - sententia/index/CODEMANIFEST
+docs/llm-providers.md:
+  - sententia/llm/.usages/llm_generating.md
+  - sententia/llm/.usages/openai_provider.md
+  - sententia/llm/.usages/anthropic_provider.md
+  - sententia/llm/CODEMANIFEST
+  - sententia/llm/openai/CODEMANIFEST
+  - sententia/llm/anthropic/CODEMANIFEST
+  - sententia/llm/provider/CODEMANIFEST
+docs/rag-pipeline.md:
+  - sententia/rag/.usages/asking.md
+  - sententia/rag/CODEMANIFEST
