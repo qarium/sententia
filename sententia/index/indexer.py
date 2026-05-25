@@ -26,16 +26,20 @@ def _split_text(text: str, size: int = 600, overlap: int = 60) -> list[str]:
     """Split text into chunks of approximately `size` characters with `overlap`."""
     if not text:
         return []
+
     chunks: list[str] = []
     start = 0
+
     while start < len(text):
         end = start + size
         if end >= len(text):
             chunks.append(text[start:])
             break
+
         break_point = text.rfind("\n", end - size // 5, end)
         if break_point == -1:
             break_point = end
+
         chunks.append(text[start:break_point])
         start = max(break_point - overlap, start + 1)
     return [c.strip() for c in chunks if c.strip()]
@@ -119,6 +123,7 @@ class Index:
             idx = indices[0][i]
             if idx < 0 or idx >= len(self.chunks):
                 break
+
             results.append(
                 {
                     "text": self.chunks[idx]["text"],
@@ -135,6 +140,7 @@ class Index:
             raise ValueError("Cannot save: index is in in-memory mode")
         if self.index is None:
             return
+
         Path(self.index_path).parent.mkdir(parents=True, exist_ok=True)
         faiss.write_index(self.index, self.index_path)
 
@@ -145,9 +151,11 @@ class Index:
         """Deserialize FAISS index and chunk metadata from disk."""
         if self.index_path is None:
             raise ValueError("Cannot load: index is in in-memory mode")
+
         meta_path = self.index_path + ".meta"
         if not Path(self.index_path).exists() or not Path(meta_path).exists():
             return False
+
         try:
             self.index = faiss.read_index(self.index_path)
             self.chunks = json.loads(Path(meta_path).read_text(encoding="utf-8"))
