@@ -1,3 +1,3 @@
-from sententia.app.app import SententiaApp
+from .app import SententiaApp
 
 __all__ = ["SententiaApp"]

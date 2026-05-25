@@ -4,6 +4,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class AskToolResult(BaseModel):
+    """Result returned by MCP ask tool with answer and source references."""
+
     model_config = ConfigDict(kw_only=True)
 
     answer: str = ""

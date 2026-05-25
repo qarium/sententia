@@ -5,7 +5,7 @@ import inspect
 import uvicorn
 from fastapi import APIRouter, FastAPI
 
-from sententia.endpoints import MCPTool, RESTResource
+from ..endpoints import MCPTool, RESTResource
 
 
 def _create_wrapper(tool: MCPTool):

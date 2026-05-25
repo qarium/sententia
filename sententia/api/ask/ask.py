@@ -15,6 +15,8 @@ if TYPE_CHECKING:
 
 
 class AskResource(RESTResource):
+    """REST resource for RAG question answering over indexed documents."""
+
     url_rule = "/ask"
 
     def __init__(
@@ -24,14 +26,31 @@ class AskResource(RESTResource):
         top: int = 10,
         **kwargs: Any,
     ) -> None:
+        """Initialize ask resource.
+
+        Args:
+            index: Index instance for semantic search.
+            llm_provider: Provider instance for answer generation.
+            top: Number of search results to include in context.
+            **kwargs: Additional keyword arguments passed to RESTResource.
+        """
         super().__init__(**kwargs)
         self._index = index
         self._llm_provider = llm_provider
         self._top = top
 
     def post(self, request: AskRequest) -> AskResponse:
+        """Handle ask request and return generated answer with sources.
+
+        Args:
+            request: Ask request with user question.
+
+        Returns:
+            Ask response with generated answer and source references.
+        """
         try:
             result = rag.ask(request.query, self._index, self._llm_provider, self._top)
         except LLMProviderError as exc:
             raise HTTPException(status_code=502, detail=str(exc)) from exc
+
         return AskResponse(answer=result["answer"], sources=result["sources"])

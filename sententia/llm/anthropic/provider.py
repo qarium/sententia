@@ -7,7 +7,20 @@ from ..provider.errors import LLMProviderError
 
 
 class AnthropicProvider(Provider):
+    """LLM provider for Anthropic API."""
+
     def generate(self, prompt: str) -> str:
+        """Generate text using Anthropic messages API.
+
+        Args:
+            prompt: Input text for generation.
+
+        Returns:
+            Generated text from the API response.
+
+        Raises:
+            LLMProviderError: If no API key provided, on request failure, or unexpected response format.
+        """
         if not self.token:
             raise LLMProviderError("Anthropic provider requires an API key (--llm-token)")
 

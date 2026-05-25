@@ -71,6 +71,7 @@ class Index:
         files = self.storage.list_files()
 
         chunks: list[dict[str, str]] = []
+
         for file_path in files:
             content = self.storage.read_file(file_path)
             cleaned = _clean_markdown(content["text"])
@@ -88,6 +89,7 @@ class Index:
         texts = ["passage: " + c["text"] for c in chunks]
         embeddings = self.embedder.encode(texts)
         dim = embeddings.shape[1]
+
         norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
         norms[norms == 0] = 1.0
         embeddings = embeddings / norms
@@ -103,12 +105,15 @@ class Index:
             return []
 
         top_k = top if top is not None else self.default_top
+
         q_embedding = self.embedder.encode(["query: " + query])
+
         q_norms = np.linalg.norm(q_embedding, axis=1, keepdims=True)
         q_norms[q_norms == 0] = 1.0
         q_embedding = q_embedding / q_norms
 
         distances, indices = self.index.search(q_embedding.astype("float32"), top_k)
+
         results: list[dict[str, Any]] = []
         for i in range(top_k):
             idx = indices[0][i]
@@ -121,6 +126,7 @@ class Index:
                     "score": float(distances[0][i]),
                 }
             )
+
         return results
 
     def save(self) -> None:
@@ -131,6 +137,7 @@ class Index:
             return
         Path(self.index_path).parent.mkdir(parents=True, exist_ok=True)
         faiss.write_index(self.index, self.index_path)
+
         meta_path = self.index_path + ".meta"
         Path(meta_path).write_text(json.dumps(self.chunks, ensure_ascii=False), encoding="utf-8")
 
@@ -144,8 +151,10 @@ class Index:
         try:
             self.index = faiss.read_index(self.index_path)
             self.chunks = json.loads(Path(meta_path).read_text(encoding="utf-8"))
+
             if not isinstance(self.chunks, list):
                 return False
+
             return self.index.ntotal == len(self.chunks)
         except (OSError, RuntimeError, ValueError, TypeError):
             return False

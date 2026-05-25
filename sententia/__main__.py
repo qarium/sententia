@@ -32,6 +32,7 @@ def main(argv: list[str] | None = None) -> None:
     """Entry point: parse args, create components, start server."""
     parser = build_parser()
     args = parser.parse_args(argv)
+
     token = args.llm_token or os.environ.get("SENTENTIA_LLM_TOKEN")
 
     from sententia.app import SententiaApp  # noqa: PLC0415
@@ -55,9 +56,11 @@ def main(argv: list[str] | None = None) -> None:
         files_tool = FilesTool(storage)
 
         app = SententiaApp()
+
         app.add_mcp_tool(search_tool)
         app.add_mcp_tool(ask_tool)
         app.add_mcp_tool(files_tool)
+
         app.run(host=args.host, port=args.port)
     else:
         from sententia.api import AskResource, FilesResource, SearchResource  # noqa: PLC0415
@@ -67,6 +70,7 @@ def main(argv: list[str] | None = None) -> None:
         files = FilesResource(storage)
 
         app = SententiaApp()
+
         app.add_rest_resource(search)
         app.add_rest_resource(ask_resource)
         app.add_rest_resource(files)

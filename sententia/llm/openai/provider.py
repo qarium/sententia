@@ -7,7 +7,20 @@ from ..provider.errors import LLMProviderError
 
 
 class OpenaiProvider(Provider):
+    """LLM provider for OpenAI-compatible APIs (OpenAI, Ollama)."""
+
     def generate(self, prompt: str) -> str:
+        """Generate text using OpenAI chat completions API.
+
+        Args:
+            prompt: Input text for generation.
+
+        Returns:
+            Generated text from the API response.
+
+        Raises:
+            LLMProviderError: On request failure or unexpected response format.
+        """
         headers: dict[str, str] = {"Content-Type": "application/json"}
         if self.token is not None:
             headers["Authorization"] = f"Bearer {self.token}"

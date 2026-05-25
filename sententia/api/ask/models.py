@@ -4,12 +4,16 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class AskRequest(BaseModel):
+    """Request body for RAG question answering."""
+
     model_config = ConfigDict(kw_only=True)
 
     query: str = ""
 
 
 class AskResponse(BaseModel):
+    """Response body with generated answer and source references."""
+
     model_config = ConfigDict(kw_only=True)
 
     answer: str = ""

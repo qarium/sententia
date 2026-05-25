@@ -4,6 +4,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class SearchRequest(BaseModel):
+    """Request body for semantic search."""
+
     model_config = ConfigDict(kw_only=True)
 
     query: str = ""
@@ -11,6 +13,8 @@ class SearchRequest(BaseModel):
 
 
 class SearchResultItem(BaseModel):
+    """Single search result with text, source, and relevance score."""
+
     model_config = ConfigDict(kw_only=True)
 
     text: str = ""
@@ -19,6 +23,8 @@ class SearchResultItem(BaseModel):
 
 
 class SearchResponse(BaseModel):
+    """Response body containing search results."""
+
     model_config = ConfigDict(kw_only=True)
 
     results: list[SearchResultItem] = Field(default_factory=list)

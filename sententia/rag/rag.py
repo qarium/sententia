@@ -20,8 +20,10 @@ def ask(query: str, index: Index, llm_provider: Provider, top: int = 10) -> dict
         dict with 'answer' (str) and 'sources' (list of unique source paths).
     """
     results = index.search(query, top)
+
     context = "\n\n".join(r["text"] for r in results)
     sources = list(dict.fromkeys(r["source"] for r in results))
+
     prompt = (
         f"Используй следующий контекст, чтобы ответить на вопрос:\n"
         f"```\n{context}\n```\n\n"
@@ -29,5 +31,7 @@ def ask(query: str, index: Index, llm_provider: Provider, top: int = 10) -> dict
         f"\n\nЕсли предоставленный контекст недостаточен для ответа на вопрос — "
         f'ответь "Недостаточно данных для ответа на данный вопрос".'
     )
+
     answer = llm_provider.generate(prompt)
+
     return {"answer": answer, "sources": sources}
