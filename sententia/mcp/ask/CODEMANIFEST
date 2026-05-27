@@ -58,10 +58,12 @@ Annotations: |
     description -> str: |
       "Ask a question and get an answer based on indexed documents"
   methods:
-    "execute(query: str) -> result:AskToolResult": |
+    "execute(query: str, top: int | None = None) -> result:AskToolResult": |
       Вопрос-ответ с RAG.
 
       `query`: текст вопроса.
+      `top`: количество чанков для контекста.
+             если None — используется дефолт из конструктора.
       `result`: `AskToolResult` с полями answer и sources.
 
       Использовать практику `asking` для выполнения RAG pipeline.

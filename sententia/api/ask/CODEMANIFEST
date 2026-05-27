@@ -39,6 +39,9 @@ Annotations: |
   properties:
     query -> str: |
       Текст вопроса пользователя. Значение по умолчанию — пустая строка.
+    top -> int | None: |
+      Количество чанков для контекста. Если не указано — используется дефолт из AskResource.
+      Значение по умолчанию — None.
 
 "AskResponse()":
   location: models.py
@@ -70,8 +73,11 @@ Annotations: |
     "post(request: AskRequest) -> response:AskResponse": |
       Обработка POST /ask.
 
-      `request`: pydantic модель запроса с полем query.
+      `request`: pydantic модель запроса с полями query и top.
       `response`: pydantic модель ответа с полями answer и sources.
+
+      Если request.top не None — передаётся как top в RAG pipeline.
+      Иначе используется дефолт из конструктора.
 
       Использовать практику `asking` для выполнения RAG pipeline.
       Использовать практику `pydantic` для конвертации данных.

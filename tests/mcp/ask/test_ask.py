@@ -72,3 +72,23 @@ class TestAskLogic:
         tool.execute(query="test")
 
         mock_index.search.assert_called_once_with("test", 3)
+
+    def test_ask_tool_execute_top_from_argument(self):
+        mock_index = MagicMock()
+        mock_llm = MagicMock()
+        mock_llm.generate.return_value = "answer"
+        mock_index.search.return_value = []
+        tool = AskTool(index=mock_index, llm_provider=mock_llm)
+        tool.execute(query="test", top=5)
+
+        mock_index.search.assert_called_once_with("test", 5)
+
+    def test_ask_tool_execute_top_none_falls_back_to_default(self):
+        mock_index = MagicMock()
+        mock_llm = MagicMock()
+        mock_llm.generate.return_value = "answer"
+        mock_index.search.return_value = []
+        tool = AskTool(index=mock_index, llm_provider=mock_llm, top=7)
+        tool.execute(query="test", top=None)
+
+        mock_index.search.assert_called_once_with("test", 7)

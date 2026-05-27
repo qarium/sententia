@@ -13,7 +13,10 @@ from sententia.mcp.ask import AskTool
 
 tool = AskTool(index, llm_provider, top=10)
 result = tool.execute(query="как настроить авторизацию?")
-# → {"answer": "Для настройки...", "sources": ["docs/auth.md", "docs/setup.md"]}
+# → AskToolResult(answer="Для настройки...", sources=["docs/auth.md", "docs/setup.md"])
+
+# С явным указанием top
+result = tool.execute(query="как настроить авторизацию?", top=5)
 ```
 
 ## Обработка ошибок

@@ -9,6 +9,7 @@ class AskRequest(BaseModel):
     model_config = ConfigDict(kw_only=True)
 
     query: str = ""
+    top: int | None = None
 
 
 class AskResponse(BaseModel):

@@ -67,3 +67,29 @@ class TestAskResourceLogic:
         mock_provider = MagicMock()
         resource = AskResource(index=mock_index, llm_provider=mock_provider)
         assert resource._top == 10
+
+    def test_ask_resource_post_top_from_request(self, monkeypatch):
+        mock_index = MagicMock()
+        mock_provider = MagicMock()
+        mock_rag = MagicMock()
+        mock_rag.ask.return_value = {"answer": "Ответ", "sources": []}
+        monkeypatch.setattr("sententia.api.ask.ask.rag", mock_rag)
+
+        resource = AskResource(index=mock_index, llm_provider=mock_provider)
+        request = AskRequest(query="test", top=5)
+        resource.post(request)
+
+        mock_rag.ask.assert_called_once_with("test", mock_index, mock_provider, 5)
+
+    def test_ask_resource_post_top_none_falls_back_to_default(self, monkeypatch):
+        mock_index = MagicMock()
+        mock_provider = MagicMock()
+        mock_rag = MagicMock()
+        mock_rag.ask.return_value = {"answer": "Ответ", "sources": []}
+        monkeypatch.setattr("sententia.api.ask.ask.rag", mock_rag)
+
+        resource = AskResource(index=mock_index, llm_provider=mock_provider, top=7)
+        request = AskRequest(query="test")
+        resource.post(request)
+
+        mock_rag.ask.assert_called_once_with("test", mock_index, mock_provider, 7)

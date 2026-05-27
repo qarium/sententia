@@ -38,17 +38,19 @@ class AskTool(MCPTool):
         self._llm_provider = llm_provider
         self._top = top
 
-    def execute(self, query: str) -> AskToolResult:
+    def execute(self, query: str, top: int | None = None) -> AskToolResult:
         """Execute RAG question answering and return answer with sources.
 
         Args:
             query: User question text.
+            top: Number of search results to include. Falls back to constructor default.
 
         Returns:
             Ask result with generated answer and source references.
         """
         try:
-            result = rag.ask(query, self._index, self._llm_provider, self._top)
+            actual_top = top if top is not None else self._top
+            result = rag.ask(query, self._index, self._llm_provider, actual_top)
         except LLMProviderError as exc:
             raise LLMProviderError(f"Failed to generate answer: {exc}") from exc
 

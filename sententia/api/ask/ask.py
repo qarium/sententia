@@ -49,7 +49,8 @@ class AskResource(RESTResource):
             Ask response with generated answer and source references.
         """
         try:
-            result = rag.ask(request.query, self._index, self._llm_provider, self._top)
+            top = request.top if request.top is not None else self._top
+            result = rag.ask(request.query, self._index, self._llm_provider, top)
         except LLMProviderError as exc:
             raise HTTPException(status_code=502, detail=str(exc)) from exc
 
