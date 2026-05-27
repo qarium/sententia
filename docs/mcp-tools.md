@@ -36,6 +36,7 @@ Q&A with RAG pipeline.
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `query` | `str` | — | Question text |
+| `top` | `int \| null` | `null` | Number of context chunks for RAG. Falls back to server default |
 
 **Result:**
 

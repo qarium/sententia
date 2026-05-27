@@ -44,13 +44,15 @@ Answer generation based on RAG (search + LLM).
 
 ```json
 {
-  "query": "how to set up authentication?"
+  "query": "how to set up authentication?",
+  "top": 5
 }
 ```
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `query` | `str` | `""` | User question text |
+| `top` | `int \| null` | `null` | Number of context chunks for RAG. Falls back to server default |
 
 **Response:**
 
