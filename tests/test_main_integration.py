@@ -251,17 +251,17 @@ class TestCliToConfigPipeline:
             spy_config.assert_called_once()
             call_kwargs = spy_config.call_args.kwargs
 
-            # cli_overrides contain all parsed CLI values
+            # cli_overrides contain only explicitly provided CLI values (non-None)
             overrides = call_kwargs["cli_overrides"]
             assert overrides["data_dir"] == str(tmp_path)
-            assert overrides["index_path"] is None
+            assert "index_path" not in overrides
             assert overrides["llm_protocol"] == "openai"
             assert overrides["llm_url"] == "http://localhost"
             assert overrides["llm_model"] == "gpt-4"
-            assert overrides["llm_token"] is None
-            assert overrides["mcp"] is False
-            assert overrides["host"] == "0.0.0.0"
-            assert overrides["port"] == 8000
+            assert "llm_token" not in overrides
+            assert "mcp" not in overrides
+            assert "host" not in overrides
+            assert "port" not in overrides
 
             # Verify components created with config values
             mock_storage_cls.assert_called_once_with(str(tmp_path))
@@ -380,17 +380,17 @@ class TestEnvFilePropagation:
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_env_file_values_accessible_when_cli_does_not_override(
-        self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path
+    def test_env_file_values_accessible_when_cli_does_not_override(  # noqa: PLR0913
+        self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path, monkeypatch
     ):
-        """Env-file provides llm_token when explicit --llm-token is passed via CLI."""
+        """Env-file provides llm_token when --llm-token is not passed via CLI."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
 
-        # Clean ENV
+        # Clean ENV so only env-file provides the token
         for key in list(os.environ):
             if key.startswith("SENTENTIA_"):
-                del os.environ[key]
+                monkeypatch.delenv(key, raising=False)
 
         env_file = tmp_path / "test.env"
         env_file.write_text("SENTENTIA_LLM_TOKEN=sk-from-file\n")
@@ -411,12 +411,10 @@ class TestEnvFilePropagation:
                     "http://localhost",
                     "--llm-model",
                     "gpt-4",
-                    "--llm-token",
-                    "sk-from-file",
                 ]
             )
 
-            # Token passed explicitly via CLI, matching env-file value
+            # Token comes from env-file, not CLI
             mock_openai_cls.assert_called_once_with(
                 "http://localhost", "gpt-4", "sk-from-file"
             )
@@ -429,100 +427,90 @@ class TestConfigPriorityIntegration:
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_cli_overrides_override_env_vars(
-        self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path
+    def test_cli_overrides_override_env_vars(  # noqa: PLR0913
+        self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path, monkeypatch
     ):
         """Explicit CLI values take priority over ENV variables."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
 
         # Set ENV vars that should be overridden by explicit CLI args
-        os.environ["SENTENTIA_LLM_PROTOCOL"] = "anthropic"
-        os.environ["SENTENTIA_HOST"] = "10.0.0.1"
-        os.environ["SENTENTIA_PORT"] = "9000"
+        monkeypatch.setenv("SENTENTIA_LLM_PROTOCOL", "anthropic")
+        monkeypatch.setenv("SENTENTIA_HOST", "10.0.0.1")
+        monkeypatch.setenv("SENTENTIA_PORT", "9000")
 
-        try:
-            with (
-                patch("sententia.api.SearchResource"),
-                patch("sententia.api.AskResource"),
-                patch("sententia.api.FilesResource"),
-            ):
-                main(
-                    [
-                        str(tmp_path),
-                        "--llm-protocol",
-                        "openai",
-                        "--llm-url",
-                        "http://localhost",
-                        "--llm-model",
-                        "gpt-4",
-                        "--host",
-                        "127.0.0.1",
-                        "--port",
-                        "5000",
-                    ]
-                )
+        with (
+            patch("sententia.api.SearchResource"),
+            patch("sententia.api.AskResource"),
+            patch("sententia.api.FilesResource"),
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--llm-protocol",
+                    "openai",
+                    "--llm-url",
+                    "http://localhost",
+                    "--llm-model",
+                    "gpt-4",
+                    "--host",
+                    "127.0.0.1",
+                    "--port",
+                    "5000",
+                ]
+            )
 
-                # Explicit CLI values win over ENV
-                mock_openai_cls.assert_called_once_with(
-                    "http://localhost", "gpt-4", None
-                )
-                mock_app.run.assert_called_once_with(host="127.0.0.1", port=5000)
-        finally:
-            for key in [
-                "SENTENTIA_LLM_PROTOCOL",
-                "SENTENTIA_HOST",
-                "SENTENTIA_PORT",
-            ]:
-                os.environ.pop(key, None)
+            # Explicit CLI values win over ENV
+            mock_openai_cls.assert_called_once_with(
+                "http://localhost", "gpt-4", None
+            )
+            mock_app.run.assert_called_once_with(host="127.0.0.1", port=5000)
 
     @patch("sententia.app.SententiaApp")
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_cli_default_port_overrides_env_port(
-        self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path
+    def test_env_port_used_when_no_explicit_cli_port(  # noqa: PLR0913
+        self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path, monkeypatch
     ):
-        """CLI default port (8000) overrides ENV port through cli_overrides."""
+        """ENV port takes effect when --port is not explicitly passed on CLI."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
 
+        # Clean ENV
         for key in list(os.environ):
             if key.startswith("SENTENTIA_"):
-                del os.environ[key]
+                monkeypatch.delenv(key, raising=False)
 
-        # ENV sets port to 7000, but CLI default is 8000
-        os.environ["SENTENTIA_PORT"] = "7000"
+        # ENV sets port to 7000
+        monkeypatch.setenv("SENTENTIA_PORT", "7000")
 
-        try:
-            with (
-                patch("sententia.api.SearchResource"),
-                patch("sententia.api.AskResource"),
-                patch("sententia.api.FilesResource"),
-            ):
-                main(
-                    [
-                        str(tmp_path),
-                        "--llm-protocol",
-                        "openai",
-                        "--llm-url",
-                        "http://localhost",
-                        "--llm-model",
-                        "gpt-4",
-                    ]
-                )
+        with (
+            patch("sententia.api.SearchResource"),
+            patch("sententia.api.AskResource"),
+            patch("sententia.api.FilesResource"),
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--llm-protocol",
+                    "openai",
+                    "--llm-url",
+                    "http://localhost",
+                    "--llm-model",
+                    "gpt-4",
+                ]
+            )
 
-                # CLI default port (8000) is in cli_overrides, wins over ENV
-                mock_app.run.assert_called_once_with(host="0.0.0.0", port=8000)
-        finally:
-            os.environ.pop("SENTENTIA_PORT", None)
+            # ENV port (7000) takes effect since --port was not explicitly passed
+            mock_app.run.assert_called_once_with(host="0.0.0.0", port=7000)
 
     @patch("sententia.app.SententiaApp")
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_env_file_plus_cli_overrides_priority_chain(
-        self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path
+    def test_env_file_plus_cli_overrides_priority_chain(  # noqa: PLR0913
+        self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path, monkeypatch
     ):
         """Full priority: cli_overrides > ENV > env-file > defaults through main()."""
         mock_app = MagicMock()
@@ -531,10 +519,10 @@ class TestConfigPriorityIntegration:
         # Clean all SENTENTIA_ vars
         for key in list(os.environ):
             if key.startswith("SENTENTIA_"):
-                del os.environ[key]
+                monkeypatch.delenv(key, raising=False)
 
         # ENV sets host
-        os.environ["SENTENTIA_HOST"] = "10.0.0.1"
+        monkeypatch.setenv("SENTENTIA_HOST", "10.0.0.1")
 
         # env-file also sets host and token
         env_file = tmp_path / "prio.env"
@@ -543,50 +531,47 @@ class TestConfigPriorityIntegration:
             "SENTENTIA_LLM_TOKEN=sk-from-file\n"
         )
 
-        try:
-            with (
-                patch("sententia.api.SearchResource"),
-                patch("sententia.api.AskResource"),
-                patch("sententia.api.FilesResource"),
-                patch(
-                    "sententia.config.SententiaConfig", wraps=SententiaConfig
-                ) as spy_config,
-            ):
-                main(
-                    [
-                        str(tmp_path),
-                        "--env-file",
-                        str(env_file),
-                        "--llm-protocol",
-                        "openai",
-                        "--llm-url",
-                        "http://localhost",
-                        "--llm-model",
-                        "gpt-4",
-                        "--host",
-                        "127.0.0.1",
-                        "--llm-token",
-                        "sk-explicit-cli",
-                    ]
-                )
+        with (
+            patch("sententia.api.SearchResource"),
+            patch("sententia.api.AskResource"),
+            patch("sententia.api.FilesResource"),
+            patch(
+                "sententia.config.SententiaConfig", wraps=SententiaConfig
+            ) as spy_config,
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--env-file",
+                    str(env_file),
+                    "--llm-protocol",
+                    "openai",
+                    "--llm-url",
+                    "http://localhost",
+                    "--llm-model",
+                    "gpt-4",
+                    "--host",
+                    "127.0.0.1",
+                    "--llm-token",
+                    "sk-explicit-cli",
+                ]
+            )
 
-                # Verify SententiaConfig was called with cli_overrides
-                spy_config.assert_called_once()
-                call_kwargs = spy_config.call_args.kwargs
-                assert call_kwargs["env_file"] == str(env_file)
+            # Verify SententiaConfig was called with cli_overrides
+            spy_config.assert_called_once()
+            call_kwargs = spy_config.call_args.kwargs
+            assert call_kwargs["env_file"] == str(env_file)
 
-                overrides = call_kwargs["cli_overrides"]
-                # Explicit CLI host wins over ENV (10.0.0.1) and env-file (10.0.0.2)
-                assert overrides["host"] == "127.0.0.1"
-                # Explicit CLI token wins over env-file
-                assert overrides["llm_token"] == "sk-explicit-cli"
+            overrides = call_kwargs["cli_overrides"]
+            # Explicit CLI host wins over ENV (10.0.0.1) and env-file (10.0.0.2)
+            assert overrides["host"] == "127.0.0.1"
+            # Explicit CLI token wins over env-file
+            assert overrides["llm_token"] == "sk-explicit-cli"
 
-                # App uses config values derived from CLI overrides
-                mock_app.run.assert_called_once_with(
-                    host="127.0.0.1", port=8000
-                )
-                mock_openai_cls.assert_called_once_with(
-                    "http://localhost", "gpt-4", "sk-explicit-cli"
-                )
-        finally:
-            os.environ.pop("SENTENTIA_HOST", None)
+            # App uses config values derived from CLI overrides
+            mock_app.run.assert_called_once_with(
+                host="127.0.0.1", port=8000
+            )
+            mock_openai_cls.assert_called_once_with(
+                "http://localhost", "gpt-4", "sk-explicit-cli"
+            )

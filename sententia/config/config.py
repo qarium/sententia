@@ -65,5 +65,5 @@ class SententiaConfig(BaseSettings):
     def apply_overrides(cls, values: dict) -> dict:
         """Apply CLI overrides on top of ENV/env-file values."""
         overrides = values.pop("cli_overrides", None) or {}
-        values.update(overrides)
+        values.update({k: v for k, v in overrides.items() if v is not None})
         return values

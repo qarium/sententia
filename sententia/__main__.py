@@ -13,15 +13,19 @@ def main(argv: list[str] | None = None) -> None:
     result = parse_cli_args(argv)
 
     cli_overrides = {
-        "data_dir": result.data_dir,
-        "index_path": result.index_path,
-        "llm_protocol": result.llm_protocol,
-        "llm_url": result.llm_url,
-        "llm_model": result.llm_model,
-        "llm_token": result.llm_token,
-        "mcp": result.mcp,
-        "host": result.host,
-        "port": result.port,
+        k: v
+        for k, v in {
+            "data_dir": result.data_dir,
+            "index_path": result.index_path,
+            "llm_protocol": result.llm_protocol,
+            "llm_url": result.llm_url,
+            "llm_model": result.llm_model,
+            "llm_token": result.llm_token,
+            "mcp": result.mcp,
+            "host": result.host,
+            "port": result.port,
+        }.items()
+        if v is not None
     }
 
     config = SententiaConfig(env_file=result.env_file, cli_overrides=cli_overrides)

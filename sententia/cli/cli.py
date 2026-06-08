@@ -33,9 +33,9 @@ class ParseCliResult(BaseModel):
     llm_url: str
     llm_model: str
     llm_token: str | None = None
-    mcp: bool = False
-    host: str = "0.0.0.0"
-    port: int = 8000
+    mcp: bool | None = None
+    host: str | None = None
+    port: int | None = None
 
 
 def parse_cli_args(argv: list[str] | None = None) -> ParseCliResult:
@@ -64,9 +64,9 @@ def parse_cli_args(argv: list[str] | None = None) -> ParseCliResult:
     parser.add_argument("--llm-url", required=True, help="LLM API endpoint URL")
     parser.add_argument("--llm-model", required=True, help="LLM model identifier")
     parser.add_argument("--llm-token", default=None, help="API key")
-    parser.add_argument("--mcp", action="store_true", default=False, help="Run as MCP Server")
-    parser.add_argument("--host", default="0.0.0.0", help="Server bind address")
-    parser.add_argument("--port", type=int, default=8000, help="Server port")
+    parser.add_argument("--mcp", action="store_true", default=None, help="Run as MCP Server")
+    parser.add_argument("--host", default=None, help="Server bind address")
+    parser.add_argument("--port", type=int, default=None, help="Server port")
 
     args = parser.parse_args(argv)
 

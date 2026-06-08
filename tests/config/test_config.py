@@ -48,7 +48,7 @@ class TestConfigDefaults:
 
     def test_config_defaults(self, monkeypatch):
         """In a clean environment, SententiaConfig returns all defaults."""
-        for key in os.environ:
+        for key in list(os.environ):
             if key.startswith("SENTENTIA_"):
                 monkeypatch.delenv(key)
 
@@ -87,7 +87,7 @@ class TestConfigCliOverrides:
     def test_config_cli_overrides_take_priority(self, monkeypatch):
         """cli_overrides take priority over ENV variables."""
         monkeypatch.setenv("SENTENTIA_LLM_PROTOCOL", "anthropic")
-        monkeypatch.setenv("SENTENTIA_HOST", "0.0.0.0")
+        monkeypatch.setenv("SENTENTIA_HOST", "10.0.0.1")
 
         config = SententiaConfig(
             cli_overrides={"llm_protocol": "ollama", "host": "127.0.0.1"}
@@ -98,7 +98,7 @@ class TestConfigCliOverrides:
 
     def test_config_none_cli_overrides(self, monkeypatch):
         """cli_overrides=None results in defaults."""
-        for key in os.environ:
+        for key in list(os.environ):
             if key.startswith("SENTENTIA_"):
                 monkeypatch.delenv(key)
 
@@ -113,13 +113,32 @@ class TestConfigCliOverrides:
         with pytest.raises(ValidationError):
             SententiaConfig(cli_overrides={"port": "abc"})
 
+    def test_config_none_values_in_overrides_do_not_overwrite_env(self, monkeypatch):
+        """None values in cli_overrides should not overwrite ENV variables."""
+        monkeypatch.setenv("SENTENTIA_LLM_TOKEN", "sk-from-env")
+
+        config = SententiaConfig(cli_overrides={"llm_token": None})
+
+        assert config.llm_token == "sk-from-env"
+
+    def test_config_empty_cli_overrides(self, monkeypatch):
+        """cli_overrides={} results in defaults."""
+        for key in list(os.environ):
+            if key.startswith("SENTENTIA_"):
+                monkeypatch.delenv(key)
+
+        config = SententiaConfig(cli_overrides={})
+
+        assert config.host == "0.0.0.0"
+        assert config.port == 8000
+
 
 class TestConfigFromEnvFile:
     """Env-file loading tests."""
 
     def test_config_from_env_file(self, tmp_path, monkeypatch):
         """Values are loaded from the specified env-file."""
-        for key in os.environ:
+        for key in list(os.environ):
             if key.startswith("SENTENTIA_"):
                 monkeypatch.delenv(key)
 

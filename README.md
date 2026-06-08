@@ -58,14 +58,35 @@ sententia DATA_DIR [OPTIONS]
 | Option           | Description                                           | Default      |
 |------------------|-------------------------------------------------------|--------------|
 | `DATA_DIR`       | Path to Markdown files directory                      | *(required)* |
+| `--env-file`     | Path to env configuration file                        | `.env`       |
 | `--index-path`   | Path to FAISS index file (persisted)                  | in-memory    |
 | `--llm-protocol` | LLM provider: `openai`, `anthropic`, `ollama`         | *(required)* |
 | `--llm-url`      | LLM API base URL (without `/v1` version path)         | *(required)* |
 | `--llm-model`    | LLM model identifier                                  | *(required)* |
-| `--llm-token`    | API key (falls back to `SENTENTIA_LLM_TOKEN` env var) | —            |
+| `--llm-token`    | API key (falls back to `SENTENTIA_LLM_TOKEN` env var or env-file) | —            |
 | `--host`         | Server bind address                                   | `0.0.0.0`    |
 | `--port`         | Server port                                           | `8000`       |
 | `--mcp`          | Run as MCP server instead of REST API                 | `false`      |
+
+### Configuration
+
+All settings can also be provided via environment variables with the `SENTENTIA_` prefix:
+
+| Variable                 | Maps to        | Default      |
+|--------------------------|----------------|--------------|
+| `SENTENTIA_DATA_DIR`     | `data_dir`     | —            |
+| `SENTENTIA_INDEX_PATH`   | `index_path`   | in-memory    |
+| `SENTENTIA_LLM_PROTOCOL` | `llm_protocol` | *(required)* |
+| `SENTENTIA_LLM_URL`      | `llm_url`      | *(required)* |
+| `SENTENTIA_LLM_MODEL`    | `llm_model`    | *(required)* |
+| `SENTENTIA_LLM_TOKEN`    | `llm_token`    | —            |
+| `SENTENTIA_MCP`          | `mcp`          | `false`      |
+| `SENTENTIA_HOST`         | `host`         | `0.0.0.0`    |
+| `SENTENTIA_PORT`         | `port`         | `8000`       |
+
+Settings can also be loaded from a `.env` file (default) or a custom file via `--env-file`.
+
+**Priority:** CLI arguments > ENV variables > env-file > defaults.
 
 ## Reference
 

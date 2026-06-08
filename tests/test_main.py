@@ -227,6 +227,37 @@ class TestMainLogic:
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
+    def test_main_with_index_path_set(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
+        """main() with --index-path passes the path to Index."""
+        mock_app = MagicMock()
+        mock_app_cls.return_value = mock_app
+
+        with (
+            patch("sententia.api.SearchResource"),
+            patch("sententia.api.AskResource"),
+            patch("sententia.api.FilesResource"),
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--index-path",
+                    "/tmp/test.faiss",
+                    "--llm-protocol",
+                    "openai",
+                    "--llm-url",
+                    "http://localhost",
+                    "--llm-model",
+                    "gpt-4",
+                ]
+            )
+
+            call_args = mock_index_cls.call_args
+            assert call_args[0][1] == "/tmp/test.faiss"
+
+    @patch("sententia.app.SententiaApp")
+    @patch("sententia.llm.OpenaiProvider")
+    @patch("sententia.index.Index")
+    @patch("sententia.storage.Storage")
     def test_main_with_llm_token_none(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
         """main() without --llm-token passes None to LLM provider."""
         mock_app = MagicMock()

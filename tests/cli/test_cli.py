@@ -69,9 +69,9 @@ class TestParseCliArgsPositive:
         assert result.llm_url == "http://localhost:11434"
         assert result.llm_model == "gpt-4"
         assert result.llm_token is None
-        assert result.mcp is False
-        assert result.host == "0.0.0.0"
-        assert result.port == 8000
+        assert result.mcp is None
+        assert result.host is None
+        assert result.port is None
 
     def test_parse_cli_args_all_options(self):
         """All options including env-file, mcp, port produce correct values."""
@@ -128,6 +128,20 @@ class TestParseCliArgsPositive:
 
 class TestParseCliArgsNegative:
     """Negative logic tests for parse_cli_args."""
+
+    def test_parse_cli_args_missing_data_dir(self):
+        """Missing positional data_dir causes SystemExit."""
+        with pytest.raises(SystemExit):
+            parse_cli_args(
+                [
+                    "--llm-protocol",
+                    "openai",
+                    "--llm-url",
+                    "http://localhost:11434",
+                    "--llm-model",
+                    "gpt-4",
+                ]
+            )
 
     def test_parse_cli_args_missing_required_protocol(self):
         """Missing --llm-protocol causes SystemExit."""
