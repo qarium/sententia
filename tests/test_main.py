@@ -296,6 +296,7 @@ class TestMainHelpOutput:
         )
         assert result.returncode == 0
         expected_args = (
+            "--env-file",
             "--index-path",
             "--llm-protocol",
             "--llm-url",

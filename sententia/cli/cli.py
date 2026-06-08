@@ -19,9 +19,9 @@ class ParseCliResult(BaseModel):
         llm_url: URL of the LLM API endpoint.
         llm_model: Identifier of the LLM model.
         llm_token: API key. None means get from ENV or env-file.
-        mcp: MCP Server mode flag. Defaults to False.
-        host: Server bind address. Defaults to "0.0.0.0".
-        port: Server port. Defaults to 8000.
+        mcp: MCP Server mode flag. None means not specified (use config default).
+        host: Server bind address. None means not specified (use config default).
+        port: Server port. None means not specified (use config default).
     """
 
     model_config = ConfigDict(kw_only=True)

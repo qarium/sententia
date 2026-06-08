@@ -28,12 +28,12 @@ Annotations: |
       Идентификатор модели LLM.
     "llm_token -> str | None": |
       API-ключ. None — получить из ENV или env-файла.
-    "mcp -> bool": |
-      Флаг режима MCP Server. По умолчанию False.
-    "host -> str": |
-      Адрес привязки сервера. По умолчанию "0.0.0.0".
-    "port -> int": |
-      Порт сервера. По умолчанию 8000.
+    "mcp -> bool | None": |
+      Флаг режима MCP Server. None — не указан (используется значение из config).
+    "host -> str | None": |
+      Адрес привязки сервера. None — не указан (используется значение из config).
+    "port -> int | None": |
+      Порт сервера. None — не указан (используется значение из config).
 
 "parse_cli_args(argv: list[str] | None = None) -> result:ParseCliResult":
   location: cli.py
