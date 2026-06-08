@@ -332,12 +332,12 @@ class AppConfig(BaseSettings):
 **Usages, релевантные для этой задачи:**
 - `conventions`: структура тестов — интеграционные тесты в `tests/`
 
-- [ ] Создать/обновить `tests/test_main_integration.py` (если нужно) или дополнить `tests/test_main.py`
-- [ ] Протестировать полный путь REST: parse_cli_args → cli_overrides → SententiaConfig → Storage → Index → OpenaiProvider → Resources → SententiaApp.run
-- [ ] Протестировать полный путь MCP: parse_cli_args → cli_overrides → SententiaConfig → Storage → Index → OpenaiProvider → Tools → SententiaApp.run
-- [ ] Протестировать передачу --env-file через весь стек: parse_cli_args → SententiaConfig(env_file=...)
-- [ ] Протестировать приоритет конфигурации: ENV + cli_overrides → правильный результат
-- [ ] Запустить валидацию: `pytest tests/ -x`
+- [x] Создать/обновить `tests/test_main_integration.py` (если нужно) или дополнить `tests/test_main.py`
+- [x] Протестировать полный путь REST: parse_cli_args → cli_overrides → SententiaConfig → Storage → Index → OpenaiProvider → Resources → SententiaApp.run
+- [x] Протестировать полный путь MCP: parse_cli_args → cli_overrides → SententiaConfig → Storage → Index → OpenaiProvider → Tools → SententiaApp.run
+- [x] Протестировать передачу --env-file через весь стек: parse_cli_args → SententiaConfig(env_file=...)
+- [x] Протестировать приоритет конфигурации: ENV + cli_overrides → правильный результат
+- [x] Запустить валидацию: `pytest tests/ -x`
 
 ---
 
@@ -356,15 +356,15 @@ class AppConfig(BaseSettings):
 
 ## Критерии завершения
 
-- [ ] Каждая сущность контракта реализована в правильном `location` (cli.py, config.py, __main__.py)
-- [ ] Каждая сущность контракта доступна из фасада (sententia.cli, sententia.config)
-- [ ] Свойства и методы соответствуют объявленному API
-- [ ] Описания отражены в поведении (приоритет cli_overrides > ENV > env-file > defaults)
-- [ ] Зависимости контракта соблюдены (main → parse_cli_args → SententiaConfig)
-- [ ] Каждая задача кодирования следовала рабочему процессу TDD (контрактные тесты → код → верификация → логические тесты → отладка → перепроверка → линт)
-- [ ] Контрактные тесты и логические тесты покрывают фасад, API и поведение в рамках каждой задачи кодирования
-- [ ] Интеграционные тесты существуют для сквозных сценариев cli → config → main
-- [ ] Ни одна граница пакета не была расширена
-- [ ] Файлы `CODEMANIFEST` не были изменены (контракт только для чтения)
-- [ ] Все команды валидации проходят
-- [ ] Каждая запись Usages упомянута как минимум в одной задаче
+- [x] Каждая сущность контракта реализована в правильном `location` (cli.py, config.py, __main__.py)
+- [x] Каждая сущность контракта доступна из фасада (sententia.cli, sententia.config)
+- [x] Свойства и методы соответствуют объявленному API
+- [x] Описания отражены в поведении (приоритет cli_overrides > ENV > env-file > defaults)
+- [x] Зависимости контракта соблюдены (main → parse_cli_args → SententiaConfig)
+- [x] Каждая задача кодирования следовала рабочему процессу TDD (контрактные тесты → код → верификация → логические тесты → отладка → перепроверка → линт)
+- [x] Контрактные тесты и логические тесты покрывают фасад, API и поведение в рамках каждой задачи кодирования
+- [x] Интеграционные тесты существуют для сквозных сценариев cli → config → main
+- [x] Ни одна граница пакета не была расширена
+- [x] Файлы `CODEMANIFEST` не были изменены (контракт только для чтения)
+- [x] Все команды валидации проходят
+- [x] Каждая запись Usages упомянута как минимум в одной задаче
