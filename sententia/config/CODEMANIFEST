@@ -1,0 +1,48 @@
+Usages:
+  conventions: .goga/usages/conventions.md
+  pydantic: .goga/usages/cooks/pydantic.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+  Использовать `pydantic` для работы с моделями данных.
+
+---
+
+"SententiaConfig(env_file: str | None = None, cli_overrides: dict[str, Any] | None = None)":
+  location: config.py
+  annotations: |
+    Модель конфигурации приложения.
+    Загружает значения из ENV переменных с префиксом SENTENTIA_ и из env-файла.
+    Приоритет источников: `cli_overrides` > ENV > env-файл > дефолты.
+
+    `env_file`: путь к env-файлу. Если None — используется ".env" по умолчанию.
+    `cli_overrides`: словарь значений из CLI для перекрытия ENV/env-файла. Значения могут быть любого типа (str, int, bool).
+
+    Использовать `pydantic` для работы с моделью.
+    Использовать `conventions` для правил написания кода и тестов.
+  properties:
+    "data_dir -> str": |
+      Путь к директории с Markdown-файлами.
+    "index_path -> str | None": |
+      Путь к файлу FAISS индекса. None — индекс в памяти.
+    "llm_protocol -> str": |
+      Тип LLM провайдера: "openai", "anthropic", "ollama".
+    "llm_url -> str": |
+      URL API endpoint LLM провайдера.
+    "llm_model -> str": |
+      Идентификатор модели LLM.
+    "llm_token -> str | None": |
+      API-ключ. None — токен не нужен (Ollama).
+    "mcp -> bool": |
+      Флаг режима MCP Server. По умолчанию False.
+    "host -> str": |
+      Адрес привязки сервера. По умолчанию "0.0.0.0".
+    "port -> int": |
+      Порт сервера. По умолчанию 8000.
+
+---
+
+Author: Goga
+CreatedAt: 08/06/26
+Description: |
+  Конфигурация приложения. Модель с поддержкой ENV и env-файла.

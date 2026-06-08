@@ -1,4 +1,15 @@
 Imports:
+  - Types:
+      - SententiaConfig
+    Usages:
+      - configuration
+    From: sententia/config
+  - Types:
+      - ParseCliResult
+      - parse_cli_args
+    Usages:
+      - cli
+    From: sententia/cli
   - Usages:
       - tool
       - resource
@@ -12,7 +23,7 @@ Imports:
       - SententiaApp
     Usages:
       - running
-      - configuration
+      - app
     From: sententia/app
   - Usages:
       - indexing
@@ -40,52 +51,45 @@ Annotations: |
   Содержит точку входа приложения — main routine.
   Точка сборки: создание всех компонентов и запуск приложения.
   Использовать практику `running` для понимания запуска приложения.
-  Использовать практику `configuration` для понимания параметров конфигурации.
+  Использовать практику `app` из sententia/app для понимания параметров приложения.
+  Использовать практику `configuration` из sententia/config для понимания создания конфигурации.
+  Использовать практику `cli` для понимания парсинга CLI аргументов.
 
 ---
 
-"main() -> void:None":
+"main(argv: list[str] | None = None) -> void:None":
   location: __main__.py
   annotations: |
     Точка входа и сборки приложения.
-    Парсит аргументы CLI, создаёт все компоненты, регистрирует маршруты и запускает сервер.
 
-    Аргументы CLI:
-      data_dir      позиционный аргумент — путь к директории с Markdown-файлами
-      --index-path  путь к файлу индекса
-      --llm-protocol  тип LLM провайдера
-      --llm-url     URL API endpoint
-      --llm-model   идентификатор модели
-      --llm-token   API-ключ (опционально)
-      --mcp         флаг режима MCP Server (по умолчанию False)
-      --host        адрес привязки (по умолчанию 0.0.0.0)
-      --port        порт сервера (по умолчанию 8000)
+    `argv`: список аргументов CLI. None — использовать sys.argv.
 
-    Переменные окружения:
-    - SENTENTIA_LLM_TOKEN - задает токен для доступа к llm
+    Алгоритм:
+    1. Вызвать `parse_cli_args` для получения `ParseCliResult`
+    2. Сформировать cli_overrides из `ParseCliResult`
+    3. Создать `SententiaConfig` с env_file и cli_overrides
+    4. Создать хранилище файлов с `reading` практикой
+    5. Создать индекс с `indexing` практикой
+    6. Создать LLM-провайдер по конфигурации (см. матчинг ниже)
 
     Матчинг протокола к провайдеру:
     - openai  → OpenaiProvider (использовать `openai_provider`)
     - ollama  → OpenaiProvider (использовать `openai_provider`)
     - anthropic → AnthropicProvider (использовать `anthropic_provider`)
 
-    Общий этап сборки (для обоих режимов):
-    1. Создать хранилище файлов с `reading` практикой
-    2. Создать индекс с `indexing` практикой
-    3. Создать LLM-провайдер по --llm-protocol (см. матчинг выше)
-
     Режим --mcp=True:
-    4. Создать MCP tools с `search_tool`, `ask_tool`, `files_tool` практиками
-    5. Создать `SententiaApp` с `running` практикой
-    6. Зарегистрировать tools с использованием практики `tool` и запустить MCP Server
+    Создать MCP tools с `search_tool`, `ask_tool`, `files_tool` практиками
+    Создать `SententiaApp` с `running` практикой
+    Зарегистрировать tools с использованием практики `tool` и запустить MCP Server
 
     Режим --mcp=False (по умолчанию):
-    4. Создать REST ресурсы с `search_resource`, `ask_resource`, `files_resource` практиками
-    5. Создать `SententiaApp` с `running` практикой
-    6. Зарегистрировать ресурсы с использованием практики `resource` и запустить FastAPI
+    Создать REST ресурсы с `search_resource`, `ask_resource`, `files_resource` практиками
+    Создать `SententiaApp` с `running` практикой
+    Зарегистрировать ресурсы с использованием практики `resource` и запустить FastAPI
 
+    Использовать практику `configuration` из sententia/config для создания конфигурации.
+    Использовать практику `cli` для парсинга CLI аргументов.
     Использовать практику `running` для создания, регистрации и запуска приложения.
-    Использовать практику `configuration` для списка параметров и значений по умолчанию.
 
 ---
 

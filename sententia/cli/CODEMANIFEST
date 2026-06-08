@@ -1,0 +1,66 @@
+Usages:
+  conventions: .goga/usages/conventions.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+---
+
+"ParseCliResult()":
+  location: cli.py
+  annotations: |
+    Модель данных результата парсинга CLI аргументов.
+    Содержит все распарсенные значения и путь к env-файлу.
+
+    Использовать `conventions` для правил написания кода и тестов.
+  properties:
+    "data_dir -> str": |
+      Путь к директории с Markdown-файлами.
+    "env_file -> str | None": |
+      Путь к env-файлу. None — использовать по умолчанию.
+    "index_path -> str | None": |
+      Путь к файлу FAISS индекса. None — индекс в памяти.
+    "llm_protocol -> str": |
+      Тип LLM провайдера: "openai", "anthropic", "ollama".
+    "llm_url -> str": |
+      URL API endpoint LLM провайдера.
+    "llm_model -> str": |
+      Идентификатор модели LLM.
+    "llm_token -> str | None": |
+      API-ключ. None — получить из ENV или env-файла.
+    "mcp -> bool": |
+      Флаг режима MCP Server. По умолчанию False.
+    "host -> str": |
+      Адрес привязки сервера. По умолчанию "0.0.0.0".
+    "port -> int": |
+      Порт сервера. По умолчанию 8000.
+
+"parse_cli_args(argv: list[str] | None = None) -> result:ParseCliResult":
+  location: cli.py
+  annotations: |
+    Парсинг CLI аргументов.
+
+    `argv`: список аргументов. None — использовать sys.argv.
+
+    Позиционные аргументы:
+      data_dir — путь к директории с Markdown-файлами
+
+    Опции:
+      --env-file — путь к env-файлу конфигурации
+      --index-path — путь к файлу FAISS индекса
+      --llm-protocol — тип LLM провайдера (openai, anthropic, ollama). Обязателен.
+      --llm-url — URL API endpoint LLM. Обязателен.
+      --llm-model — идентификатор модели. Обязателен.
+      --llm-token — API-ключ
+      --mcp — флаг запуска в режиме MCP Server
+      --host — адрес привязки сервера
+      --port — порт сервера
+
+    Использовать `conventions` для правил написания кода и тестов.
+
+---
+
+Author: Goga
+CreatedAt: 08/06/26
+Description: |
+  Парсинг CLI аргументов. Модель результата и функция парсинга.
