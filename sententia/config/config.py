@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import model_validator
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -36,7 +36,7 @@ class SententiaConfig(BaseSettings):
     llm_protocol: str = ""
     llm_url: str = ""
     llm_model: str = ""
-    llm_token: str | None = None
+    llm_token: str | None = Field(None, repr=False)
     mcp: bool = False
     host: str = "0.0.0.0"
     port: int = 8000
