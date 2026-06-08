@@ -305,25 +305,25 @@ class AppConfig(BaseSettings):
 
 **КРИТИЧЕСКИ: файлы `CODEMANIFEST` — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.**
 
-- [ ] **ШАГ 0**: Объявить работу над Task 5 — переработка main()
-- [ ] **Контрактные тесты**: обновить `tests/test_main.py`. Проверить: (1) `main` импортируем из `sententia.__main__`, (2) сигнатура main(argv: list[str]|None=None) -> None, (3) `build_parser` больше НЕ импортируем (удалён)
-- [ ] **Код**: удалить `build_parser()` из `__main__.py`
-- [ ] **Код**: удалить `sententia/app/.usages/configuration.md` — заменён на `app.md`
-- [ ] **Код**: переписать `main(argv)` — делегировать в `parse_cli_args(argv)`, сформировать `cli_overrides` из ParseCliResult, создать `SententiaConfig(env_file=result.env_file, cli_overrides=cli_overrides)`, использовать config.* вместо args.* для создания Storage/Index/LLM
-- [ ] **Код**: добавить матчинг llm_protocol с ValueError для неизвестного протокола
-- [ ] **Верификация интерфейсов**: запустить контрактные тесты — `pytest tests/test_main.py::TestMainContract -v` — все должны пройти
-- [ ] **Логические тесты** (позитивные):
+- [x] **ШАГ 0**: Объявить работу над Task 5 — переработка main()
+- [x] **Контрактные тесты**: обновить `tests/test_main.py`. Проверить: (1) `main` импортируем из `sententia.__main__`, (2) сигнатура main(argv: list[str]|None=None) -> None, (3) `build_parser` больше НЕ импортируем (удалён)
+- [x] **Код**: удалить `build_parser()` из `__main__.py`
+- [x] **Код**: удалить `sententia/app/.usages/configuration.md` — заменён на `app.md`
+- [x] **Код**: переписать `main(argv)` — делегировать в `parse_cli_args(argv)`, сформировать `cli_overrides` из ParseCliResult, создать `SententiaConfig(env_file=result.env_file, cli_overrides=cli_overrides)`, использовать config.* вместо args.* для создания Storage/Index/LLM
+- [x] **Код**: добавить матчинг llm_protocol с ValueError для неизвестного протокола
+- [x] **Верификация интерфейсов**: запустить контрактные тесты — `pytest tests/test_main.py::TestMainContract -v` — все должны пройти
+- [x] **Логические тесты** (позитивные):
   - `test_main_rest_mode`: mock всех зависимостей, main(["data", "--llm-protocol", "openai", "--llm-url", "http://localhost", "--llm-model", "gpt-4"]) → SententiaApp.add_rest_resource.call_count == 3, add_mcp_tool.call_count == 0, run(host="0.0.0.0", port=8000)
   - `test_main_mcp_mode`: mock + "--mcp" → add_mcp_tool.call_count == 3, add_rest_resource.call_count == 0
   - `test_main_with_env_file`: mock + "--env-file" /tmp/custom.env → SententiaConfig called with env_file="/tmp/.../custom.env"
-- [ ] **Логические тесты** (негативные):
+- [x] **Логические тесты** (негативные):
   - `test_main_unknown_protocol_raises_error`: mock parse_cli_args с llm_protocol="invalid" → ValueError("Unknown LLM protocol")
-- [ ] **Логические тесты** (краевые):
+- [x] **Логические тесты** (краевые):
   - `test_main_with_index_path_none`: mock + без --index-path → Index(storage, None)
   - `test_main_with_llm_token_none`: mock + без --llm-token → LLM provider called with token=None
-- [ ] **Отладка**: запустить `pytest tests/test_main.py -x` — исправлять код, пока все тесты не пройдут
-- [ ] **Перепроверка контрактов**: main принимает argv, делегирует в parse_cli_args и SententiaConfig, использует config.* для создания компонентов, ValueError для неизвестного протокола
-- [ ] **Линт**: `ruff check sententia/__main__.py tests/test_main.py` — исправить форматирование
+- [x] **Отладка**: запустить `pytest tests/test_main.py -x` — исправлять код, пока все тесты не пройдут
+- [x] **Перепроверка контрактов**: main принимает argv, делегирует в parse_cli_args и SententiaConfig, использует config.* для создания компонентов, ValueError для неизвестного протокола
+- [x] **Линт**: `ruff check sententia/__main__.py tests/test_main.py` — исправить форматирование
 
 ### Task 6: Интеграционные тесты для cli + config + main
 

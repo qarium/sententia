@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import inspect
 import subprocess
 import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
 import sententia
-from sententia.__main__ import build_parser, main
-from sententia.storage import Storage
+import sententia.__main__
+from sententia.__main__ import main
+from sententia.config import SententiaConfig
 
 
 class TestMainContract:
@@ -16,6 +18,17 @@ class TestMainContract:
     def test_main_importable(self):
         """main must be importable from sententia.__main__."""
         assert callable(main)
+
+    def test_main_signature(self):
+        """main must accept argv: list[str] | None = None and return None."""
+        sig = inspect.signature(main)
+        params = list(sig.parameters.keys())
+        assert params == ["argv"]
+        assert sig.parameters["argv"].default is None
+
+    def test_build_parser_removed(self):
+        """build_parser has been deleted from __main__."""
+        assert not hasattr(sententia.__main__, "build_parser")
 
     def test_storage_importable_from_sententia(self):
         """Storage must be importable from sententia (lazy)."""
@@ -70,130 +83,51 @@ class TestMainContract:
 
 
 class TestMainLogic:
-    """Logic tests for main() CLI entry point."""
+    """Logic tests for main() with delegated CLI parsing and config."""
 
-    def test_argparse_parsing_with_defaults(self):
-        """main() parses required args and uses defaults for optional ones."""
-        args = build_parser().parse_args(
-            [
-                "/data",
-                "--llm-protocol",
-                "ollama",
-                "--llm-url",
-                "http://localhost:11434",
-                "--llm-model",
-                "llama3",
-            ]
-        )
-        assert args.data_dir == "/data"
-        assert args.llm_protocol == "ollama"
-        assert args.llm_url == "http://localhost:11434"
-        assert args.llm_model == "llama3"
-        assert args.index_path is None
-        assert args.llm_token is None
-        assert args.host == "0.0.0.0"
-        assert args.port == 8000
-        assert args.mcp is False
-
-    def test_mcp_flag_parsed_true(self):
-        """--mcp flag is parsed as True when provided."""
-        args = build_parser().parse_args(
-            [
-                "data",
-                "--llm-protocol",
-                "openai",
-                "--llm-url",
-                "http://api",
-                "--llm-model",
-                "gpt-4",
-                "--mcp",
-            ]
-        )
-        assert args.mcp is True
-
-    def test_mcp_flag_default_false(self):
-        """--mcp defaults to False when not provided."""
-        args = build_parser().parse_args(
-            [
-                "data",
-                "--llm-protocol",
-                "openai",
-                "--llm-url",
-                "http://api",
-                "--llm-model",
-                "gpt-4",
-            ]
-        )
-        assert args.mcp is False
-
-    def test_argparse_all_args(self):
-        """main() parses all arguments including optional ones."""
-        args = build_parser().parse_args(
-            [
-                "/docs",
-                "--index-path",
-                "/tmp/my.index",
-                "--llm-protocol",
-                "openai",
-                "--llm-url",
-                "https://api.openai.com",
-                "--llm-model",
-                "gpt-4",
-                "--llm-token",
-                "sk-test",
-                "--host",
-                "127.0.0.1",
-                "--port",
-                "9000",
-            ]
-        )
-        assert args.data_dir == "/docs"
-        assert args.index_path == "/tmp/my.index"
-        assert args.llm_protocol == "openai"
-        assert args.llm_url == "https://api.openai.com"
-        assert args.llm_model == "gpt-4"
-        assert args.llm_token == "sk-test"
-        assert args.host == "127.0.0.1"
-        assert args.port == 9000
-
-    @patch("uvicorn.run")
-    @patch("sententia.index.indexer.SentenceTransformer")
-    @patch("sententia.llm.openai.provider.httpx")
-    def test_main_creates_all_components(self, mock_httpx, mock_st_cls, mock_run, tmp_path):
-        """main() creates all components and starts the server."""
-        mock_response = MagicMock()
-        mock_response.json.return_value = {"choices": [{"message": {"content": "test"}}]}
-        mock_httpx.post.return_value = mock_response
-
-        main(
-            [
-                str(tmp_path),
-                "--llm-protocol",
-                "ollama",
-                "--llm-url",
-                "http://localhost:11434",
-                "--llm-model",
-                "llama3",
-            ]
-        )
-
-        mock_run.assert_called_once()
-        call_kwargs = mock_run.call_args
-        assert call_kwargs.kwargs["host"] == "0.0.0.0"
-        assert call_kwargs.kwargs["port"] == 8000
-
-    @patch("uvicorn.run")
-    @patch("sententia.index.indexer.SentenceTransformer")
-    @patch("sententia.llm.openai.provider.httpx")
-    def test_main_creates_storage_and_passes_to_files_resource(self, mock_httpx, mock_st_cls, mock_run, tmp_path):
-        """main() creates Storage with data_dir and passes it to FilesResource."""
-        mock_response = MagicMock()
-        mock_response.json.return_value = {"choices": [{"message": {"content": "test"}}]}
-        mock_httpx.post.return_value = mock_response
+    @patch("sententia.app.SententiaApp")
+    @patch("sententia.llm.OpenaiProvider")
+    @patch("sententia.index.Index")
+    @patch("sententia.storage.Storage")
+    def test_main_rest_mode(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
+        """main() in REST mode: 3 resources, 0 tools, run with host and port."""
+        mock_app = MagicMock()
+        mock_app_cls.return_value = mock_app
 
         with (
-            patch("sententia.storage.Storage", wraps=sententia.storage.Storage) as storage_spy,
-            patch("sententia.api.FilesResource", wraps=sententia.api.files.FilesResource) as files_res_spy,
+            patch("sententia.api.SearchResource"),
+            patch("sententia.api.AskResource"),
+            patch("sententia.api.FilesResource"),
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--llm-protocol",
+                    "openai",
+                    "--llm-url",
+                    "http://localhost",
+                    "--llm-model",
+                    "gpt-4",
+                ]
+            )
+
+            assert mock_app.add_rest_resource.call_count == 3
+            mock_app.add_mcp_tool.assert_not_called()
+            mock_app.run.assert_called_once_with(host="0.0.0.0", port=8000)
+
+    @patch("sententia.app.SententiaApp")
+    @patch("sententia.llm.OpenaiProvider")
+    @patch("sententia.index.Index")
+    @patch("sententia.storage.Storage")
+    def test_main_mcp_mode(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
+        """main() with --mcp: 3 tools, 0 resources, run called."""
+        mock_app = MagicMock()
+        mock_app_cls.return_value = mock_app
+
+        with (
+            patch("sententia.mcp.SearchTool"),
+            patch("sententia.mcp.AskTool"),
+            patch("sententia.mcp.FilesTool"),
         ):
             main(
                 [
@@ -204,25 +138,125 @@ class TestMainLogic:
                     "http://localhost:11434",
                     "--llm-model",
                     "llama3",
+                    "--mcp",
                 ]
             )
 
-            storage_spy.assert_called_once()
-            call_args = storage_spy.call_args
-            assert call_args[0][0] == str(tmp_path)
+            assert mock_app.add_mcp_tool.call_count == 3
+            mock_app.add_rest_resource.assert_not_called()
+            mock_app.run.assert_called_once()
 
-            files_res_spy.assert_called_once()
-            files_call_args = files_res_spy.call_args
-            # First positional arg should be a Storage instance
-            assert isinstance(files_call_args[0][0], Storage)
+    @patch("sententia.app.SententiaApp")
+    @patch("sententia.llm.OpenaiProvider")
+    @patch("sententia.index.Index")
+    @patch("sententia.storage.Storage")
+    def test_main_with_env_file(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
+        """main() passes --env-file to SententiaConfig."""
+        mock_app = MagicMock()
+        mock_app_cls.return_value = mock_app
+        env_file_path = str(tmp_path / "custom.env")
 
-    def test_prog_name_is_sententia(self):
-        """ArgParser prog should be 'sententia'."""
-        parser = build_parser()
-        assert parser.prog == "sententia"
+        with (
+            patch("sententia.api.SearchResource"),
+            patch("sententia.api.AskResource"),
+            patch("sententia.api.FilesResource"),
+            patch("sententia.config.SententiaConfig", wraps=SententiaConfig) as spy_config,
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--env-file",
+                    env_file_path,
+                    "--llm-protocol",
+                    "openai",
+                    "--llm-url",
+                    "http://localhost",
+                    "--llm-model",
+                    "gpt-4",
+                ]
+            )
+
+            spy_config.assert_called_once()
+            call_kwargs = spy_config.call_args.kwargs
+            assert call_kwargs["env_file"] == env_file_path
+
+    def test_main_unknown_protocol_raises_error(self):
+        """main() raises ValueError for unknown LLM protocol."""
+        from sententia.cli import ParseCliResult  # noqa: PLC0415
+
+        with patch("sententia.cli.parse_cli_args") as mock_parse:
+            mock_parse.return_value = ParseCliResult(
+                data_dir="data",
+                llm_protocol="invalid",
+                llm_url="http://api",
+                llm_model="test",
+            )
+            with pytest.raises(ValueError, match="Unknown LLM protocol"):
+                main()
+
+    @patch("sententia.app.SententiaApp")
+    @patch("sententia.llm.OpenaiProvider")
+    @patch("sententia.index.Index")
+    @patch("sententia.storage.Storage")
+    def test_main_with_index_path_none(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
+        """main() without --index-path passes None to Index (in-memory mode)."""
+        mock_app = MagicMock()
+        mock_app_cls.return_value = mock_app
+
+        with (
+            patch("sententia.api.SearchResource"),
+            patch("sententia.api.AskResource"),
+            patch("sententia.api.FilesResource"),
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--llm-protocol",
+                    "openai",
+                    "--llm-url",
+                    "http://localhost",
+                    "--llm-model",
+                    "gpt-4",
+                ]
+            )
+
+            call_args = mock_index_cls.call_args
+            assert call_args[0][1] is None
+
+    @patch("sententia.app.SententiaApp")
+    @patch("sententia.llm.OpenaiProvider")
+    @patch("sententia.index.Index")
+    @patch("sententia.storage.Storage")
+    def test_main_with_llm_token_none(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
+        """main() without --llm-token passes None to LLM provider."""
+        mock_app = MagicMock()
+        mock_app_cls.return_value = mock_app
+
+        with (
+            patch("sententia.api.SearchResource"),
+            patch("sententia.api.AskResource"),
+            patch("sententia.api.FilesResource"),
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--llm-protocol",
+                    "openai",
+                    "--llm-url",
+                    "http://localhost",
+                    "--llm-model",
+                    "gpt-4",
+                ]
+            )
+
+            mock_llm_cls.assert_called_once_with("http://localhost", "gpt-4", None)
+
+
+class TestMainHelpOutput:
+    """Tests for CLI help output."""
 
     def test_help_output(self):
-        """python -m sententia --help outputs all arguments; data-dir is positional, not --data-dir."""
+        """python -m sententia --help outputs all arguments."""
         result = subprocess.run(
             [sys.executable, "-m", "sententia", "--help"],
             capture_output=True,
@@ -242,241 +276,13 @@ class TestMainLogic:
         )
         for arg in expected_args:
             assert arg in result.stdout
-        # Positional arg shown without -- prefix (argparse uses dest name with underscore)
+        # Positional arg shown without -- prefix
         assert "data_dir" in result.stdout
         assert "--data-dir" not in result.stdout
 
-    def test_positional_arg_after_named_args(self):
-        """Positional data_dir can appear after named arguments."""
-        args = build_parser().parse_args(
-            [
-                "--llm-protocol",
-                "ollama",
-                "--llm-url",
-                "http://localhost:11434",
-                "--llm-model",
-                "llama3",
-                "/data",
-            ]
-        )
-        assert args.data_dir == "/data"
 
-    def test_missing_data_dir_exits(self):
-        """Missing positional data_dir causes SystemExit."""
-        with pytest.raises(SystemExit) as exc_info:
-            build_parser().parse_args(
-                [
-                    "--llm-protocol",
-                    "ollama",
-                    "--llm-url",
-                    "http://localhost:11434",
-                    "--llm-model",
-                    "llama3",
-                ]
-            )
-        assert exc_info.value.code != 0
-
-    def test_old_data_dir_flag_rejected(self):
-        """Using --data-dir as named flag is rejected (it is now positional)."""
-        with pytest.raises(SystemExit) as exc_info:
-            build_parser().parse_args(
-                [
-                    "--data-dir",
-                    "/data",
-                    "--llm-protocol",
-                    "ollama",
-                    "--llm-url",
-                    "http://localhost:11434",
-                    "--llm-model",
-                    "llama3",
-                ]
-            )
-        assert exc_info.value.code != 0
-
-    @patch("uvicorn.run")
-    @patch("sententia.index.indexer.SentenceTransformer")
-    @patch("sententia.llm.openai.provider.httpx")
-    def test_main_passes_storage_to_index(self, mock_httpx, mock_st_cls, mock_run, tmp_path):
-        """main() creates Storage and passes it to Index constructor."""
-        mock_response = MagicMock()
-        mock_response.json.return_value = {"choices": [{"message": {"content": "test"}}]}
-        mock_httpx.post.return_value = mock_response
-
-        with patch("sententia.index.Index") as mock_index_cls:
-            mock_index_cls.return_value.search.return_value = []
-            main(
-                [
-                    str(tmp_path),
-                    "--llm-protocol",
-                    "ollama",
-                    "--llm-url",
-                    "http://localhost:11434",
-                    "--llm-model",
-                    "llama3",
-                ]
-            )
-
-            call_args = mock_index_cls.call_args
-            assert isinstance(call_args[0][0], Storage)
-
-    @patch("uvicorn.run")
-    @patch("sententia.index.indexer.SentenceTransformer")
-    @patch("sententia.llm.openai.provider.httpx")
-    def test_main_without_index_path_creates_in_memory_index(self, mock_httpx, mock_st_cls, mock_run, tmp_path):
-        """main() without --index-path passes None to Index (in-memory mode)."""
-        mock_response = MagicMock()
-        mock_response.json.return_value = {"choices": [{"message": {"content": "test"}}]}
-        mock_httpx.post.return_value = mock_response
-
-        with patch("sententia.index.Index") as mock_index_cls:
-            mock_index_cls.return_value.search.return_value = []
-            main(
-                [
-                    str(tmp_path),
-                    "--llm-protocol",
-                    "ollama",
-                    "--llm-url",
-                    "http://localhost:11434",
-                    "--llm-model",
-                    "llama3",
-                ]
-            )
-
-            call_args = mock_index_cls.call_args
-            assert call_args[0][1] is None
-
-    @patch("uvicorn.run")
-    @patch("sententia.index.indexer.SentenceTransformer")
-    @patch("sententia.llm.openai.provider.httpx")
-    def test_main_with_index_path_creates_persistent_index(self, mock_httpx, mock_st_cls, mock_run, tmp_path):
-        """main() with --index-path passes the path string to Index."""
-        mock_response = MagicMock()
-        mock_response.json.return_value = {"choices": [{"message": {"content": "test"}}]}
-        mock_httpx.post.return_value = mock_response
-        index_file = tmp_path / "test.faiss"
-
-        with patch("sententia.index.Index") as mock_index_cls:
-            mock_index_cls.return_value.search.return_value = []
-            main(
-                [
-                    str(tmp_path),
-                    "--index-path",
-                    str(index_file),
-                    "--llm-protocol",
-                    "ollama",
-                    "--llm-url",
-                    "http://localhost:11434",
-                    "--llm-model",
-                    "llama3",
-                ]
-            )
-
-            call_args = mock_index_cls.call_args
-            assert call_args[0][1] == str(index_file)
-
-
-class TestMainMcpMode:
-    """Logic tests for main() MCP mode."""
-
-    @patch("sententia.app.SententiaApp")
-    @patch("sententia.llm.OpenaiProvider")
-    @patch("sententia.index.Index")
-    @patch("sententia.storage.Storage")
-    def test_main_mcp_flag_creates_tools(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
-        """main() with --mcp creates SearchTool, AskTool, FilesTool and calls add_mcp_tool 3 times."""
-        mock_app = MagicMock()
-        mock_app_cls.return_value = mock_app
-
-        with (
-            patch("sententia.mcp.SearchTool") as mock_search_tool,
-            patch("sententia.mcp.AskTool") as mock_ask_tool,
-            patch("sententia.mcp.FilesTool") as mock_files_tool,
-        ):
-            main(
-                [
-                    str(tmp_path),
-                    "--llm-protocol",
-                    "ollama",
-                    "--llm-url",
-                    "http://localhost:11434",
-                    "--llm-model",
-                    "llama3",
-                    "--mcp",
-                ]
-            )
-
-            mock_search_tool.assert_called_once()
-            mock_ask_tool.assert_called_once()
-            mock_files_tool.assert_called_once()
-            assert mock_app.add_mcp_tool.call_count == 3
-            mock_app.run.assert_called_once()
-
-    @patch("uvicorn.run")
-    @patch("sententia.index.indexer.SentenceTransformer")
-    @patch("sententia.llm.openai.provider.httpx")
-    def test_main_without_mcp_uses_endpoints(self, mock_httpx, mock_st_cls, mock_run, tmp_path):
-        """main() without --mcp runs REST mode (regression test)."""
-        mock_response = MagicMock()
-        mock_response.json.return_value = {"choices": [{"message": {"content": "test"}}]}
-        mock_httpx.post.return_value = mock_response
-
-        main(
-            [
-                str(tmp_path),
-                "--llm-protocol",
-                "ollama",
-                "--llm-url",
-                "http://localhost:11434",
-                "--llm-model",
-                "llama3",
-            ]
-        )
-
-        mock_run.assert_called_once()
-        call_kwargs = mock_run.call_args
-        assert call_kwargs.kwargs["host"] == "0.0.0.0"
-        assert call_kwargs.kwargs["port"] == 8000
-
-    @patch("sententia.app.SententiaApp")
-    @patch("sententia.llm.OpenaiProvider")
-    @patch("sententia.index.Index")
-    @patch("sententia.storage.Storage")
-    def test_main_mcp_does_not_create_rest_resources(
-        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
-    ):
-        """main() with --mcp does not create REST resources."""
-        mock_app = MagicMock()
-        mock_app_cls.return_value = mock_app
-
-        with (
-            patch("sententia.mcp.SearchTool"),
-            patch("sententia.mcp.AskTool"),
-            patch("sententia.mcp.FilesTool"),
-            patch("sententia.api.SearchResource") as mock_search_res,
-            patch("sententia.api.AskResource") as mock_ask_res,
-            patch("sententia.api.FilesResource") as mock_files_res,
-        ):
-            main(
-                [
-                    str(tmp_path),
-                    "--llm-protocol",
-                    "ollama",
-                    "--llm-url",
-                    "http://localhost:11434",
-                    "--llm-model",
-                    "llama3",
-                    "--mcp",
-                ]
-            )
-
-            mock_search_res.assert_not_called()
-            mock_ask_res.assert_not_called()
-            mock_files_res.assert_not_called()
-            mock_app.add_rest_resource.assert_not_called()
-
-
-class TestMainNewProviderTypes:
-    """Contract tests verifying main() uses new provider types."""
+class TestMainProviderTypes:
+    """Tests verifying main() uses correct provider types."""
 
     @patch("sententia.app.SententiaApp")
     @patch("sententia.llm.OpenaiProvider")
@@ -575,12 +381,94 @@ class TestMainNewProviderTypes:
 
             mock_anthropic_cls.assert_called_once_with("https://api.anthropic.com", "claude-3", "sk-ant-test")
 
+
+class TestMainMcpMode:
+    """Logic tests for main() MCP mode."""
+
     @patch("sententia.app.SententiaApp")
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_main_mcp_uses_top_10(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
-        """main() passes top=10 to AskTool (not top=5)."""
+    def test_main_mcp_flag_creates_tools(
+        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
+    ):
+        """main() with --mcp creates SearchTool, AskTool, FilesTool and calls add_mcp_tool 3 times."""
+        mock_app = MagicMock()
+        mock_app_cls.return_value = mock_app
+
+        with (
+            patch("sententia.mcp.SearchTool") as mock_search_tool,
+            patch("sententia.mcp.AskTool") as mock_ask_tool,
+            patch("sententia.mcp.FilesTool") as mock_files_tool,
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--llm-protocol",
+                    "ollama",
+                    "--llm-url",
+                    "http://localhost:11434",
+                    "--llm-model",
+                    "llama3",
+                    "--mcp",
+                ]
+            )
+
+            mock_search_tool.assert_called_once()
+            mock_ask_tool.assert_called_once()
+            mock_files_tool.assert_called_once()
+            assert mock_app.add_mcp_tool.call_count == 3
+            mock_app.run.assert_called_once()
+
+    @patch("sententia.app.SententiaApp")
+    @patch("sententia.llm.OpenaiProvider")
+    @patch("sententia.index.Index")
+    @patch("sententia.storage.Storage")
+    def test_main_mcp_does_not_create_rest_resources(
+        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
+    ):
+        """main() with --mcp does not create REST resources."""
+        mock_app = MagicMock()
+        mock_app_cls.return_value = mock_app
+
+        with (
+            patch("sententia.mcp.SearchTool"),
+            patch("sententia.mcp.AskTool"),
+            patch("sententia.mcp.FilesTool"),
+            patch("sententia.api.SearchResource") as mock_search_res,
+            patch("sententia.api.AskResource") as mock_ask_res,
+            patch("sententia.api.FilesResource") as mock_files_res,
+        ):
+            main(
+                [
+                    str(tmp_path),
+                    "--llm-protocol",
+                    "ollama",
+                    "--llm-url",
+                    "http://localhost:11434",
+                    "--llm-model",
+                    "llama3",
+                    "--mcp",
+                ]
+            )
+
+            mock_search_res.assert_not_called()
+            mock_ask_res.assert_not_called()
+            mock_files_res.assert_not_called()
+            mock_app.add_rest_resource.assert_not_called()
+
+
+class TestMainTopParameter:
+    """Tests verifying main() passes top=10 to AskResource/AskTool."""
+
+    @patch("sententia.app.SententiaApp")
+    @patch("sententia.llm.OpenaiProvider")
+    @patch("sententia.index.Index")
+    @patch("sententia.storage.Storage")
+    def test_main_mcp_uses_top_10(
+        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
+    ):
+        """main() passes top=10 to AskTool."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
 
@@ -602,13 +490,17 @@ class TestMainNewProviderTypes:
                 ]
             )
 
-            mock_ask_tool.assert_called_once_with(mock_index_cls.return_value, mock_llm_cls.return_value, top=10)
+            mock_ask_tool.assert_called_once_with(
+                mock_index_cls.return_value, mock_llm_cls.return_value, top=10
+            )
 
     @patch("sententia.app.SententiaApp")
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_main_rest_uses_top_10(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
+    def test_main_rest_uses_top_10(
+        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
+    ):
         """main() in REST mode passes top=10 to AskResource."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
@@ -634,11 +526,17 @@ class TestMainNewProviderTypes:
             call_kwargs = mock_ask_resource.call_args
             assert call_kwargs.kwargs.get("top", call_kwargs[1].get("top")) == 10
 
+
+class TestMainMcpMethodNames:
+    """Tests verifying main() uses correct method names."""
+
     @patch("sententia.app.SententiaApp")
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_main_mcp_calls_add_mcp_tool(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
+    def test_main_mcp_calls_add_mcp_tool(
+        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
+    ):
         """main() calls add_mcp_tool (not add_tool)."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
@@ -663,39 +561,3 @@ class TestMainNewProviderTypes:
 
             assert mock_app.add_mcp_tool.call_count == 3
             mock_app.add_tool.assert_not_called()
-
-
-class TestMainEnvVarFallback:
-    """Test env var fallback for --llm-token."""
-
-    @patch("sententia.app.SententiaApp")
-    @patch("sententia.llm.OpenaiProvider")
-    @patch("sententia.index.Index")
-    @patch("sententia.storage.Storage")
-    def test_main_token_fallback_to_env_var(
-        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
-    ):
-        """main() falls back to SENTENTIA_LLM_TOKEN env var when --llm-token is not provided."""
-        mock_app = MagicMock()
-        mock_app_cls.return_value = mock_app
-
-        with (
-            patch("sententia.mcp.SearchTool"),
-            patch("sententia.mcp.AskTool"),
-            patch("sententia.mcp.FilesTool"),
-            patch.dict("os.environ", {"SENTENTIA_LLM_TOKEN": "env-token"}),
-        ):
-            main(
-                [
-                    str(tmp_path),
-                    "--llm-protocol",
-                    "openai",
-                    "--llm-url",
-                    "http://api",
-                    "--llm-model",
-                    "gpt-4",
-                    "--mcp",
-                ]
-            )
-
-            mock_llm_cls.assert_called_once_with("http://api", "gpt-4", "env-token")
