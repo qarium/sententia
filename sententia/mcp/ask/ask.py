@@ -34,6 +34,7 @@ class AskTool(MCPTool):
             **kwargs: Additional keyword arguments passed to MCPTool.
         """
         super().__init__(**kwargs)
+
         self._index = index
         self._llm_provider = llm_provider
         self._top = top

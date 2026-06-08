@@ -36,10 +36,13 @@ class Storage:
             FileNotFoundError: If the file does not exist or is not a .md file.
         """
         full_path = (self._base / file_path).resolve()
+
         if not full_path.is_relative_to(self._base):
             raise ValueError("Path traversal detected")
         if not full_path.is_file() or full_path.suffix.lower() != ".md":
             raise FileNotFoundError(f"File not found: {file_path}")
+
         text = full_path.read_text(encoding="utf-8")
         source = str(full_path.relative_to(self._base))
+
         return {"text": text, "source": source}

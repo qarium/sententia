@@ -35,6 +35,7 @@ class AskResource(RESTResource):
             **kwargs: Additional keyword arguments passed to RESTResource.
         """
         super().__init__(**kwargs)
+
         self._index = index
         self._llm_provider = llm_provider
         self._top = top

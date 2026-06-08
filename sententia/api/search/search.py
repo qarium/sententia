@@ -22,6 +22,7 @@ class SearchResource(RESTResource):
             **kwargs: Additional keyword arguments passed to RESTResource.
         """
         super().__init__(**kwargs)
+
         self._index = index
 
     def post(self, request: SearchRequest) -> SearchResponse:
@@ -34,7 +35,8 @@ class SearchResource(RESTResource):
             Search response with ranked results.
         """
         raw = self._index.search(request.query, request.top)
-
-        results = [SearchResultItem(text=item["text"], source=item["source"], score=item["score"]) for item in raw]
+        results = [SearchResultItem(text=item["text"],
+                                    source=item["source"],
+                                    score=item["score"]) for item in raw]
 
         return SearchResponse(results=results)

@@ -20,6 +20,7 @@ def _create_wrapper(tool: MCPTool):
     wrapper.__signature__ = sig.replace(parameters=list(params.values()))  # type: ignore[attr-defined]
     wrapper.__name__ = tool.name
     wrapper.__doc__ = tool.description
+
     return wrapper
 
 
@@ -35,6 +36,7 @@ class SententiaApp:
     def add_rest_resource(self, resource: RESTResource) -> None:
         """Register a REST resource's route on the FastAPI application."""
         router = APIRouter()
+
         for method_name in ("get", "post", "put", "delete"):
             for cls in type(resource).__mro__:
                 if cls is RESTResource:
@@ -43,6 +45,7 @@ class SententiaApp:
                     handler = getattr(resource, method_name)
                     router.add_api_route(resource.url_rule, handler, methods=[method_name.upper()])
                     break
+
         self._app.include_router(router)
         self._resources.append(resource)
 
@@ -54,6 +57,7 @@ class SententiaApp:
             self._mcp = FastMCP("Sententia", json_response=True, stateless_http=True)
 
         wrapper = _create_wrapper(tool)
+
         self._mcp.tool()(wrapper)
         self._tools.append(tool)
 
@@ -64,6 +68,7 @@ class SententiaApp:
         if self._tools:
             if self._mcp is None:
                 raise RuntimeError("MCP server not initialized")
+
             self._mcp.settings.host = host
             self._mcp.settings.port = port
             self._mcp.run(transport="streamable-http")

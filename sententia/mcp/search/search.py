@@ -23,6 +23,7 @@ class SearchTool(MCPTool):
             **kwargs: Additional keyword arguments passed to MCPTool.
         """
         super().__init__(**kwargs)
+
         self._index = index
 
     def execute(self, query: str, top: int = 10) -> list[SearchToolResult]:

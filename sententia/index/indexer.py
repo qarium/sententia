@@ -19,6 +19,7 @@ def _clean_markdown(text: str) -> str:
     text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
     text = re.sub(r"#{1,6}\s+", "", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
+
     return text.strip()
 
 
@@ -42,6 +43,7 @@ def _split_text(text: str, size: int = 600, overlap: int = 60) -> list[str]:
 
         chunks.append(text[start:break_point])
         start = max(break_point - overlap, start + 1)
+
     return [c.strip() for c in chunks if c.strip()]
 
 
@@ -63,6 +65,7 @@ class Index:
             self.index_directory()
         elif Path(index_path).exists():
             loaded = self.load()
+
             if not loaded:
                 self.index_directory()
                 self.save()
@@ -80,6 +83,7 @@ class Index:
             content = self.storage.read_file(file_path)
             cleaned = _clean_markdown(content["text"])
             file_chunks = _split_text(cleaned)
+
             for c in file_chunks:
                 chunks.append({"text": c, "source": content["source"]})
 
@@ -101,6 +105,7 @@ class Index:
         self.index = faiss.IndexFlatIP(dim)
         self.index.add(embeddings.astype("float32"))
         self.chunks = chunks
+
         return {"files": len(files), "chunks": len(chunks), "dimensions": dim}
 
     def search(self, query: str, top: int | None = None) -> list[dict[str, Any]]:
@@ -119,6 +124,7 @@ class Index:
         distances, indices = self.index.search(q_embedding.astype("float32"), top_k)
 
         results: list[dict[str, Any]] = []
+
         for i in range(top_k):
             idx = indices[0][i]
             if idx < 0 or idx >= len(self.chunks):
@@ -153,6 +159,7 @@ class Index:
             raise ValueError("Cannot load: index is in in-memory mode")
 
         meta_path = self.index_path + ".meta"
+
         if not Path(self.index_path).exists() or not Path(meta_path).exists():
             return False
 

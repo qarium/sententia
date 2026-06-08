@@ -23,6 +23,7 @@ class FilesTool(MCPTool):
             **kwargs: Additional keyword arguments passed to MCPTool.
         """
         super().__init__(**kwargs)
+
         self._storage = storage
 
     def execute(self, path: str) -> FilesToolResult:

@@ -24,6 +24,7 @@ class FilesResource(RESTResource):
             **kwargs: Additional keyword arguments passed to RESTResource.
         """
         super().__init__(**kwargs)
+
         self._storage = storage
 
     def get(self, path: str) -> FileResponse:

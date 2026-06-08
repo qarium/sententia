@@ -25,6 +25,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--host", default="0.0.0.0", help="Server bind address")
     parser.add_argument("--port", type=int, default=8000, help="Server port")
     parser.add_argument("--mcp", action="store_true", default=False, help="Run as MCP Server instead of REST API")
+
     return parser
 
 
