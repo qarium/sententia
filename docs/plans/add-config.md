@@ -160,23 +160,23 @@
 
 **КРИТИЧЕСКИ: файлы `CODEMANIFEST` — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.**
 
-- [ ] **ШАГ 0**: Объявить работу над Task 2 — реализация ParseCliResult и parse_cli_args
-- [ ] **Контрактные тесты**: создать `tests/cli/__init__.py` и `tests/cli/test_cli.py`. Проверить: (1) `ParseCliResult` импортируем из `sententia.cli`, (2) `parse_cli_args` импортируем из `sententia.cli`, (3) сигнатура `parse_cli_args(argv=None)`, (4) `ParseCliResult` имеет 10 свойств с правильными типами (data_dir: str, env_file: str|None, index_path: str|None, llm_protocol: str, llm_url: str, llm_model: str, llm_token: str|None, mcp: bool, host: str, port: int)
-- [ ] **Код**: реализовать `ParseCliResult` как dataclass или Pydantic BaseModel с kw_only=True и 10 свойствами
-- [ ] **Код**: реализовать `parse_cli_args` через argparse с позиционным data_dir и 8 опциями (--env-file, --index-path, --llm-protocol required choices=["openai","anthropic","ollama"], --llm-url required, --llm-model required, --llm-token, --mcp store_true, --host default="0.0.0.0", --port type=int default=8000)
-- [ ] **Код**: обновить фасад `sententia/cli/__init__.py` — реэкспортировать `ParseCliResult` и `parse_cli_args`
-- [ ] **Верификация интерфейсов**: запустить контрактные тесты — `pytest tests/cli/test_cli.py -v` — все должны пройти
-- [ ] **Логические тесты** (позитивные):
+- [x] **ШАГ 0**: Объявить работу над Task 2 — реализация ParseCliResult и parse_cli_args
+- [x] **Контрактные тесты**: создать `tests/cli/__init__.py` и `tests/cli/test_cli.py`. Проверить: (1) `ParseCliResult` импортируем из `sententia.cli`, (2) `parse_cli_args` импортируем из `sententia.cli`, (3) сигнатура `parse_cli_args(argv=None)`, (4) `ParseCliResult` имеет 10 свойств с правильными типами (data_dir: str, env_file: str|None, index_path: str|None, llm_protocol: str, llm_url: str, llm_model: str, llm_token: str|None, mcp: bool, host: str, port: int)
+- [x] **Код**: реализовать `ParseCliResult` как dataclass или Pydantic BaseModel с kw_only=True и 10 свойствами
+- [x] **Код**: реализовать `parse_cli_args` через argparse с позиционным data_dir и 8 опциями (--env-file, --index-path, --llm-protocol required choices=["openai","anthropic","ollama"], --llm-url required, --llm-model required, --llm-token, --mcp store_true, --host default="0.0.0.0", --port type=int default=8000)
+- [x] **Код**: обновить фасад `sententia/cli/__init__.py` — реэкспортировать `ParseCliResult` и `parse_cli_args`
+- [x] **Верификация интерфейсов**: запустить контрактные тесты — `pytest tests/cli/test_cli.py -v` — все должны пройти
+- [x] **Логические тесты** (позитивные):
   - `test_parse_cli_args_minimal_required_args`: передать `["data_dir", "--llm-protocol", "openai", "--llm-url", "http://localhost:11434", "--llm-model", "gpt-4"]` → проверить все 10 свойств (дефолты: env_file=None, index_path=None, llm_token=None, mcp=False, host="0.0.0.0", port=8000)
   - `test_parse_cli_args_all_options`: передать все опции включая `--env-file .env.prod`, `--mcp`, `--port 9000` → проверить все значения
-- [ ] **Логические тесты** (негативные):
+- [x] **Логические тесты** (негативные):
   - `test_parse_cli_args_missing_required_protocol`: без --llm-protocol → SystemExit
   - `test_parse_cli_args_invalid_protocol`: --llm-protocol invalid → SystemExit
-- [ ] **Логические тесты** (краевые):
+- [x] **Логические тесты** (краевые):
   - `test_parse_cli_args_none_argv`: mock sys.argv, вызвать parse_cli_args(None) → использует sys.argv[1:]
-- [ ] **Отладка**: запустить `pytest tests/cli/test_cli.py -x` — исправлять код, пока все тесты не пройдут
-- [ ] **Перепроверка контрактов**: проверить что ParseCliResult имеет 10 свойств, parse_cli_args имеет сигнатуру (argv: list[str]|None=None) -> ParseCliResult, оба доступны из sententia.cli
-- [ ] **Линт**: `ruff check sententia/cli/ tests/cli/` — исправить форматирование
+- [x] **Отладка**: запустить `pytest tests/cli/test_cli.py -x` — исправлять код, пока все тесты не пройдут
+- [x] **Перепроверка контрактов**: проверить что ParseCliResult имеет 10 свойств, parse_cli_args имеет сигнатуру (argv: list[str]|None=None) -> ParseCliResult, оба доступны из sententia.cli
+- [x] **Линт**: `ruff check sententia/cli/ tests/cli/` — исправить форматирование
 
 ### Task 3: Инфраструктура sententia/config (инфраструктура)
 
