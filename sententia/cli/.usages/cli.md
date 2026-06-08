@@ -19,9 +19,9 @@
 - llm_url: str — URL API endpoint
 - llm_model: str — идентификатор модели
 - llm_token: str | None — API-ключ
-- mcp: bool — флаг MCP Server
-- host: str — адрес привязки
-- port: int — порт сервера
+- mcp: bool | None — флаг MCP Server
+- host: str | None — адрес привязки
+- port: int | None — порт сервера
 
 ## CLI аргументы
 

@@ -37,7 +37,7 @@ SententiaConfig — модель конфигурации с поддержко�
 | Переменная              | Поле         | Дефолт    |
 |-------------------------|-------------|-----------|
 | SENTENTIA_DATA_DIR      | data_dir    | ""        |
-| SENTENTIA_INDEX_PATH    | index_path  | ""        |
+| SENTENTIA_INDEX_PATH    | index_path  | None      |
 | SENTENTIA_LLM_PROTOCOL  | llm_protocol| ""        |
 | SENTENTIA_LLM_URL       | llm_url     | ""        |
 | SENTENTIA_LLM_MODEL     | llm_model   | ""        |
