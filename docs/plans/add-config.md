@@ -184,10 +184,10 @@
 
 **КРИТИЧЕСКИ: файлы `CODEMANIFEST` — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.**
 
-- [ ] Создать файл `sententia/config/__init__.py` с `__all__`, содержащим `SententiaConfig`
-- [ ] Создать файл `sententia/config/config.py` с заглушкой класса (pass)
-- [ ] Проверить доступность фасада: `python -c "from sententia.config import SententiaConfig"`
-- [ ] Линт: `ruff check sententia/config/` — исправить форматирование при необходимости
+- [x] Создать файл `sententia/config/__init__.py` с `__all__`, содержащим `SententiaConfig`
+- [x] Создать файл `sententia/config/config.py` с заглушкой класса (pass)
+- [x] Проверить доступность фасада: `python -c "from sententia.config import SententiaConfig"`
+- [x] Линт: `ruff check sententia/config/` — исправить форматирование при необходимости
 
 ### Task 4: Реализация SententiaConfig (TDD)
 
