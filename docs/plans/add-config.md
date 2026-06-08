@@ -130,10 +130,10 @@
 
 **КРИТИЧЕСКИ: файлы `CODEMANIFEST` — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.**
 
-- [ ] Создать файл `sententia/cli/__init__.py` с `__all__`, содержащим `ParseCliResult` и `parse_cli_args`
-- [ ] Создать файл `sententia/cli/cli.py` с заглушками классов/функций (pass/NotImplementedError)
-- [ ] Проверить доступность фасада: `python -c "from sententia.cli import ParseCliResult, parse_cli_args"`
-- [ ] Линт: `ruff check sententia/cli/` — исправить форматирование при необходимости
+- [x] Создать файл `sententia/cli/__init__.py` с `__all__`, содержащим `ParseCliResult` и `parse_cli_args`
+- [x] Создать файл `sententia/cli/cli.py` с заглушками классов/функций (pass/NotImplementedError)
+- [x] Проверить доступность фасада: `python -c "from sententia.cli import ParseCliResult, parse_cli_args"`
+- [x] Линт: `ruff check sententia/cli/` — исправить форматирование при необходимости
 
 ### Task 2: Реализация ParseCliResult и parse_cli_args (TDD)
 
