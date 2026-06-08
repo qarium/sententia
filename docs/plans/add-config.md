@@ -244,24 +244,24 @@ class AppConfig(BaseSettings):
 
 **КРИТИЧЕСКИ: файлы `CODEMANIFEST` — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.**
 
-- [ ] **ШАГ 0**: Объявить работу над Task 4 — реализация SententiaConfig
-- [ ] **Контрактные тесты**: создать `tests/config/__init__.py` и `tests/config/test_config.py`. Проверить: (1) `SententiaConfig` импортируем из `sententia.config`, (2) конструктор принимает `env_file: str|None=None` и `cli_overrides: dict[str,Any]|None=None`, (3) 9 свойств с правильными типами (data_dir: str, index_path: str|None, llm_protocol: str, llm_url: str, llm_model: str, llm_token: str|None, mcp: bool, host: str, port: int)
-- [ ] **Код**: реализовать `SententiaConfig` как pydantic-settings `BaseSettings` с `SettingsConfigDict(env_prefix="SENTENTIA_", env_file=env_file или ".env", env_file_encoding="utf-8", extra="ignore")` и `model_validator(mode="before")` для cli_overrides
-- [ ] **Код**: реализовать 9 свойств с дефолтами: data_dir=""", index_path=None, llm_protocol="", llm_url="", llm_model="", llm_token=None, mcp=False, host="0.0.0.0", port=8000
-- [ ] **Код**: обновить фасад `sententia/config/__init__.py` — реэкспортировать `SententiaConfig`
-- [ ] **Верификация интерфейсов**: запустить контрактные тесты — `pytest tests/config/test_config.py -v` — все должны пройти
-- [ ] **Логические тесты** (позитивные):
+- [x] **ШАГ 0**: Объявить работу над Task 4 — реализация SententiaConfig
+- [x] **Контрактные тесты**: создать `tests/config/__init__.py` и `tests/config/test_config.py`. Проверить: (1) `SententiaConfig` импортируем из `sententia.config`, (2) конструктор принимает `env_file: str|None=None` и `cli_overrides: dict[str,Any]|None=None`, (3) 9 свойств с правильными типами (data_dir: str, index_path: str|None, llm_protocol: str, llm_url: str, llm_model: str, llm_token: str|None, mcp: bool, host: str, port: int)
+- [x] **Код**: реализовать `SententiaConfig` как pydantic-settings `BaseSettings` с `SettingsConfigDict(env_prefix="SENTENTIA_", env_file=env_file или ".env", env_file_encoding="utf-8", extra="ignore")` и `model_validator(mode="before")` для cli_overrides
+- [x] **Код**: реализовать 9 свойств с дефолтами: data_dir=""", index_path=None, llm_protocol="", llm_url="", llm_model="", llm_token=None, mcp=False, host="0.0.0.0", port=8000
+- [x] **Код**: обновить фасад `sententia/config/__init__.py` — реэкспортировать `SententiaConfig`
+- [x] **Верификация интерфейсов**: запустить контрактные тесты — `pytest tests/config/test_config.py -v` — все должны пройти
+- [x] **Логические тесты** (позитивные):
   - `test_config_defaults`: в чистом окружении (monkeypatch.delenv все SENTENTIA_*) → SententiaConfig() → проверить все 9 дефолтов
   - `test_config_from_env_vars`: monkeypatch.setenv("SENTENTIA_LLM_PROTOCOL", "anthropic"), setenv("SENTENTIA_LLM_URL", "https://api.anthropic.com"), setenv("SENTENTIA_LLM_MODEL", "claude-3") → SententiaConfig() → проверить что ENV-значения загружены
   - `test_config_cli_overrides_take_priority`: monkeypatch.setenv("SENTENTIA_LLM_PROTOCOL", "anthropic"), setenv("SENTENTIA_HOST", "0.0.0.0") → SententiaConfig(cli_overrides={"llm_protocol": "ollama", "host": "127.0.0.1"}) → проверить cli_overrides > ENV
   - `test_config_from_env_file`: tmp_path / ".env" с SENTENTIA_LLM_TOKEN=sk-test-file → SententiaConfig(env_file=str(env_path)) → проверить загрузку из файла
   - `test_config_full_priority_chain`: ENV: SENTENTIA_HOST=10.0.0.1, SENTENTIA_PORT=9000; env-file: SENTENTIA_HOST=10.0.0.2, SENTENTIA_LLM_TOKEN=sk-file; cli_overrides: {"host": "127.0.0.1"} → host="127.0.0.1", port=9000, llm_token="sk-file"
-- [ ] **Логические тесты** (краевые):
+- [x] **Логические тесты** (краевые):
   - `test_config_none_cli_overrides`: SententiaConfig(cli_overrides=None) → defaults
   - `test_config_invalid_cli_overrides_type`: SententiaConfig(cli_overrides={"port": "abc"}) → ValidationError
-- [ ] **Отладка**: запустить `pytest tests/config/test_config.py -x` — исправлять код, пока все тесты не пройдут
-- [ ] **Перепроверка контрактов**: проверить что SententiaConfig имеет 9 свойств, конструктор принимает env_file и cli_overrides, приоритет cli_overrides > ENV > env-file > defaults соблюдён
-- [ ] **Линт**: `ruff check sententia/config/ tests/config/` — исправить форматирование
+- [x] **Отладка**: запустить `pytest tests/config/test_config.py -x` — исправлять код, пока все тесты не пройдут
+- [x] **Перепроверка контрактов**: проверить что SententiaConfig имеет 9 свойств, конструктор принимает env_file и cli_overrides, приоритет cli_overrides > ENV > env-file > defaults соблюдён
+- [x] **Линт**: `ruff check sententia/config/ tests/config/` — исправить форматирование
 
 ### Task 5: Переработка main() в __main__.py (TDD)
 
