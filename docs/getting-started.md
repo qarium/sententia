@@ -51,6 +51,29 @@ python -m sententia /path/to/markdown/docs \
   --mcp
 ```
 
+## Configuration via .env file
+
+Instead of passing all parameters via CLI, you can use a `.env` file:
+
+```bash
+# .env
+SENTENTIA_LLM_PROTOCOL=ollama
+SENTENTIA_LLM_URL=http://localhost:11434
+SENTENTIA_LLM_MODEL=llama3
+```
+
+```bash
+python -m sententia /path/to/markdown/docs
+```
+
+Use `--env-file` to specify a custom path:
+
+```bash
+python -m sententia /path/to/markdown/docs --env-file /path/to/config.env
+```
+
+See [Configuration](configuration.md) for all available environment variables and priority rules.
+
 ## First Request
 
 After starting in REST mode:

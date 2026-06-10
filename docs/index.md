@@ -38,7 +38,7 @@ Once started, the API is available at `http://localhost:8000`.
 ## Sections
 
 - [:material-play: Getting Started](getting-started.md) — launch and first request
-- [:material-cog: Configuration](configuration.md) — CLI parameters and environment variables
+- [:material-cog: Configuration](configuration.md) — CLI parameters, environment variables, and `.env` files
 - [:material-api: REST API](rest-api.md) — HTTP endpoints
 - [:material-tools: MCP Tools](mcp-tools.md) — tools for MCP clients
 - [:material-database: Core Concepts](storage.md) — internal components

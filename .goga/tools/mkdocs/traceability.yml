@@ -1,11 +1,15 @@
 docs/index.md:
   - sententia
+  - sententia/config
 docs/getting-started.md:
   - sententia
   - sententia/app
+  - sententia/config
+  - sententia/cli
 docs/configuration.md:
   - sententia
-  - sententia/app
+  - sententia/config
+  - sententia/cli
 docs/rest-api.md:
   - sententia
   - sententia/api
