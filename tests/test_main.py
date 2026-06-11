@@ -421,9 +421,7 @@ class TestMainMcpMode:
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_main_mcp_flag_creates_tools(
-        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
-    ):
+    def test_main_mcp_flag_creates_tools(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
         """main() with --mcp creates SearchTool, AskTool, FilesTool and calls add_mcp_tool 3 times."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
@@ -497,9 +495,7 @@ class TestMainTopParameter:
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_main_mcp_uses_top_10(
-        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
-    ):
+    def test_main_mcp_uses_top_10(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
         """main() passes top=10 to AskTool."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
@@ -522,17 +518,13 @@ class TestMainTopParameter:
                 ]
             )
 
-            mock_ask_tool.assert_called_once_with(
-                mock_index_cls.return_value, mock_llm_cls.return_value, top=10
-            )
+            mock_ask_tool.assert_called_once_with(mock_index_cls.return_value, mock_llm_cls.return_value, top=10)
 
     @patch("sententia.app.SententiaApp")
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_main_rest_uses_top_10(
-        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
-    ):
+    def test_main_rest_uses_top_10(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
         """main() in REST mode passes top=10 to AskResource."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
@@ -566,9 +558,7 @@ class TestMainMcpMethodNames:
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_main_mcp_calls_add_mcp_tool(
-        self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path
-    ):
+    def test_main_mcp_calls_add_mcp_tool(self, mock_storage_cls, mock_index_cls, mock_llm_cls, mock_app_cls, tmp_path):
         """main() calls add_mcp_tool (not add_tool)."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app

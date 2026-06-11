@@ -89,9 +89,7 @@ class TestConfigCliOverrides:
         monkeypatch.setenv("SENTENTIA_LLM_PROTOCOL", "anthropic")
         monkeypatch.setenv("SENTENTIA_HOST", "10.0.0.1")
 
-        config = SententiaConfig(
-            cli_overrides={"llm_protocol": "ollama", "host": "127.0.0.1"}
-        )
+        config = SententiaConfig(cli_overrides={"llm_protocol": "ollama", "host": "127.0.0.1"})
 
         assert config.llm_protocol == "ollama"
         assert config.host == "127.0.0.1"
@@ -159,10 +157,7 @@ class TestConfigFullPriorityChain:
         monkeypatch.setenv("SENTENTIA_PORT", "9000")
 
         env_path = tmp_path / ".env"
-        env_path.write_text(
-            "SENTENTIA_HOST=10.0.0.2\n"
-            "SENTENTIA_LLM_TOKEN=sk-file\n"
-        )
+        env_path.write_text("SENTENTIA_HOST=10.0.0.2\nSENTENTIA_LLM_TOKEN=sk-file\n")
 
         config = SententiaConfig(
             env_file=str(env_path),

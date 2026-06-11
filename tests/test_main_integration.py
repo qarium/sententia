@@ -52,9 +52,7 @@ class TestMainMcpEndToEnd:
 
             # MCP tools created with correct dependencies
             mock_search_tool.assert_called_once_with(mock_index_cls.return_value)
-            mock_ask_tool.assert_called_once_with(
-                mock_index_cls.return_value, mock_openai_cls.return_value, top=10
-            )
+            mock_ask_tool.assert_called_once_with(mock_index_cls.return_value, mock_openai_cls.return_value, top=10)
             mock_files_tool.assert_called_once_with(mock_storage_cls.return_value)
 
             # Tools registered with app
@@ -70,9 +68,7 @@ class TestMainMcpEndToEnd:
     @patch("sententia.llm.OpenaiProvider")
     @patch("sententia.index.Index")
     @patch("sententia.storage.Storage")
-    def test_mcp_custom_host_port(
-        self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path
-    ):
+    def test_mcp_custom_host_port(self, mock_storage_cls, mock_index_cls, mock_openai_cls, mock_app_cls, tmp_path):
         """main() --mcp passes custom host/port to app.run()."""
         mock_app = MagicMock()
         mock_app_cls.return_value = mock_app
@@ -108,14 +104,10 @@ class TestMainRestEndToEnd:
     @patch("uvicorn.run")
     @patch("sententia.index.indexer.SentenceTransformer")
     @patch("sententia.llm.openai.provider.httpx")
-    def test_rest_mode_creates_resources(
-        self, mock_httpx, mock_st_cls, mock_run, tmp_path
-    ):
+    def test_rest_mode_creates_resources(self, mock_httpx, mock_st_cls, mock_run, tmp_path):
         """main() without --mcp creates REST resources and starts uvicorn."""
         mock_response = MagicMock()
-        mock_response.json.return_value = {
-            "choices": [{"message": {"content": "test"}}]
-        }
+        mock_response.json.return_value = {"choices": [{"message": {"content": "test"}}]}
         mock_response.status_code = 200
         mock_response.is_success = True
         mock_httpx.post.return_value = mock_response
@@ -180,14 +172,10 @@ class TestMainModeExclusivity:
     @patch("uvicorn.run")
     @patch("sententia.index.indexer.SentenceTransformer")
     @patch("sententia.llm.openai.provider.httpx")
-    def test_rest_mode_does_not_create_mcp_tools(
-        self, mock_httpx, mock_st_cls, mock_run, tmp_path
-    ):
+    def test_rest_mode_does_not_create_mcp_tools(self, mock_httpx, mock_st_cls, mock_run, tmp_path):
         """main() without --mcp does not import or create MCP tools."""
         mock_response = MagicMock()
-        mock_response.json.return_value = {
-            "choices": [{"message": {"content": "test"}}]
-        }
+        mock_response.json.return_value = {"choices": [{"message": {"content": "test"}}]}
         mock_response.status_code = 200
         mock_response.is_success = True
         mock_httpx.post.return_value = mock_response
@@ -232,9 +220,7 @@ class TestCliToConfigPipeline:
             patch("sententia.api.SearchResource"),
             patch("sententia.api.AskResource"),
             patch("sententia.api.FilesResource"),
-            patch(
-                "sententia.config.SententiaConfig", wraps=SententiaConfig
-            ) as spy_config,
+            patch("sententia.config.SententiaConfig", wraps=SententiaConfig) as spy_config,
         ):
             main(
                 [
@@ -265,12 +251,8 @@ class TestCliToConfigPipeline:
 
             # Verify components created with config values
             mock_storage_cls.assert_called_once_with(str(tmp_path))
-            mock_index_cls.assert_called_once_with(
-                mock_storage_cls.return_value, None
-            )
-            mock_openai_cls.assert_called_once_with(
-                "http://localhost", "gpt-4", None
-            )
+            mock_index_cls.assert_called_once_with(mock_storage_cls.return_value, None)
+            mock_openai_cls.assert_called_once_with("http://localhost", "gpt-4", None)
 
             assert mock_app.add_rest_resource.call_count == 3
             mock_app.run.assert_called_once_with(host="0.0.0.0", port=8000)
@@ -290,9 +272,7 @@ class TestCliToConfigPipeline:
             patch("sententia.mcp.SearchTool"),
             patch("sententia.mcp.AskTool"),
             patch("sententia.mcp.FilesTool"),
-            patch(
-                "sententia.config.SententiaConfig", wraps=SententiaConfig
-            ) as spy_config,
+            patch("sententia.config.SententiaConfig", wraps=SententiaConfig) as spy_config,
         ):
             main(
                 [
@@ -327,9 +307,7 @@ class TestCliToConfigPipeline:
             assert overrides["llm_token"] == "sk-test"
 
             # Verify components use config values (not raw args)
-            mock_openai_cls.assert_called_once_with(
-                "http://localhost:11434", "llama3", "sk-test"
-            )
+            mock_openai_cls.assert_called_once_with("http://localhost:11434", "llama3", "sk-test")
             assert mock_app.add_mcp_tool.call_count == 3
             mock_app.run.assert_called_once_with(host="192.168.1.1", port=9999)
 
@@ -354,9 +332,7 @@ class TestEnvFilePropagation:
             patch("sententia.api.SearchResource"),
             patch("sententia.api.AskResource"),
             patch("sententia.api.FilesResource"),
-            patch(
-                "sententia.config.SententiaConfig", wraps=SententiaConfig
-            ) as spy_config,
+            patch("sententia.config.SententiaConfig", wraps=SententiaConfig) as spy_config,
         ):
             main(
                 [
@@ -415,9 +391,7 @@ class TestEnvFilePropagation:
             )
 
             # Token comes from env-file, not CLI
-            mock_openai_cls.assert_called_once_with(
-                "http://localhost", "gpt-4", "sk-from-file"
-            )
+            mock_openai_cls.assert_called_once_with("http://localhost", "gpt-4", "sk-from-file")
 
 
 class TestConfigPriorityIntegration:
@@ -461,9 +435,7 @@ class TestConfigPriorityIntegration:
             )
 
             # Explicit CLI values win over ENV
-            mock_openai_cls.assert_called_once_with(
-                "http://localhost", "gpt-4", None
-            )
+            mock_openai_cls.assert_called_once_with("http://localhost", "gpt-4", None)
             mock_app.run.assert_called_once_with(host="127.0.0.1", port=5000)
 
     @patch("sententia.app.SententiaApp")
@@ -526,18 +498,13 @@ class TestConfigPriorityIntegration:
 
         # env-file also sets host and token
         env_file = tmp_path / "prio.env"
-        env_file.write_text(
-            "SENTENTIA_HOST=10.0.0.2\n"
-            "SENTENTIA_LLM_TOKEN=sk-from-file\n"
-        )
+        env_file.write_text("SENTENTIA_HOST=10.0.0.2\nSENTENTIA_LLM_TOKEN=sk-from-file\n")
 
         with (
             patch("sententia.api.SearchResource"),
             patch("sententia.api.AskResource"),
             patch("sententia.api.FilesResource"),
-            patch(
-                "sententia.config.SententiaConfig", wraps=SententiaConfig
-            ) as spy_config,
+            patch("sententia.config.SententiaConfig", wraps=SententiaConfig) as spy_config,
         ):
             main(
                 [
@@ -569,9 +536,5 @@ class TestConfigPriorityIntegration:
             assert overrides["llm_token"] == "sk-explicit-cli"
 
             # App uses config values derived from CLI overrides
-            mock_app.run.assert_called_once_with(
-                host="127.0.0.1", port=8000
-            )
-            mock_openai_cls.assert_called_once_with(
-                "http://localhost", "gpt-4", "sk-explicit-cli"
-            )
+            mock_app.run.assert_called_once_with(host="127.0.0.1", port=8000)
+            mock_openai_cls.assert_called_once_with("http://localhost", "gpt-4", "sk-explicit-cli")
