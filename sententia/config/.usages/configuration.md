@@ -1,40 +1,46 @@
-# Конфигурация приложения
+# Application Configuration
 
-SententiaConfig — модель конфигурации с поддержкой ENV переменных и env-файла.
+SententiaConfig is a configuration model that resolves values from environment variables and a dotenv file.
 
-## Создание
+## Instantiation
 
-Базовое создание — загружает значения из ENV и .env файла:
+Default instantiation — resolves values from ENV and the `.env` file:
 
-    from sententia.config import SententiaConfig
+```python
+from sententia.config import SententiaConfig
 
-    config = SententiaConfig()
+config = SententiaConfig()
+```
 
-С кастомным env-файлом:
+With a custom dotenv file:
 
-    config = SententiaConfig(env_file="/path/to/.env")
+```python
+config = SententiaConfig(env_file="/path/to/.env")
+```
 
-## Перекрытие из CLI
+## CLI Overrides
 
-Для передачи значений из CLI аргументов:
+Pass CLI arguments as overrides:
 
-    config = SententiaConfig(
-        env_file=result.env_file,
-        cli_overrides={
-            "data_dir": result.data_dir,
-            "llm_protocol": result.llm_protocol,
-            "llm_url": result.llm_url,
-            "llm_model": result.llm_model,
-            "mcp": result.mcp,
-            "port": result.port,
-        },
-    )
+```python
+config = SententiaConfig(
+    env_file=result.env_file,
+    cli_overrides={
+        "data_dir": result.data_dir,
+        "llm_protocol": result.llm_protocol,
+        "llm_url": result.llm_url,
+        "llm_model": result.llm_model,
+        "mcp": result.mcp,
+        "port": result.port,
+    },
+)
+```
 
-Приоритет: cli_overrides > ENV > env-файл > дефолты.
+Resolution priority: cli_overrides > ENV > dotenv file > built-in defaults.
 
-## ENV переменные
+## Environment Variables
 
-| Переменная              | Поле         | Дефолт    |
+| Variable                | Field        | Default   |
 |-------------------------|-------------|-----------|
 | SENTENTIA_DATA_DIR      | data_dir    | ""        |
 | SENTENTIA_INDEX_PATH    | index_path  | None      |

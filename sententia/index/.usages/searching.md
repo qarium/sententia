@@ -1,12 +1,12 @@
-# Семантический поиск
+# Semantic Search
 
-Вызовите `index.search(query, top)` для поиска релевантных фрагментов.
-Запрос автоматически получает префикс "query: " для модели E5.
-Индекс — экземпляр `Index` из клетки `sententia/index`.
+Call `index.search(query, top)` to search for relevant fragments.
+The query automatically receives the prefix "query: " for the E5 model.
+The index is an `Index` instance from the `sententia/index` cell.
 
-Пример:
-  results = index.search("как настроить авторизацию", top=5)
+Example:
+  results = index.search("how to set up authorization", top=5)
   # → [{"text": "...", "source": "docs/auth.md", "score": 0.95}, ...]
 
-Результаты отсортированы по убыванию score (косинусное сходство).
-Если top не указан — используется default_top (по умолчанию 10).
+Results are sorted by score in descending order (cosine similarity).
+If top is not specified, default_top is used (defaults to 10).

@@ -10,10 +10,10 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for code and test authoring standards.
 
-  Фасад клетки llm. Re-export провайдеров для потребителей.
-  Инициализация провайдера: openai/ollama → `OpenaiProvider`, anthropic → `AnthropicProvider`.
+  The llm cell facade. Re-exports providers for consumers.
+  Provider initialization: openai/ollama → `OpenaiProvider`, anthropic → `AnthropicProvider`.
 
 ---
 
@@ -25,4 +25,4 @@ Annotations: |
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  Фасад LLM провайдеров. Re-export OpenaiProvider и AnthropicProvider.
+  LLM provider facade. Re-exports OpenaiProvider and AnthropicProvider.

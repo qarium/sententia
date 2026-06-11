@@ -1,22 +1,22 @@
-# RESTResource — базовый тип HTTP-обработчика
+# RESTResource — Abstract Base for HTTP Handlers
 
-## Назначение
+## Purpose
 
-`RESTResource` — базовый тип для REST-ресурсов. Определяет контракт HTTP-обработчика с методами get/post/put/delete.
+`RESTResource` is an abstract base class for REST resources. It defines the HTTP handler contract with get/post/put/delete methods.
 
-## Использование
+## Usage
 
-Создайте подкласс `RESTResource`, переопределив нужный HTTP-метод:
+Subclass `RESTResource` and override the required HTTP method:
 
 ```python
 class SearchResource(RESTResource):
     url_rule = "/search"
 
     def post(self, request: SearchRequest) -> SearchResponse:
-        # реализация
+        # implementation
 ```
 
-## Регистрация в FastAPI
+## Registration in FastAPI
 
 ```python
 router.add_api_route(
@@ -26,8 +26,8 @@ router.add_api_route(
 )
 ```
 
-## Правила
+## Rules
 
-- Базовые реализации get/post/put/delete возвращают Method Not Allowed
-- Переопределяйте только нужные методы
-- Свойство `url_rule` обязательно
+- Default get/post/put/delete implementations raise NotImplementedError("Method Not Allowed")
+- Override only the methods the resource supports
+- Property `url_rule` is required

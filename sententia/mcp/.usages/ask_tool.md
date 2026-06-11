@@ -1,24 +1,24 @@
-# AskTool — MCP инструмент вопрос-ответ
+# AskTool — MCP Question-Answer Tool
 
-## Назначение
+## Purpose
 
-`AskTool` — MCP инструмент для вопрос-ответ с RAG pipeline.
+`AskTool` is an MCP tool that answers user questions using a RAG pipeline. It combines document retrieval via `Index` with answer generation via an LLM provider.
 
-## Использование
+## Usage
 
-Создайте экземпляр с Index и LLM-провайдером, затем вызовите execute():
+Instantiate with an `Index` and an `llm_provider`, then invoke `execute()`:
 
 ```python
 from sententia.mcp.ask import AskTool
 
 tool = AskTool(index, llm_provider, top=10)
-result = tool.execute(query="как настроить авторизацию?")
-# → AskToolResult(answer="Для настройки...", sources=["docs/auth.md", "docs/setup.md"])
+result = tool.execute(query="how to configure authorization?")
+# → AskToolResult(answer="To configure...", sources=["docs/auth.md", "docs/setup.md"])
 
-# С явным указанием top
-result = tool.execute(query="как настроить авторизацию?", top=5)
+# Override default top-k retrieval count
+result = tool.execute(query="how to configure authorization?", top=5)
 ```
 
-## Обработка ошибок
+## Error Handling
 
-При ошибке LLM провайдера (LLMProviderError) выбрасывается исключение (tool error).
+If the LLM provider raises `LLMProviderError`, `AskTool` propagates it as a tool error exception.

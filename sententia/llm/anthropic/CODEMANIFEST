@@ -8,33 +8,33 @@ Usages:
   anthropic_api: .goga/usages/cooks/anthropic_api.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for code and test standards.
 
-  Провайдер для Anthropic Claude.
-  Использовать `anthropic_api` для вызова Anthropic API.
+  Anthropic Claude LLM provider.
+  Follow `anthropic_api` for Anthropic API integration.
 
 ---
 
 "Provider::AnthropicProvider(url: str, model: str, token: str | None = None)":
   location: provider.py
   annotations: |
-    LLM-провайдер для Anthropic Claude.
+    Anthropic Claude LLM provider implementation.
 
-    `url`: базовый URL API endpoint.
-    `model`: идентификатор модели.
-    `token`: API-ключ. Обязателен для Anthropic.
+    `url`: base URL of the API endpoint.
+    `model`: model identifier string.
+    `token`: API key for Anthropic authentication. This parameter is required and must not be None.
   methods:
     "generate(prompt: str) -> answer:str": |
-      Генерация через Anthropic API (POST {url}/v1/messages).
+      Generate text via the Anthropic Messages API (POST {url}/v1/messages).
 
-      `prompt`: полный текст промпта.
-      `answer`: текст сгенерированного ответа.
+      `prompt`: complete prompt text.
+      `answer`: generated response text.
 
-      Использовать практику `anthropic_api` для реализации.
+      Implement using the `anthropic_api` practice.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  LLM-провайдер для Anthropic Claude.
+  LLM provider for Anthropic Claude.

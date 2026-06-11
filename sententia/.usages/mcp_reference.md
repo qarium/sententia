@@ -1,20 +1,20 @@
 # MCP Reference
 
-MCP Server доступен через Streamable HTTP transport на endpoint /mcp.
-Клиент подключается через SSE к http://<host>:<port>/mcp.
+The MCP Server exposes a Streamable HTTP transport on the /mcp endpoint.
+Clients connect via SSE at http://<host>:<port>/mcp.
 
 ## search
-Поиск релевантных документов.
-  Параметры: query: str, top: int = 10
-  Результат: list[SearchToolResult] — [{"text": "...", "source": "file.md", "score": 0.95}, ...]
+Retrieve relevant documents.
+  Parameters: query: str, top: int = 10
+  Result: `list[SearchToolResult]` — `[{"text": "...", "source": "file.md", "score": 0.95}, ...]`
 
 ## ask
-Вопрос-ответ с RAG.
-  Параметры: query: str
-  Результат: AskToolResult — {"answer": "...", "sources": ["file1.md", "file2.md"]}
+Answer questions using RAG.
+  Parameters: query: str
+  Result: `AskToolResult` — `{"answer": "...", "sources": ["file1.md", "file2.md"]}`
 
 ## files
-Чтение содержимого файла.
-  Параметры: path: str
-  Результат: FilesToolResult — {"text": "содержимое", "source": "path/to/file.md"}
-  Ошибка: tool error если файл не найден
+Read file contents.
+  Parameters: path: str
+  Result: `FilesToolResult` — `{"text": "contents", "source": "path/to/file.md"}`
+  Error: returns a tool error when the file is not found

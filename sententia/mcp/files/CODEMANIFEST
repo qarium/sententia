@@ -14,34 +14,34 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Use `conventions` for coding and testing rules.
 
-  MCP tool для чтения содержимого файла.
-  Использовать практику `hexagonal` для понимания роли адаптера.
-  Использовать практику `reading` для чтения файлов.
+  MCP tool for reading file content.
+  Use the `hexagonal` practice to understand the adapter role.
+  Use the `reading` practice for file reading operations.
 
 ---
 
 "FilesToolResult()":
   location: models.py
   annotations: |
-    Модель результата files для MCP tool.
-    Использовать `pydantic` для реализации (conventions: kw_only=True, дефолты).
+    Result model for the files MCP tool.
+    Use `pydantic` for implementation (conventions: kw_only=True, defaults).
   properties:
     text -> str: |
-      Содержимое файла. Значение по умолчанию — пустая строка.
+      The file content. Defaults to an empty string.
     source -> str: |
-      Путь к файлу. Значение по умолчанию — пустая строка.
+      The file path. Defaults to an empty string.
 
 "MCPTool::FilesTool(storage: Storage)":
   location: files.py
   annotations: |
-    MCP tool для чтения содержимого файла.
+    MCP tool for reading file content.
 
-    `storage`: экземпляр `Storage` для чтения файлов.
+    `storage`: A `Storage` instance used for file reading.
 
-    Использовать практику `reading` для чтения файлов.
-    Использовать практику `hexagonal` для понимания роли адаптера.
+    Use the `reading` practice for file reading operations.
+    Use the `hexagonal` practice to understand the adapter role.
   properties:
     name -> str: |
       "files"
@@ -49,17 +49,17 @@ Annotations: |
       "Read file content by path"
   methods:
     "execute(path: str) -> result:FilesToolResult": |
-      Чтение содержимого файла.
+      Read file content.
 
-      `path`: относительный путь к файлу.
-      `result`: `FilesToolResult` с полями text и source.
+      `path`: A relative path to the target file.
+      `result`: A `FilesToolResult` containing text and source fields.
 
-      Если файл не найден — tool error.
-      Использовать практику `reading` для чтения файлов.
+      If the file is not found, return a tool error.
+      Use the `reading` practice for file reading operations.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  MCP tool файлов — files.
+  The files MCP tool for file operations.

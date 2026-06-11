@@ -1,18 +1,18 @@
-# Чтение файлов
+# Reading Files
 
-Создайте экземпляр `Storage(directory_path)`.
+Create an instance of `Storage(directory_path)`.
 
-## Листинг файлов
+## File Listing
 
   files = storage.list_files()
   # → ["docs/auth.md", "docs/setup.md", "guide.md"]
 
-Возвращает список относительных путей всех .md файлов в директории.
+Returns a list of relative paths for all `.md` files within the directory.
 
-## Чтение файла
+## Reading a File
 
   content = storage.read_file("docs/auth.md")
-  # → {"text": "# Авторизация\n...", "source": "docs/auth.md"}
+  # → {"text": "# Authorization\n...", "source": "docs/auth.md"}
 
-Если файл не найден — выбрасывается FileNotFoundError.
-Путь file_path должен быть относительным, выход за пределы directory_path запрещён.
+Raises `FileNotFoundError` if the file does not exist.
+The `file_path` argument must be a relative path within `directory_path`; path traversal outside the root directory boundary is prohibited.

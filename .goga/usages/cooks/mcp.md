@@ -1,51 +1,51 @@
 # MCP Python SDK
 
-## Назначение
+## Purpose
 
-Библиотека `mcp` — официальный Python SDK от Anthropic для реализации MCP (Model Context Protocol) серверов и клиентов.
-Используется для предоставления инструментов (tools) внешним MCP-клиентам (Claude Desktop, Cursor и др.).
+The `mcp` library is the official Anthropic Python SDK for building MCP (Model Context Protocol) servers and clients.
+It exposes tools to external MCP clients (Claude Desktop, Cursor, and others).
 
-**Пакет:** `mcp>=1.27.0`
+**Package:** `mcp>=1.27.0`
 
-## Ключевые компоненты
+## Key Components
 
 ### FastMCP
 
-Высокоуровневый сервер для быстрого создания MCP Server.
+A high-level server class for rapid MCP server creation.
 
 ```python
 from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP(
     name="ServerName",
-    instructions="Описание сервера для клиентов",
-    json_response=True,       # JSON вместо SSE где возможно
-    stateless_http=True,      # нет sticky sessions, проще деплой
+    instructions="Server description for clients",
+    json_response=True,       # JSON instead of SSE where possible
+    stateless_http=True,      # no sticky sessions, simpler deployment
 )
 ```
 
-### Определение инструментов (tools)
+### Tool Definition
 
-Инструменты регистрируются через `mcp.tool()`. Типы аннотаций функции автоматически формируют JSON Schema для клиентов.
+Register tools via `mcp.tool()`. The function's type annotations drive automatic JSON Schema generation for clients.
 
-#### Декоратор
+#### Decorator-Based Registration
 
 ```python
 @mcp.tool()
 def search(query: str, limit: int = 10) -> list[str]:
-    """Поиск по базе знаний."""
+    """Search the knowledge base."""
     return ["result-1", "result-2"]
 
 @mcp.tool()
 async def ask(question: str) -> str:
-    """Вопрос-ответ с RAG."""
+    """RAG-based question answering."""
     return "answer"
 ```
 
-#### Программная регистрация существующего метода
+#### Programmatic Registration of an Existing Method
 
-`mcp.tool()` можно вызвать как функцию, передав callable напрямую (без использования как декоратора).
-Это позволяет регистрировать bound-методы существующих объектов через wrapper-функцию:
+Invoke `mcp.tool()` as a function and pass a callable directly — without decorator syntax.
+This pattern registers bound methods from existing objects through a wrapper function:
 
 ```python
 class MyTool:
@@ -55,14 +55,14 @@ class MyTool:
 
     @property
     def description(self) -> str:
-        return "Описание инструмента"
+        return "Tool description"
 
     def execute(self, query: str, top: int = 5) -> list[str]:
         return ["result"]
 
 tool = MyTool()
 
-# Создание wrapper-функции для регистрации в FastMCP
+# Build a wrapper function for FastMCP registration
 def _make_wrapper(t):
     def wrapper(query: str, top: int = 5) -> list[str]:
         return t.execute(query, top)
@@ -73,46 +73,46 @@ def _make_wrapper(t):
 mcp.tool(_make_wrapper(tool))
 ```
 
-Правила wrapper-функции:
-- `__name__` — имя инструмента в MCP протоколе
-- `__doc__` — описание инструмента (docstring становится description в MCP)
-- Сигнатура с type annotations — FastMCP извлекает из неё JSON Schema для параметров
-- Вызывает `tool.execute()` с соответствующими аргументами
+Wrapper function requirements:
+- Set `__name__` to the tool name exposed in the MCP protocol
+- Set `__doc__` to the tool description — FastMCP reads the docstring as the MCP description field
+- Preserve type annotations on all parameters — FastMCP derives the JSON Schema from the signature
+- Delegate to `tool.execute()` with the matching arguments
 
-#### Общие правила
+#### General Rules
 
-- Docstring становится описанием инструмента в MCP протоколе
-- Поддерживаются sync и async функции
-- Возвращаемые типы: Pydantic модели, TypedDict, dataclasses, встроенные коллекции — автоматически сериализуются
+- The docstring becomes the tool description in the MCP protocol
+- Both sync and async functions are supported
+- Return types — Pydantic models, TypedDict, dataclasses, and built-in collections — are serialized automatically
 
-### Standalone запуск (Streamable HTTP)
+### Standalone Server (Streamable HTTP)
 
-Streamable HTTP — рекомендуемый транспорт. Сервер запускается standalone через `mcp.run()`.
+Streamable HTTP is the recommended transport. Start the server as a standalone process via `mcp.run()`.
 
 ```python
 mcp = FastMCP("ServerName", stateless_http=True, json_response=True)
 
-# ... определение инструментов ...
+# ... tool definitions ...
 
-# Запуск как standalone ASGI сервер
+# Start as a standalone ASGI server
 mcp.run(transport="streamable-http")
 ```
 
-При вызове `mcp.run(transport="streamable-http")` запускается встроенный ASGI сервер (uvicorn). Настраиваемые параметры:
+Calling `mcp.run(transport="streamable-http")` starts the built-in ASGI server (uvicorn). Configuration options:
 
 ```python
-mcp.settings.host = "127.0.0.1"  # хост
-mcp.settings.port = 8000          # порт
+mcp.settings.host = "127.0.0.1"  # host
+mcp.settings.port = 8000          # port
 ```
 
-## Конструктор FastMCP
+## FastMCP Constructor
 
-| Параметр | По умолчанию | Описание |
+| Parameter | Default | Description |
 |---|---|---|
-| `name` | обязателен | Имя сервера в MCP протоколе |
-| `instructions` | `None` | Человекочитаемое описание сервера |
-| `host` | `"127.0.0.1"` | Хост для standalone запуска |
-| `port` | `8000` | Порт для standalone запуска |
-| `json_response` | `False` | JSON ответы вместо SSE |
-| `stateless_http` | `False` | Stateless режим (нет sticky sessions) |
-| `streamable_http_path` | `"/mcp"` | URL path для Streamable HTTP |
+| `name` | required | Server name in the MCP protocol |
+| `instructions` | `None` | Human-readable server description |
+| `host` | `"127.0.0.1"` | Host for standalone server |
+| `port` | `8000` | Port for standalone server |
+| `json_response` | `False` | Use JSON responses instead of SSE |
+| `stateless_http` | `False` | Stateless mode — no sticky sessions |
+| `streamable_http_path` | `"/mcp"` | URL path for Streamable HTTP transport |

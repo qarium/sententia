@@ -1,21 +1,21 @@
-# Разбиение текста на фрагменты (chunking)
+# Text Chunking
 
-Размер чанка: ~500-800 символов. Overlap: ~10%.
+Chunk size: ~500-800 characters. Overlap: ~10%.
 
-## Кастомный Markdown-сплиттер
+## Custom Markdown Splitter
 
 ```python
 import re
 
 def split_text(text: str, chunk_size: int = 600, overlap: int = 60) -> list[str]:
-    """Разбивает текст на фрагменты с перекрытием."""
+    """Splits text into overlapping chunks."""
     chunks = []
     start = 0
     while start < len(text):
         end = start + chunk_size
         chunk = text[start:end]
         if end < len(text):
-            # Обрезаем по последнее слово, не посреди
+            # Trim at the last word boundary, not mid-word
             last_space = chunk.rfind(" ")
             if last_space > chunk_size // 2:
                 chunk = chunk[:last_space]
@@ -25,7 +25,7 @@ def split_text(text: str, chunk_size: int = 600, overlap: int = 60) -> list[str]
     return chunks
 ```
 
-## LangChain RecursiveCharacterTextSplitter (альтернатива)
+## LangChain RecursiveCharacterTextSplitter (alternative)
 
 ```python
 from langchain.text_splitter import RecursiveCharacterTextSplitter

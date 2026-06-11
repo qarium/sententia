@@ -1,13 +1,13 @@
-# SearchResource — REST ресурс поиска
+# SearchResource — REST Search Resource
 
-## Назначение
+## Purpose
 
-`SearchResource` — REST адаптер для семантического поиска документов (POST /search).
-Принимает SearchRequest с запросом, вызывает `index.search()`, возвращает SearchResponse с результатами.
+`SearchResource` — REST adapter for semantic document search (POST /search).
+Accepts a `SearchRequest` with the query, delegates to `index.search()`, returns a `SearchResponse` with ranked results.
 
-## Использование
+## Usage
 
-Создайте экземпляр с Index, затем вызовите post():
+Instantiate with an `Index`, then call `post()`:
 
 ```python
 from sententia.api.search import SearchResource, SearchRequest, SearchResponse
@@ -18,22 +18,22 @@ for item in response.results:
     print(item.source, item.score, item.text[:80])
 ```
 
-## Параметры конструктора
+## Constructor Parameters
 
-- `index: Index` — экземпляр индекса для поиска
+- `index: Index` — search index instance
 
-## Модели запроса
+## Request Models
 
 `SearchRequest`:
-- `query: str` — поисковый запрос (по умолчанию `""`)
-- `top: int` — количество результатов, от 1 до 100 (по умолчанию `10`)
+- `query: str` — search query string (defaults to `""`)
+- `top: int` — number of results, range 1–100 (defaults to `10`)
 
-## Модели ответа
+## Response Models
 
 `SearchResponse`:
-- `results: list[SearchResultItem]` — список результатов поиска
+- `results: list[SearchResultItem]` — list of search results
 
 `SearchResultItem`:
-- `text: str` — текст найденного фрагмента
-- `source: str` — источник (путь к файлу)
-- `score: float` — релевантность результата
+- `text: str` — matched fragment text
+- `source: str` — source file path
+- `score: float` — relevance score

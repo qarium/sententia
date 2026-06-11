@@ -10,56 +10,56 @@ Usages:
   mcp: .goga/usages/cooks/mcp.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for code and test authoring standards.
 
-  Клетка описывает FastAPI приложение — HTTP-сервер.
-  Не знает о доменных зависимостях. Сборка компонентов происходит в корневой ячейке.
-  Использовать практику `fastapi` для создания приложения и маршрутов.
+  This cell defines a FastAPI application — an HTTP server.
+  The cell holds no domain dependencies. Component composition occurs in the root cell.
+  Apply the `fastapi` practice for application and route setup.
 
-  Использовать практику `mcp` для создания MCP Server и регистрации tools.
-  Если зарегистрированы tools — run() запускает MCP Server (Streamable HTTP).
-  Если зарегистрированы resources — run() запускает FastAPI (текущее поведение).
-  Режимы взаимоисключающие.
+  Apply the `mcp` practice for MCP Server creation and tool registration.
+  When tools are registered, run() MUST launch MCP Server using Streamable HTTP transport.
+  When resources are registered, run() MUST launch FastAPI via uvicorn.
+  The two modes are mutually exclusive.
 
 ---
 
 "SententiaApp()":
   location: app.py
   annotations: |
-    FastAPI приложение. HTTP-контейнер.
-    Принимает REST-ресурсы и MCP инструменты, запускает сервер.
+    FastAPI application. HTTP container.
+    Accepts REST resources and MCP tools, launches the appropriate server.
 
-    Использовать практику `fastapi` для создания экземпляра приложения.
+    Apply the `fastapi` practice to instantiate the application.
   methods:
     "add_rest_resource(resource: RESTResource) -> void:None": |
-      Регистрация REST-ресурса.
+      Register a REST resource.
 
-      `resource`: экземпляр мутированного `RESTResource`.
-      URL-путь определяется свойством `resource`.
+      `resource`: an instance of the mutated `RESTResource` type.
+      The URL path derives from the `resource` property.
 
-      Использовать практику `fastapi` для создания маршрута.
+      Apply the `fastapi` practice to create the route.
     "add_mcp_tool(tool: MCPTool) -> void:None": |
-      Регистрация MCP tool.
+      Register an MCP tool.
 
-      `tool`: экземпляр мутированного `MCPTool`.
+      `tool`: an instance of the mutated `MCPTool` type.
 
-      Использовать практику `mcp` для регистрации tool через декоратор.
+      Apply the `mcp` practice to register the tool via decorator.
     "run(host: str = '0.0.0.0', port: int = 8000) -> void:None": |
-      Запуск сервера.
+      Launch the server.
 
-      `host`: адрес привязки. По умолчанию "0.0.0.0".
-      `port`: порт сервера. По умолчанию 8000.
+      `host`: bind address. Defaults to "0.0.0.0".
+      `port`: server port. Defaults to 8000.
 
-      Если зарегистрированы tools — запуск MCP Server (Streamable HTTP).
-      Использовать практику `mcp` для настройки и запуска MCP Server.
-      Настроить mcp.settings.host и mcp.settings.port перед вызовом mcp.run().
+      When tools are registered, launch MCP Server using Streamable HTTP transport.
+      Apply the `mcp` practice to configure and start MCP Server.
+      Set mcp.settings.host and mcp.settings.port before invoking mcp.run().
 
-      Если зарегистрированы resources — запуск FastAPI через uvicorn (текущее поведение).
-      Использовать практику `fastapi` для запуска через uvicorn.
+      When resources are registered, launch FastAPI via uvicorn.
+      Apply the `fastapi` practice to start uvicorn.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  Точка входа сервиса Sententia. Сборка и запуск всех компонентов.
+  Entry point of the Sententia service. Composes and launches all components.

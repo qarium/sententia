@@ -1,19 +1,19 @@
-# FilesTool — MCP инструмент файлов
+# FilesTool — MCP File Reader Tool
 
-## Назначение
+## Purpose
 
-`FilesTool` — MCP инструмент для чтения содержимого файла по пути.
+`FilesTool` is an MCP tool that reads file contents by path using a `Storage` backend. It returns the file text and its source path.
 
-## Использование
+## Usage
 
-Создайте экземпляр с Storage, затем вызовите execute():
+Instantiate with a `Storage` backend, then invoke `execute()`:
 
 ```python
 from sententia.mcp.files import FilesTool
 
 tool = FilesTool(storage)
 content = tool.execute(path="docs/auth.md")
-# → {"text": "# Авторизация\n...", "source": "docs/auth.md"}
+# → {"text": "# Authorization\n...", "source": "docs/auth.md"}
 ```
 
-Если файл не найден — выбрасывается исключение (tool error).
+If the file at `path` does not exist, `FilesTool` raises a tool error exception.

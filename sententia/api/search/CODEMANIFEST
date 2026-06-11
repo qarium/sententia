@@ -14,74 +14,74 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for coding and testing standards.
 
-  Адаптер POST /search — поиск релевантных документов.
-  Использовать практику `pydantic` для моделей запроса и ответа.
-  Использовать практику `hexagonal` для понимания роли адаптера.
-  Использовать практику `searching` для поиска и понимания формата результатов.
+  Adapter for POST /search — retrieves relevant documents.
+  Apply `pydantic` to define request and response models.
+  Apply `hexagonal` to understand the adapter's architectural role.
+  Apply `searching` to perform search and interpret result format.
 
 ---
 
 "SearchRequest()":
   location: models.py
   annotations: |
-    Модель запроса для POST /search.
-    Использовать `pydantic` для реализации.
+    Request model for POST /search endpoint.
+    Implement using `pydantic`.
   properties:
     query -> str: |
-      Текст поискового запроса. Значение по умолчанию — пустая строка.
+      Search query text. Defaults to an empty string.
     top -> int: |
-      Количество возвращаемых результатов. Значение по умолчанию — 10.
+      Maximum number of results to return. Defaults to 10.
 
 "SearchResultItem()":
   location: models.py
   annotations: |
-    Модель одного результата поиска.
-    Использовать `pydantic` для реализации.
+    Single search result item model.
+    Implement using `pydantic`.
   properties:
     text -> str: |
-      Фрагмент текста из документа. Значение по умолчанию — пустая строка.
+      Document text fragment. Defaults to an empty string.
     source -> str: |
-      Путь к исходному файлу. Значение по умолчанию — пустая строка.
+      Source file path. Defaults to an empty string.
     score -> float: |
-      Оценка релевантности. Значение по умолчанию — 0.0.
+      Relevance score. Defaults to 0.0.
 
 "SearchResponse()":
   location: models.py
   annotations: |
-    Модель ответа для POST /search.
-    Использовать `pydantic` для реализации.
+    Response model for POST /search endpoint.
+    Implement using `pydantic`.
   properties:
     results -> list: |
-      Список `SearchResultItem`. Значение по умолчанию — пустой список.
+      List of `SearchResultItem`. Defaults to an empty list.
 
 "RESTResource::SearchResource(index: Index)":
   location: search.py
   annotations: |
-    REST ресурс POST /search — поиск релевантных документов.
+    REST resource for POST /search — retrieves relevant documents.
 
-    `index`: экземпляр `Index`.
+    `index`: an `Index` instance.
 
-    Использовать практику `searching` для поиска и понимания формата результатов.
-    Использовать практику `pydantic` для конвертации данных.
-    Использовать практику `hexagonal` для понимания роли адаптера.
+    Apply `searching` to perform search and interpret result format.
+    Apply `pydantic` for data conversion.
+    Apply `hexagonal` to understand the adapter's architectural role.
   properties:
     url_rule -> str: |
       "/search"
   methods:
     "post(request: SearchRequest) -> response:SearchResponse": |
-      Обработка POST /search.
+      Handle POST /search requests.
 
-      `request`: pydantic модель запроса с полями query и top.
-      `response`: pydantic модель ответа со списком результатов.
+      `request`: pydantic request model with query and top fields.
+      `response`: pydantic response model containing the result list.
 
-      Использовать практику `searching` для поиска.
-      Использовать практику `pydantic` для конвертации данных.
+      Apply `searching` to execute search.
+      Apply `pydantic` for data conversion.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  API адаптер поиска — POST /search.
+  Search API adapter — POST /search.

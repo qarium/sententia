@@ -21,37 +21,37 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for all code and test authoring rules.
 
-  MCP tool для вопрос-ответ с RAG.
-  Использовать практику `hexagonal` для понимания роли адаптера.
-  Использовать практику `asking` для выполнения RAG pipeline.
-  Использовать практику `llm_generating` для понимания работы с LLM-провайдерами.
+  This cell implements an MCP tool for question-answering using RAG.
+  Apply the `hexagonal` practice to understand the adapter role in this cell.
+  Apply the `asking` practice to execute the RAG pipeline.
+  Apply the `llm_generating` practice for LLM provider interaction patterns.
 
 ---
 
 "AskToolResult()":
   location: models.py
   annotations: |
-    Модель результата ask для MCP tool.
-    Использовать `pydantic` для реализации (conventions: kw_only=True, дефолты).
+    Pydantic model representing the result of the ask MCP tool.
+    Implement using `pydantic` (conventions: kw_only=True, field defaults).
   properties:
     answer -> str: |
-      Сгенерированный ответ. Значение по умолчанию — пустая строка.
+      Generated answer text. Defaults to empty string.
     sources -> list: |
-      Список файлов-источников. Значение по умолчанию — пустой список.
+      List of source file references. Defaults to empty list.
 
 "MCPTool::AskTool(index: Index, llm_provider: OpenaiProvider | AnthropicProvider, top: int = 10)":
   location: ask.py
   annotations: |
-    MCP tool для вопрос-ответ с RAG.
+    MCP tool for question-answering via RAG.
 
-    `index`: экземпляр `Index`.
-    `llm_provider`: LLM-провайдер (`OpenaiProvider` или `AnthropicProvider`).
-    `top`: количество чанков для контекста. По умолчанию 10.
+    `index`: `Index` instance for chunk retrieval.
+    `llm_provider`: LLM provider — `OpenaiProvider` or `AnthropicProvider`.
+    `top`: the number of context chunks to retrieve. Defaults to 10.
 
-    Использовать практику `asking` для выполнения RAG pipeline.
-    Использовать практику `hexagonal` для понимания роли адаптера.
+    Apply the `asking` practice to execute the RAG pipeline.
+    Apply the `hexagonal` practice to understand the adapter role.
   properties:
     name -> str: |
       "ask"
@@ -59,18 +59,18 @@ Annotations: |
       "Ask a question and get an answer based on indexed documents"
   methods:
     "execute(query: str, top: int | None = None) -> result:AskToolResult": |
-      Вопрос-ответ с RAG.
+      Question-answering via RAG.
 
-      `query`: текст вопроса.
-      `top`: количество чанков для контекста.
-             если None — используется дефолт из конструктора.
-      `result`: `AskToolResult` с полями answer и sources.
+      `query`: user question text.
+      `top`: context chunk count override.
+             When None, falls back to the constructor default.
+      `result`: `AskToolResult` containing answer and sources.
 
-      Использовать практику `asking` для выполнения RAG pipeline.
+      Apply the `asking` practice to execute the RAG pipeline.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  MCP tool вопроса — ask.
+  Ask MCP tool for question-answering with RAG.

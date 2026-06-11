@@ -14,36 +14,36 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for coding and testing standards.
 
-  MCP tool для семантического поиска по базе знаний.
-  Использовать практику `hexagonal` для понимания роли адаптера.
-  Использовать практику `searching` для поиска и понимания формата результатов.
+  MCP tool providing semantic search over the knowledge base.
+  Apply the `hexagonal` practice to understand the adapter role.
+  Apply the `searching` practice to perform search and interpret result format.
 
 ---
 
 "SearchToolResult()":
   location: models.py
   annotations: |
-    Модель результата поиска для MCP tool.
-    Использовать `pydantic` для реализации (conventions: kw_only=True, дефолты).
+    Search result DTO for the MCP tool.
+    Implement using `pydantic` (conventions: kw_only=True, defaults).
   properties:
     text -> str: |
-      Фрагмент текста. Значение по умолчанию — пустая строка.
+      Text fragment content. Defaults to empty string.
     source -> str: |
-      Путь к файлу. Значение по умолчанию — пустая строка.
+      File path. Defaults to empty string.
     score -> float: |
-      Оценка релевантности. Значение по умолчанию — 0.0.
+      Relevance score. Defaults to 0.0.
 
 "MCPTool::SearchTool(index: Index)":
   location: search.py
   annotations: |
-    MCP tool для семантического поиска.
+    MCP tool adapter for semantic search.
 
-    `index`: экземпляр `Index`.
+    `index`: an `Index` instance.
 
-    Использовать практику `searching` для поиска.
-    Использовать практику `hexagonal` для понимания роли адаптера.
+    Apply the `searching` practice for search operations.
+    Apply the `hexagonal` practice to understand the adapter role.
   properties:
     name -> str: |
       "search"
@@ -51,18 +51,18 @@ Annotations: |
       "Search for relevant documents in the knowledge base"
   methods:
     "execute(query: str, top: int = 10) -> results:list[SearchToolResult]": |
-      Поиск релевантных фрагментов.
+      Execute semantic search and return relevant fragments.
 
-      `query`: текст поискового запроса.
-      `top`: количество возвращаемых результатов.
+      `query`: the search query text.
+      `top`: the maximum number of results to return.
 
-      `results`: список `SearchToolResult`, отсортированных по убыванию релевантности.
+      `results`: a list of `SearchToolResult` entries sorted by descending relevance.
 
-      Использовать практику `searching` для поиска.
+      Apply the `searching` practice to execute search.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  MCP tool поиска — search.
+  MCP search tool — search.

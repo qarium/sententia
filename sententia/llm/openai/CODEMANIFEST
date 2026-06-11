@@ -9,35 +9,35 @@ Usages:
   ollama_api: .goga/usages/cooks/ollama_api.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` as the standard for writing code and tests.
 
-  Провайдер для OpenAI и Ollama (совместимый API).
-  Использовать `openai_api` для вызова OpenAI API.
-  Использовать `ollama_api` для вызова Ollama (та же реализация, без авторизации).
+  The OpenaiProvider entity acts as an LLM provider for OpenAI and Ollama (compatible API).
+  Apply `openai_api` practice when calling the OpenAI API.
+  Apply `ollama_api` practice when calling Ollama (same implementation path, no authentication header).
 
 ---
 
 "Provider::OpenaiProvider(url: str, model: str, token: str | None = None)":
   location: provider.py
   annotations: |
-    LLM-провайдер для OpenAI и Ollama (совместимый API).
+    LLM provider for OpenAI and Ollama (compatible API). This entity mutates the `Provider` base type.
 
-    `url`: базовый URL API endpoint.
-    `model`: идентификатор модели.
-    `token`: API-ключ. Если None — авторизация не отправляется (Ollama).
+    `url`: the base URL of the API endpoint.
+    `model`: the identifier of the target model.
+    `token`: the API key for authentication. When None, the provider skips authentication (Ollama mode).
   methods:
     "generate(prompt: str) -> answer:str": |
-      Генерация через OpenAI-совместимый API (POST {url}/v1/chat/completions).
+      Send a generation request to the OpenAI-compatible chat completions endpoint via HTTP POST to {url}/v1/chat/completions.
 
-      `prompt`: полный текст промпта.
-      `answer`: текст сгенерированного ответа.
+      `prompt`: the complete prompt text to submit.
+      `answer`: the generated response text returned by the API.
 
-      Использовать практику `openai_api` для реализации.
-      Если token is None — авторизация не отправляется (`ollama_api`).
+      Implement this method using the `openai_api` practice.
+      When the token constructor parameter is None, omit the Authorization header — apply the `ollama_api` practice.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  LLM-провайдер для OpenAI и Ollama (совместимый API).
+  LLM provider for OpenAI and Ollama (compatible API).

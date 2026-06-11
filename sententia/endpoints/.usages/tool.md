@@ -1,12 +1,12 @@
-# MCPTool — базовый тип MCP инструмента
+# MCPTool — Abstract Base for MCP Tools
 
-## Назначение
+## Purpose
 
-`MCPTool` — базовый тип для MCP инструментов. Определяет контракт для внешних MCP-клиентов. Мутируется конкретными реализациями (SearchTool, AskTool, FilesTool).
+`MCPTool` is an abstract base class for MCP tools. It defines the contract for external MCP clients. Specialized by concrete implementations (SearchTool, AskTool, FilesTool).
 
-## Использование
+## Usage
 
-Создайте подкласс `MCPTool`, реализовав свойства `name`, `description` и метод `execute`:
+Subclass `MCPTool`, implementing properties `name`, `description` and method `execute`:
 
 ```python
 class SearchTool(MCPTool):
@@ -14,12 +14,12 @@ class SearchTool(MCPTool):
     description = "Search for relevant documents"
 
     def execute(self, query: str, top: int = 10) -> list[SearchToolResult]:
-        # реализация
+        # implementation
 ```
 
-## Регистрация в MCP Server
+## Registration in MCP Server
 
-Для регистрации инструмента в FastMCP создайте wrapper-функцию, которая делегирует вызов методу `execute`, и передайте её в декоратор `@mcp.tool()`:
+To register a tool in FastMCP, create a wrapper function that delegates to the `execute` method and pass it to the `@mcp.tool()` decorator:
 
 ```python
 from mcp.server.fastmcp import FastMCP
@@ -27,7 +27,7 @@ import inspect
 
 mcp = FastMCP("MyServer")
 
-tool = MyTool()  # мутированный MCPTool
+tool = MyTool()  # MCPTool subclass instance
 
 def wrapper(**kwargs):
     return tool.execute(**kwargs)
@@ -42,9 +42,9 @@ wrapper.__doc__ = tool.description
 mcp.tool()(wrapper)
 ```
 
-## Правила
+## Rules
 
-- Базовая реализация `execute()` выбрасывает NotImplementedError
-- Свойства `name` и `description` обязательны — имя и описание инструмента для MCP-клиентов
-- Переопределяйте `execute()` с конкретной сигнатурой аргументов
-- Паттерн мутации: конкретный инструмент наследует MCPTool, определяет name/description, переопределяет execute()
+- Base implementation of `execute()` raises NotImplementedError
+- Properties `name` and `description` are required — tool identifier and description for MCP clients
+- Override `execute()` with a concrete parameter signature
+- Specialization pattern: concrete tool subclasses MCPTool, defines name/description, overrides execute()

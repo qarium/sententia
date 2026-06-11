@@ -45,55 +45,55 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for all code and test standards.
 
-  Корневая клетка сервиса Sententia.
-  Содержит точку входа приложения — main routine.
-  Точка сборки: создание всех компонентов и запуск приложения.
-  Использовать практику `running` для понимания запуска приложения.
-  Использовать практику `app` из sententia/app для понимания параметров приложения.
-  Использовать практику `configuration` из sententia/config для понимания создания конфигурации.
-  Использовать практику `cli` для понимания парсинга CLI аргументов.
+  This is the root cell of the Sententia service.
+  This cell owns the application entry point — the main routine.
+  This cell serves as the assembly point: it creates all components and launches the application.
+  Reference the `running` practice for the application startup procedure.
+  Reference the `app` practice from sententia/app for application parameters.
+  Reference the `configuration` practice from sententia/config for the configuration creation procedure.
+  Reference the `cli` practice for the CLI argument parsing procedure.
 
 ---
 
 "main(argv: list[str] | None = None) -> void:None":
   location: __main__.py
   annotations: |
-    Точка входа и сборки приложения.
+    Application entry point and assembly routine.
 
-    `argv`: список аргументов CLI. None — использовать sys.argv.
+    `argv`: a list of CLI arguments. When None, the routine uses sys.argv.
 
-    Алгоритм:
-    1. Вызвать `parse_cli_args` для получения `ParseCliResult`
-    2. Сформировать cli_overrides из `ParseCliResult`
-    3. Создать `SententiaConfig` с env_file и cli_overrides
-    4. Создать хранилище файлов с `reading` практикой
-    5. Создать индекс с `indexing` практикой
-    6. Создать LLM-провайдер по конфигурации (см. матчинг ниже)
+    Algorithm:
+    1. The routine invokes `parse_cli_args` and receives a `ParseCliResult`
+    2. The routine builds cli_overrides from `ParseCliResult`
+    3. The routine creates a `SententiaConfig` using env_file and cli_overrides
+    4. The routine creates a file storage using the `reading` practice
+    5. The routine creates an index using the `indexing` practice
+    6. The routine creates an LLM provider based on the configuration (see protocol mapping below)
 
-    Матчинг протокола к провайдеру:
-    - openai  → OpenaiProvider (использовать `openai_provider`)
-    - ollama  → OpenaiProvider (использовать `openai_provider`)
-    - anthropic → AnthropicProvider (использовать `anthropic_provider`)
+    Protocol-to-provider mapping:
+    - openai    → The routine creates an OpenaiProvider (apply `openai_provider`)
+    - ollama    → The routine creates an OpenaiProvider (apply `openai_provider`)
+    - anthropic → The routine creates an AnthropicProvider (apply `anthropic_provider`)
 
-    Режим --mcp=True:
-    Создать MCP tools с `search_tool`, `ask_tool`, `files_tool` практиками
-    Создать `SententiaApp` с `running` практикой
-    Зарегистрировать tools с использованием практики `tool` и запустить MCP Server
+    --mcp=True mode:
+    The routine creates MCP tools using `search_tool`, `ask_tool`, `files_tool` practices
+    The routine creates a `SententiaApp` using the `running` practice
+    The routine registers tools using the `tool` practice and starts the MCP Server
 
-    Режим --mcp=False (по умолчанию):
-    Создать REST ресурсы с `search_resource`, `ask_resource`, `files_resource` практиками
-    Создать `SententiaApp` с `running` практикой
-    Зарегистрировать ресурсы с использованием практики `resource` и запустить FastAPI
+    --mcp=False mode (default):
+    The routine creates REST resources using `search_resource`, `ask_resource`, `files_resource` practices
+    The routine creates a `SententiaApp` using the `running` practice
+    The routine registers resources using the `resource` practice and starts the FastAPI server
 
-    Использовать практику `configuration` из sententia/config для создания конфигурации.
-    Использовать практику `cli` для парсинга CLI аргументов.
-    Использовать практику `running` для создания, регистрации и запуска приложения.
+    Apply the `configuration` practice from sententia/config for configuration creation.
+    Apply the `cli` practice for CLI argument parsing.
+    Apply the `running` practice for application creation, registration, and startup.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  Точка входа сервиса Sententia. Сборка и запуск всех компонентов.
+  Entry point of the Sententia service. Assembles and launches all components.

@@ -1,13 +1,13 @@
-# AskResource — REST ресурс вопроса
+# AskResource — REST Question Resource
 
-## Назначение
+## Purpose
 
-`AskResource` — REST адаптер для RAG пайплайна (POST /ask).
-Принимает AskRequest с запросом, вызывает rag.ask(), возвращает AskResponse с ответом и источниками.
+`AskResource` — REST adapter for the RAG pipeline (POST /ask).
+Accepts an `AskRequest` with the query, delegates to `rag.ask()`, returns an `AskResponse` with the answer and sources.
 
-## Использование
+## Usage
 
-Создайте экземпляр с Index и LLM-провайдером, затем вызовите post():
+Instantiate with an `Index` and an LLM provider, then call `post()`:
 
 ```python
 from sententia.api.ask import AskResource, AskRequest, AskResponse
@@ -15,24 +15,24 @@ from sententia.llm import OpenaiProvider
 
 resource = AskResource(index=index, llm_provider=OpenaiProvider(url="...", model="llama3"))
 response = resource.post(AskRequest(query="как настроить авторизацию?"))
-print(response.answer)   # "Настройте OAuth2..."
+print(response.answer)   # "Configure OAuth2..."
 print(response.sources)  # ["auth.md"]
 
-# С явным указанием top
+# Override default top
 response = resource.post(AskRequest(query="как настроить авторизацию?", top=5))
 ```
 
-## Параметры конструктора
+## Constructor Parameters
 
-- `index: Index` — экземпляр индекса для поиска
-- `llm_provider: OpenaiProvider | AnthropicProvider` — LLM провайдер
-- `top: int = 10` — количество результатов поиска по умолчанию (используется если в запросе top не указан)
+- `index: Index` — search index instance
+- `llm_provider: OpenaiProvider | AnthropicProvider` — LLM provider backend
+- `top: int = 10` — default number of search results (applied when the request omits `top`)
 
-## Параметры AskRequest
+## AskRequest Parameters
 
-- `query: str` — текст вопроса (по умолчанию пустая строка)
-- `top: int | None` — количество чанков для контекста. Если None — используется дефолт из конструктора
+- `query: str` — question text (defaults to empty string)
+- `top: int | None` — number of context chunks. Falls back to the constructor default when `None`
 
-## Обработка ошибок
+## Error Handling
 
-При ошибке LLM провайдера (LLMProviderError) выбрасывает HTTPException(502).
+Raises `HTTPException(502)` on `LLMProviderError`.

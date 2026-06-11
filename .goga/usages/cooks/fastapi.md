@@ -1,6 +1,6 @@
-# FastAPI — фреймворк для HTTP API
+# FastAPI — a framework for HTTP API
 
-## Создание приложения
+## Creating an application
 
 ```python
 from fastapi import FastAPI
@@ -8,16 +8,16 @@ from fastapi import FastAPI
 app = FastAPI(title="Knowage API")
 ```
 
-## APIRouter и регистрация маршрутов
+## APIRouter and route registration
 
-Привязка экземпляра класса как route handler через bound-метод:
+Bind a class instance as a route handler via a bound method. The endpoint object must expose: `url_rule` (str property), `method` (str property), and `handle` (callable method).
 
 ```python
 from fastapi import APIRouter
 
 router = APIRouter()
 
-# endpoint — экземпляр класса с properties url_rule, method и методом handle
+# endpoint — a class instance with properties url_rule, method and method handle
 router.add_api_route(
     endpoint.url_rule,           # "/search"
     endpoint.handle,             # bound method
@@ -25,13 +25,13 @@ router.add_api_route(
 )
 ```
 
-Подключение роутера к приложению:
+Connect the router to the application:
 
 ```python
 app.include_router(router)
 ```
 
-## POST с body (Pydantic моделью)
+## POST with body (Pydantic model)
 
 ```python
 @router.post("/search", response_model=SearchResponse)
@@ -39,9 +39,9 @@ async def search(request: SearchRequest) -> SearchResponse:
     return SearchResponse(results=[])
 ```
 
-## GET с path parameter
+## GET with path parameter
 
-Синтаксис `{param:path}` захватывает весь остаток URL включая слеши:
+The `{param:path}` syntax captures the entire remaining URL path including forward slashes:
 
 ```python
 @router.get("/files/{file_path:path}", response_model=FileResponse)
@@ -49,7 +49,7 @@ async def get_file(file_path: str) -> FileResponse:
     return FileResponse(text="...", source=file_path)
 ```
 
-## Запуск через uvicorn
+## Running via uvicorn
 
 ```python
 import uvicorn
@@ -57,15 +57,15 @@ import uvicorn
 uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-## Обработка исключений
+## Exception handling
 
 ```python
 from fastapi import HTTPException
 
-# В endpoint — raise, не return
+# In an endpoint — raise, never return
 raise HTTPException(status_code=404, detail="File not found")
 
-# Глобальный обработчик
+# Global exception handler
 @app.exception_handler(FileNotFoundError)
 async def file_not_found_handler(request, exc):
     return JSONResponse(status_code=404, content={"detail": str(exc)})

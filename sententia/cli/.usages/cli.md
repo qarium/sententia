@@ -1,40 +1,42 @@
-# CLI аргументы
+# CLI Arguments
 
-Парсинг CLI аргументов через parse_cli_args.
+Parse CLI arguments using parse_cli_args.
 
-## Использование
+## Usage
 
-    from sententia.cli import parse_cli_args
+```python
+from sententia.cli import parse_cli_args
 
-    result = parse_cli_args()           # из sys.argv
-    result = parse_cli_args(["data"])   # из переданного списка
+result = parse_cli_args()           # reads from sys.argv
+result = parse_cli_args(["data"])   # reads from the provided list
+```
 
-## Результат — ParseCliResult
+## Result — ParseCliResult
 
-Свойства:
-- data_dir: str — путь к директории с Markdown-файлам
-- env_file: str | None — путь к env-файлу
-- index_path: str | None — путь к файлу FAISS индекса
-- llm_protocol: str — тип LLM провайдера
-- llm_url: str — URL API endpoint
-- llm_model: str — идентификатор модели
-- llm_token: str | None — API-ключ
-- mcp: bool | None — флаг MCP Server
-- host: str | None — адрес привязки
-- port: int | None — порт сервера
+Properties:
+- data_dir: str — path to the Markdown files directory
+- env_file: str | None — path to the env file
+- index_path: str | None — path to the FAISS index file
+- llm_protocol: str — LLM provider type
+- llm_url: str — API endpoint URL
+- llm_model: str — model identifier
+- llm_token: str | None — API key
+- mcp: bool | None — MCP Server mode flag
+- host: str | None — bind address
+- port: int | None — server port
 
-## CLI аргументы
+## CLI Arguments
 
-Позиционные:
-  data_dir — путь к директории с Markdown-файлами
+Positional:
+  data_dir — path to the Markdown files directory
 
-Опции:
-  --env-file — путь к env-файлу конфигурации. Если не указан — используется ".env" по умолчанию.
-  --index-path — путь к файлу FAISS индекса
-  --llm-protocol — тип LLM (openai, anthropic, ollama). Обязателен.
-  --llm-url — URL API endpoint. Обязателен.
-  --llm-model — идентификатор модели. Обязателен.
-  --llm-token — API-ключ
-  --mcp — запустить как MCP Server
-  --host — адрес привязки (по умолчанию 0.0.0.0)
-  --port — порт сервера (по умолчанию 8000)
+Options:
+  --env-file — path to the env configuration file. Defaults to ".env" if not specified.
+  --index-path — path to the FAISS index file
+  --llm-protocol — LLM type (openai, anthropic, ollama). Required.
+  --llm-url — API endpoint URL. Required.
+  --llm-model — model identifier. Required.
+  --llm-token — API key
+  --mcp — run as MCP Server
+  --host — bind address (default: 0.0.0.0)
+  --port — server port (default: 8000)

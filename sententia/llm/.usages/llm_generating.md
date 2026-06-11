@@ -1,6 +1,6 @@
-# Базовый паттерн работы с LLM-провайдером
+# Basic LLM Provider Usage Pattern
 
-Все провайдеры реализуют единый интерфейс generate(prompt: str) -> str.
+All providers implement the unified interface generate(prompt: str) -> str.
 
-Использование:
-  answer = llm_provider.generate("Ваш промпт")
+Usage:
+  answer = llm_provider.generate("Your prompt")

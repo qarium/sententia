@@ -14,10 +14,10 @@ Usages:
   mcp: .goga/usages/cooks/mcp.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` to enforce code and test authoring rules.
 
-  Фасад клетки mcp. Re-export MCP инструментов.
-  Использовать `mcp` для регистрации инструментов через MCP SDK.
+  This cell acts as the MCP facade. It re-exports the MCP tool types `SearchTool`, `AskTool`, `FilesTool` from their respective subcells.
+  Apply `mcp` to register tools via the MCP SDK.
 
 ---
 
@@ -30,4 +30,4 @@ Annotations: |
 Author: Goga Brainstorm
 CreatedAt: 16/05/26
 Description: |
-  Фасад MCP адаптера. Re-export MCP инструментов.
+  MCP adapter facade. Re-exports MCP tool types from subcells.

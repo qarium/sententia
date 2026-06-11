@@ -1,23 +1,23 @@
-# Индексация Markdown-файлов
+# Indexing Markdown Files
 
-Создайте экземпляр `Index` со Storage и (опционально) путём к файлу индекса.
+Create an `Index` instance with a `Storage` instance and an optional index file path.
 
-## Персистентный режим (с index_path)
+## Persistent Mode (with index_path)
 
   storage = Storage("/path/to/markdown/docs")
   index = Index(storage, "/path/to/index.faiss")
-  # → индекс загружен из файла или создан и сохранён на диск
+  # → index loaded from disk, or built and persisted on first run
 
-При создании индекс загружается из файла, если он существует.
-Для переиндексации вызовите `index.index_directory()`:
+On instantiation, the index is restored from disk if the file exists.
+To force a full re-index, call `index.index_directory()`:
   info = index.index_directory()
   # → {"files": 12, "chunks": 156, "dimensions": 768}
 
-## In-memory режим (без index_path)
+## In-Memory Mode (without index_path)
 
   storage = Storage("/path/to/markdown/docs")
   index = Index(storage)
-  # → индекс создан из .md файлов, существует только в памяти
+  # → index built from .md files, held entirely in memory
 
-Индекс строится с нуля при каждом создании экземпляра.
-Методы `save()` и `load()` недоступны — выбрасывают ошибку.
+The index is reconstructed from scratch on every instantiation.
+The `save()` and `load()` methods raise errors in this mode.

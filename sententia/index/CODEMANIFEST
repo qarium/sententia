@@ -12,99 +12,99 @@ Usages:
   text_splitting: .goga/usages/cooks/text_splitting.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for all code and test authoring rules.
 
-  Клетка отвечает за индексацию Markdown-файлов и поиск релевантных фрагментов.
-  Поддерживает два режима работы:
-  - Персистентный: при заданном index_path индекс загружается/сохраняется в файл
-  - In-memory: при index_path=None индекс строится с нуля при каждом запуске, не сохраняется на диск
+  This cell provides Markdown file indexing and semantic fragment retrieval.
+  It supports two operational modes:
+  - Persistent: when index_path is set, the index is persisted to and loaded from disk.
+  - In-memory: when index_path is None, the index is rebuilt on every instantiation and never persisted.
 
-  Использовать практику `faiss` для векторного хранилища.
-  Использовать практику `sentence_transformers` для генерации эмбеддингов.
-  Использовать практику `text_splitting` для разбиения текста на чанки.
+  Apply the `faiss` practice for vector store operations.
+  Apply the `sentence_transformers` practice for embedding generation.
+  Apply the `text_splitting` practice for text chunking.
 
-  Порядок индексации: получение файлов через `reading` → очистка → chunking → эмбеддинги → FAISS.
-  Нормализовать векторы перед добавлением в FAISS.
+  Indexing pipeline: retrieve files via `reading` → sanitize → chunk → embed → index into FAISS.
+  Normalize all vectors before insertion into FAISS.
 
 ---
 
 "Index(storage: Storage, index_path: str | None = None, default_top: int = 10)":
   location: indexer.py
   annotations: |
-    Индекс Markdown-файлов с семантическим поиском.
-    Поддерживает два режима работы:
-    - При заданном index_path: проверяет наличие сохранённого индекса.
-      Если файл существует — загружает через load. Если нет — строит через `storage` и сохраняет через save.
-    - При index_path=None: строит индекс с нуля через `storage`. Индекс существует только в памяти.
-      Методы save и load недоступны — выбрасывают ошибку при вызове.
+    Markdown file indexer with semantic search capabilities.
+    Operates in two modes:
+    - Persistent (index_path provided): checks for an existing index on disk.
+      If the file exists, restores it via load. Otherwise, builds the index from `storage` and persists via save.
+    - In-memory (index_path is None): builds the index from `storage` on every instantiation. The index resides solely in memory.
+      The save and load methods raise an error when invoked in this mode.
 
-    `storage`: экземпляр Storage для доступа к Markdown-файлам.
-    `index_path`: путь к файлу для сохранения/загрузки FAISS индекса. Если None — in-memory режим.
-      Пустая строка недопустима — выбрасывает ValueError.
-    `default_top`: количество результатов поиска по умолчанию.
+    `storage`: a `Storage` instance providing access to Markdown files.
+    index_path: filesystem path for the FAISS index file. When None, activates in-memory mode.
+      Passing an empty string is invalid and raises ValueError.
+    default_top: default number of search results returned by search.
 
-    Модель эмбеддингов — внутренняя деталь. Чанки получают префикс "passage: ", запросы — "query: "
-    (требование модели E5).
+    The embedding model is an implementation detail. Chunks are prefixed with "passage: " and queries with "query: "
+    as required by the E5 model.
 
-    Использовать практику `faiss` для векторного хранилища.
-    Использовать практику `sentence_transformers` для генерации эмбеддингов.
-    Использовать практику `text_splitting` для разбиения текста на чанки.
-    Использовать практику `reading` для работы с файлами.
+    Apply the `faiss` practice for vector store operations.
+    Apply the `sentence_transformers` practice for embedding generation.
+    Apply the `text_splitting` practice for text chunking.
+    Apply the `reading` practice for file access.
   methods:
     "index_directory() -> index_info:dict": |
-      Построение индекса из файлов Storage.
+      Build a vector index from all files provided by `Storage`.
 
-      Алгоритм:
-      1. Получение списка файлов и чтение содержимого каждого.
-      2. Очистка текста от Markdown-разметки (блоки кода, изображения, ссылки, заголовки).
-      3. Разбиение очищенного текста на чанки с перекрытием.
-      4. Добавление префикса "passage: " к каждому чанку (требование модели E5).
-      5. Генерация эмбеддингов и нормализация векторов.
-      6. Создание FAISS-индекса (IndexFlatIP) и добавление векторов.
+      Pipeline:
+      1. Enumerate files and read each file's content.
+      2. Strip Markdown markup (code blocks, images, links, headings).
+      3. Split the sanitized text into overlapping chunks.
+      4. Prepend the "passage: " prefix to every chunk (E5 model requirement).
+      5. Generate embeddings and normalize the resulting vectors.
+      6. Instantiate a FAISS IndexFlatIP and insert the normalized vectors.
 
-      `index_info`: словарь {"files": int, "chunks": int, "dimensions": int} —
-      количество файлов, чанков и размерность векторов.
+      `index_info`: dict {"files": int, "chunks": int, "dimensions": int} reporting
+      the number of indexed files, total chunks, and embedding dimensionality.
 
-      Требования:
-      - Векторы нормализуются перед добавлением в FAISS.
-      - Если файлов нет — создаётся пустой индекс с размерностью, определённой пробным эмбеддингом.
+      Requirements:
+      - All vectors must be normalized before FAISS insertion.
+      - When no files are present, create an empty index whose dimensionality is derived from a probe embedding.
 
-      Использовать практику `reading` для работы с файлами.
-      Использовать практику `faiss` для создания и заполнения индекса.
-      Использовать практику `sentence_transformers` для генерации эмбеддингов.
-      Использовать практику `text_splitting` для разбиения текста.
+      Apply the `reading` practice for file access.
+      Apply the `faiss` practice for index construction and population.
+      Apply the `sentence_transformers` practice for embedding generation.
+      Apply the `text_splitting` practice for text splitting.
 
     "search(query: str, top: int | None = None) -> results:list": |
-      Векторизация запроса и поиск top-N релевантных чанков в FAISS.
-      Если `top` не указан — используется default_top.
+      Encode the query and retrieve the top-N most relevant chunks from FAISS.
+      Falls back to default_top when `top` is omitted.
 
-      `query`: текст поискового запроса. Векторизуется с префиксом "query: ".
-      `top`: количество возвращаемых результатов.
+      `query`: search query text. Encoded with the "query: " prefix.
+      `top`: number of results to return.
 
-      `results`: список объектов {"text": str, "source": str, "score": float},
-                 отсортированных по убыванию релевантности.
+      `results`: list of dicts {"text": str, "source": str, "score": float},
+                 sorted by relevance score in descending order.
 
-      Использовать практику `faiss` для поиска.
-      Использовать практику `sentence_transformers` для векторизации запроса.
+      Apply the `faiss` practice for similarity search.
+      Apply the `sentence_transformers` practice for query encoding.
 
     "save() -> void:none": |
-      Сохранить FAISS индекс и метаданные на диск в index_path.
-      Выбрасывает ошибку, если index_path равен None.
+      Persist the FAISS index and associated metadata to disk at index_path.
+      Raises an error when index_path is None.
 
-      Использовать практику `faiss` для сериализации индекса.
+      Apply the `faiss` practice for index serialization.
 
     "load() -> loaded:bool": |
-      Загрузить FAISS индекс и метаданные с диска из index_path.
-      Выбрасывает ошибку, если index_path равен None.
+      Restore the FAISS index and metadata from disk at index_path.
+      Raises an error when index_path is None.
 
-      `loaded`: True если загрузка успешна, False если файл не найден
-                или формат повреждён.
+      `loaded`: True on successful restore, False when the file is missing
+                or the format is corrupted.
 
-      Использовать практику `faiss` для десериализации индекса.
+      Apply the `faiss` practice for index deserialization.
 
 ---
 
 Author: Goga
 CreatedAt: 07/05/26
 Description: |
-  Индексация Markdown-файлов и семантический поиск на основе FAISS + Sentence-Transformers.
+  Markdown file indexing and semantic search powered by FAISS + Sentence-Transformers.

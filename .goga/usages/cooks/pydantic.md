@@ -1,8 +1,8 @@
-# Pydantic v2 — валидация данных и сериализация
+# Pydantic v2 — Data Validation and Serialization
 
-## BaseSettings — загрузка из ENV и env-файла
+## BaseSettings — Environment Variable and Env File Loading
 
-Для моделей, загружающих значения из переменных окружения и env-файлов, используется `pydantic-settings`:
+The `pydantic-settings` package provides `BaseSettings` for models that load configuration values from environment variables and `.env` files:
 
 ```python
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -10,10 +10,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class AppConfig(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="APP_",          # префикс ENV переменных
-        env_file=".env",            # путь к env-файлу
+        env_prefix="APP_",          # prefix for ENV variables
+        env_file=".env",            # path to env file
         env_file_encoding="utf-8",
-        extra="ignore",             # игнорировать лишние переменные
+        extra="ignore",             # ignore unrecognized variables
     )
 
     host: str = "0.0.0.0"
@@ -21,19 +21,19 @@ class AppConfig(BaseSettings):
     debug: bool = False
 ```
 
-Приоритет источников (от высокого к низкому): аргументы конструктора > ENV переменные > env-файл > дефолты.
+The resolution order for configuration sources (highest priority first): constructor arguments > environment variables > env file > field defaults.
 
 ```python
-# Из ENV: APP_HOST=127.0.0.1
+# Environment: APP_HOST=127.0.0.1
 config = AppConfig()
 assert config.host == "127.0.0.1"
 
-# Аргумент конструктора перекрывает ENV
+# Constructor argument takes precedence over environment variable
 config = AppConfig(host="10.0.0.1")
 assert config.host == "10.0.0.1"
 ```
 
-Дополнительные перекрытия через kwargs реализуются через `model_validator`:
+To apply additional overrides beyond the standard resolution order, use a `model_validator` with `mode="before"` that merges a `cli_overrides` dict into the values:
 
 ```python
 from pydantic import model_validator
@@ -64,7 +64,7 @@ assert config.host == "192.168.1.1"
 
 ---
 
-## Модель с kw_only и дефолтами
+## Models with kw_only and Default Values
 
 ```python
 from pydantic import BaseModel, ConfigDict, Field
@@ -81,13 +81,13 @@ class SearchResponse(BaseModel):
     results: list = Field(default_factory=list)
 ```
 
-Правила дефолтов:
-- str → `""` (пустая строка)
-- int → `0`
-- float → `0.0`
-- list → `Field(default_factory=list)` (не `[]` напрямую — mutable default)
+Default value conventions for field types:
+- `str` fields default to `""` (empty string)
+- `int` fields default to `0`
+- `float` fields default to `0.0`
+- `list` fields use `Field(default_factory=list)` — never assign `[]` directly to avoid the mutable default trap
 
-## Типы полей
+## Field Types
 
 ```python
 class DataModel(BaseModel):
@@ -99,18 +99,20 @@ class DataModel(BaseModel):
     tags: list = Field(default_factory=list)
 ```
 
-## Сериализация
+## Serialization
+
+The `BaseModel` class exposes four methods for serialization and deserialization:
 
 ```python
 # -> dict
 d = model.model_dump()
 
-# -> JSON строка
+# -> JSON string
 j = model.model_dump_json()
 
 # <- dict
 m = Model.model_validate({"field": "value"})
 
-# <- JSON строка
+# <- JSON string
 m = Model.model_validate_json('{"field": "value"}')
 ```

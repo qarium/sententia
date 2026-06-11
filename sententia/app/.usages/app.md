@@ -1,24 +1,26 @@
-# Параметры приложения
+# Application Parameters
 
-Параметры приложения можно передать через аргументы командной строки (через main routine) или через ENV переменные.
+Supply application parameters via command-line arguments (through the main routine) or environment variables.
 
-Конфигурация инкапсулирована в SententiaConfig из sententia/config клетки:
+Configuration is encapsulated in `SententiaConfig` from the `sententia/config` cell:
 
-    from sententia.config import SententiaConfig
+```python
+from sententia.config import SententiaConfig
 
-    config = SententiaConfig(env_file=result.env_file, cli_overrides={...})
+config = SententiaConfig(env_file=result.env_file, cli_overrides={...})
+```
 
-Приоритет: cli_overrides > ENV > env-файл > дефолты.
+Precedence order: cli_overrides > ENV > env-file > defaults.
 
-Обязательные параметры:
-  data_dir — путь к директории с Markdown-файлам
-  llm_protocol — тип LLM ("openai", "anthropic", "ollama")
-  llm_url — URL API endpoint
-  llm_model — идентификатор модели
+Required parameters:
+  data_dir — path to the directory containing Markdown files
+  llm_protocol — LLM provider type ("openai", "anthropic", "ollama")
+  llm_url — API endpoint URL
+  llm_model — model identifier
 
-Опциональные параметры:
-  index_path — путь к файлу индекса. Если не указан — индекс строится в памяти без сохранения на диск
-  llm_token — API-ключ (не нужен для Ollama)
-  mcp — флаг режима MCP Server (по умолчанию False). При True запускается MCP Server вместо REST API
-  host — адрес привязки (по умолчанию 0.0.0.0)
-  port — порт сервера (по умолчанию 8000)
+Optional parameters:
+  index_path — path to the index file. When omitted, the index is built in memory without disk persistence
+  llm_token — API key (not required for Ollama)
+  mcp — MCP Server mode flag (default: False). When True, launches MCP Server instead of REST API
+  host — bind address (default: 0.0.0.0)
+  port — server port (default: 8000)

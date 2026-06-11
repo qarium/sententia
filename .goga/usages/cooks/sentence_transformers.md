@@ -1,8 +1,8 @@
-# Sentence-Transformers — генерация эмбеддингов
+# Sentence-Transformers — Embedding Generation
 
-Модель: `intfloat/multilingual-e5-base`. Размерность: 768. Поддержка кириллицы и латиницы.
+Model: `intfloat/multilingual-e5-base`. Dimensionality: 768. Supports Cyrillic and Latin scripts.
 
-## Загрузка модели
+## Loading the Model
 
 ```python
 from sentence_transformers import SentenceTransformer
@@ -10,30 +10,30 @@ from sentence_transformers import SentenceTransformer
 model = SentenceTransformer("intfloat/multilingual-e5-base")
 ```
 
-## Префиксы E5 (обязательно)
+## E5 Prefixes (mandatory)
 
-Без префиксов качество поиска значительно падает:
-- Документы (индексация): `"passage: "` + текст
-- Запросы (поиск): `"query: "` + текст
+The model requires input text prefixes. Without them, search quality drops significantly:
+- Documents (indexing): `"passage: "` + text
+- Queries (search): `"query: "` + text
 
-## Генерация эмбеддингов
+## Generating Embeddings
 
 ```python
-# Батч документов
+# Document batch
 texts = ["passage: " + chunk for chunk in chunks]
 embeddings = model.encode(texts)
 # numpy array, shape (n, 768), dtype float32
 
-# Один запрос
+# Single query
 query_vec = model.encode(["query: " + query])
 # numpy array, shape (1, 768), dtype float32
 ```
 
-Нормализация векторов выполняется через `np.linalg.norm` с явным присвоением результата перед добавлением в индекс и поиском.
+Normalize vectors using `np.linalg.norm` with explicit result assignment before adding to the index and performing search.
 
-## Формат результата
+## Result Format
 
-| Вызов                          | Тип           | Shape         |
-|--------------------------------|---------------|---------------|
-| `encode("текст")`              | numpy.ndarray | (768,) — 1D   |
-| `encode(["текст1", "текст2"])` | numpy.ndarray | (2, 768) — 2D |
+| Call                           | Type           | Shape         |
+|--------------------------------|----------------|---------------|
+| `encode("text")`               | numpy.ndarray  | (768,) — 1D   |
+| `encode(["text1", "text2"])`   | numpy.ndarray  | (2, 768) — 2D |

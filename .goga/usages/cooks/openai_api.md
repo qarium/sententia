@@ -1,6 +1,6 @@
-# OpenAI API — генерация текста через GPT-модели
+# OpenAI API — Text Generation via GPT Models
 
-## Вызов через httpx
+## Invocation via httpx
 
 ```python
 import httpx
@@ -20,10 +20,10 @@ response.raise_for_status()
 answer = response.json()["choices"][0]["message"]["content"]
 ```
 
-## Параметры
+## Parameters
 
 - Endpoint: `POST {url}/chat/completions`
-- Headers: `Authorization: Bearer {token}`, `Content-Type: application/json`
-- Body: `model`, `messages` (массив `{role, content}`), опционально `temperature`, `max_tokens`
-- Ответ: `choices[0].message.content`
-- token обязателен — без него API вернёт 401
+- Headers: `Authorization: Bearer {token}` (required), `Content-Type: application/json`
+- Body: `model` (string — GPT model identifier), `messages` (array of `{role, content}` objects), optional `temperature`, `max_tokens`
+- Response: `choices[0].message.content`
+- Authentication: required — requests without a valid token receive `401 Unauthorized`

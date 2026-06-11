@@ -1,12 +1,12 @@
-# FilesResource — REST ресурс файлов
+# FilesResource — REST File Resource
 
-## Назначение
+## Purpose
 
-`FilesResource` — REST ресурс для чтения содержимого файла. Адаптер GET /files/{path:path}.
+`FilesResource` — REST adapter for file content retrieval (GET /files/{path:path}).
 
-## Использование
+## Usage
 
-Создайте экземпляр с Storage, затем вызовите get():
+Instantiate with a `Storage`, then call `get()`:
 
 ```python
 from sententia.storage import Storage
@@ -15,12 +15,12 @@ from sententia.api.files import FilesResource
 storage = Storage(directory_path="/data/docs")
 resource = FilesResource(storage=storage)
 result = resource.get(path="docs/auth.md")
-# result.text — содержимое файла
-# result.source — относительный путь
+# result.text — file contents
+# result.source — relative path
 ```
 
-## Обработка ошибок
+## Error Handling
 
-- FileNotFoundError / UnicodeDecodeError → HTTP 404
-- PermissionError → HTTP 403
-- ValueError (path traversal) → HTTP 404
+- `FileNotFoundError` / `UnicodeDecodeError` → HTTP 404
+- `PermissionError` → HTTP 403
+- `ValueError` (path traversal) → HTTP 404

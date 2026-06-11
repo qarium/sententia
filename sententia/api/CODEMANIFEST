@@ -14,10 +14,10 @@ Usages:
   fastapi: .goga/usages/cooks/fastapi.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for coding and testing standards.
 
-  Фасад клетки api. Re-export REST ресурсов.
-  Использовать `fastapi` для регистрации маршрутов.
+  API cell facade. Re-export REST resources.
+  Register routes using `fastapi`.
 
 ---
 
@@ -30,4 +30,4 @@ Annotations: |
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  Фасад API адаптера. Re-export REST ресурсов.
+  API adapter facade. Re-export REST resources.

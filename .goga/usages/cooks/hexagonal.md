@@ -1,25 +1,25 @@
-# Гексагональная архитектура (ports & adapters)
+# Hexagonal Architecture (Ports & Adapters)
 
-## Назначение
+## Purpose
 
-Данная практика описывает паттерн гексагональной архитектуры, применяемый в адаптерах
-сервиса Sententia (API и MCP).
+This practice describes the Hexagonal Architecture pattern applied to the adapters
+of the Sententia service (API Adapter and MCP Adapter).
 
-## Принцип
+## Principle
 
-Адаптер находится на границе домена и выполняет две функции:
-1. Переводит внешние запросы (HTTP для API, MCP протокол для MCP tools) в вызовы доменного слоя
-2. Конвертирует результаты домена (dict/list) в модели ответов (pydantic)
+An Adapter operates at the boundary of the Domain Layer and performs two functions:
+1. Translates external requests (HTTP for the API Adapter, MCP Protocol for the MCP Adapter) into Domain Layer calls
+2. Converts Domain Layer results (dict/list) into Response Models (Pydantic Models)
 
-Доменный слой (index, rag, storage) не знает о протоколе взаимодействия и моделях ответов.
+The Domain Layer (index, rag, storage) is protocol-agnostic and unaware of Response Models.
 
-## Применение
+## Application
 
-- **API адаптер** (sententia/api/*) — переводит HTTP-запросы в вызовы домена, конвертирует в pydantic модели
-- **MCP адаптер** (sententia/mcp/*) — переводит MCP tool вызовы в вызовы домена, конвертирует в pydantic модели
+- **API Adapter** (sententia/api/*) — translates HTTP requests into Domain Layer calls, converts results into Pydantic Models
+- **MCP Adapter** (sententia/mcp/*) — translates MCP Protocol tool calls into Domain Layer calls, converts results into Pydantic Models
 
-## Правила
+## Rules
 
-- Адаптер не содержит бизнес-логики — только маршрутизация и конвертация данных
-- Доменный слой не импортирует типы из адаптера
-- Модели запросов/ответов принадлежат адаптеру, не домену
+- Adapters must not contain Business Logic — only Routing and Data Conversion
+- The Domain Layer must not import types from the Adapter
+- Request Models and Response Models belong to the Adapter, not the Domain Layer

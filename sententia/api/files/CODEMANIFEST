@@ -14,53 +14,53 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Reference `conventions` for code and test authoring rules.
 
-  Адаптер GET /files/<path> — получение содержимого файла.
-  Использовать практику `pydantic` для моделей ответа.
-  Использовать практику `hexagonal` для понимания роли адаптера.
-  Использовать практику `reading` для чтения файлов.
+  GET /files/<path> adapter — retrieves file contents.
+  Reference `pydantic` practice for response model definitions.
+  Reference `hexagonal` practice to understand adapter boundaries.
+  Reference `reading` practice for file read operations.
 
 ---
 
 "FileResponse()":
   location: models.py
   annotations: |
-    Модель ответа для GET /files/<path>.
-    Использовать `pydantic` для реализации.
+    Response model for GET /files/<path>.
+    Reference `pydantic` practice for model implementation.
   properties:
     text -> str: |
-      Содержимое файла. Значение по умолчанию — пустая строка.
+      File content string. Default value: empty string.
     source -> str: |
-      Путь к файлу. Значение по умолчанию — пустая строка.
+      File path string. Default value: empty string.
 
 "RESTResource::FilesResource(storage: Storage)":
   location: files.py
   annotations: |
-    REST ресурс GET /files/<path> — получение содержимого файла.
+    REST adapter serving GET /files/<path> — retrieves and returns file contents.
 
-    `storage`: экземпляр `Storage` для чтения файлов.
+    `storage`: an instance of `Storage` used for file read operations.
 
-    Использовать практику `reading` для чтения файлов.
-    Использовать практику `pydantic` для конвертации данных.
-    Использовать практику `hexagonal` для понимания роли адаптера.
+    Reference `reading` practice when reading files through `storage`.
+    Reference `pydantic` practice when constructing response models.
+    Reference `hexagonal` practice to understand adapter boundaries and responsibilities.
   properties:
     url_rule -> str: |
       "/files/{path:path}"
   methods:
     "get(path: str) -> response:FileResponse": |
-      Обработка GET /files/<path>.
+      Handle GET /files/<path> requests.
 
-      `path`: относительный путь к файлу из URL.
-      `response`: pydantic модель ответа с полями text и source.
+      `path`: relative file path extracted from the URL.
+      `response`: a pydantic response model populated with text and source fields.
 
-      Если файл не найден — HTTP 404.
-      Использовать практику `reading` для чтения файлов.
-      Использовать практику `pydantic` для конвертации данных.
+      Return HTTP 404 when the file is not found.
+      Reference `reading` practice when reading file contents.
+      Reference `pydantic` practice when constructing the response model.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  API адаптер файлов — GET /files/<path>.
+  File API adapter — GET /files/<path> endpoint.

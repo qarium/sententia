@@ -3,46 +3,46 @@ Usages:
   pydantic: .goga/usages/cooks/pydantic.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
-  Использовать `pydantic` для работы с моделями данных.
+  The agent must apply `conventions` rules when authoring code and tests for this cell.
+  The agent must apply `pydantic` patterns when implementing data models in this cell.
 
 ---
 
 "SententiaConfig(env_file: str | None = None, cli_overrides: dict[str, Any] | None = None)":
   location: config.py
   annotations: |
-    Модель конфигурации приложения.
-    Загружает значения из ENV переменных с префиксом SENTENTIA_ и из env-файла.
-    Приоритет источников: `cli_overrides` > ENV > env-файл > дефолты.
+    Application configuration model.
+    Resolves values from ENV variables with the SENTENTIA_ prefix and from a dotenv file.
+    Resolution priority: `cli_overrides` > ENV > dotenv file > built-in defaults.
 
-    `env_file`: путь к env-файлу. Если None — используется ".env" по умолчанию.
-    `cli_overrides`: словарь значений из CLI для перекрытия ENV/env-файла. Значения могут быть любого типа (str, int, bool).
+    `env_file` (str | None): filesystem path to a dotenv file. When the value is None, the model uses ".env" as the default path.
+    `cli_overrides` (dict[str, Any] | None): a dictionary of values provided by the CLI layer. Each key corresponds to a configuration field name. Values may be of type str, int, or bool. Non-None values take precedence over ENV and dotenv sources.
 
-    Использовать `pydantic` для работы с моделью.
-    Использовать `conventions` для правил написания кода и тестов.
+    The agent must use `pydantic` BaseModel as the base class for this model.
+    The agent must apply `conventions` rules for code and test authoring.
   properties:
     "data_dir -> str": |
-      Путь к директории с Markdown-файлами.
+      Directory path containing Markdown documents for indexing. Defaults to an empty string.
     "index_path -> str | None": |
-      Путь к файлу FAISS индекса. None — индекс в памяти.
+      Filesystem path to a persisted FAISS index file. None indicates an in-memory index.
     "llm_protocol -> str": |
-      Тип LLM провайдера: "openai", "anthropic", "ollama".
+      LLM provider identifier: "openai", "anthropic", or "ollama".
     "llm_url -> str": |
-      URL API endpoint LLM провайдера.
+      Base URL of the LLM provider API endpoint.
     "llm_model -> str": |
-      Идентификатор модели LLM.
+      Identifier of the LLM model to invoke.
     "llm_token -> str | None": |
-      API-ключ. None — токен не нужен (Ollama).
+      API authentication key for the LLM provider. None indicates no authentication required (e.g. Ollama).
     "mcp -> bool": |
-      Флаг режима MCP Server. По умолчанию False.
+      Boolean flag that enables MCP Server mode. Defaults to False.
     "host -> str": |
-      Адрес привязки сервера. По умолчанию "0.0.0.0".
+      Server bind address. Defaults to "0.0.0.0".
     "port -> int": |
-      Порт сервера. По умолчанию 8000.
+      Server listen port. Defaults to 8000.
 
 ---
 
 Author: Goga
 CreatedAt: 08/06/26
 Description: |
-  Конфигурация приложения. Модель с поддержкой ENV и env-файла.
+  Application configuration cell. Pydantic model that resolves configuration values from environment variables, dotenv file, and CLI overrides with defined priority.

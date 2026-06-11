@@ -21,70 +21,69 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for code and test writing standards.
 
-  Адаптер POST /ask — генерация ответа на основе RAG.
-  Использовать практику `pydantic` для моделей запроса и ответа.
-  Использовать практику `hexagonal` для понимания роли адаптера.
-  Использовать практику `asking` для выполнения RAG pipeline.
-  Использовать практику `llm_generating` для понимания работы с LLM-провайдерами.
+  The POST /ask adapter is responsible for generating answers via RAG.
+  Apply `pydantic` to define request and response data models.
+  Apply `hexagonal` to clarify the adapter role within the architecture.
+  Apply `asking` to execute the RAG pipeline.
+  Apply `llm_generating` for LLM provider integration patterns.
 
 ---
 
 "AskRequest()":
   location: models.py
   annotations: |
-    Модель запроса для POST /ask.
-    Использовать `pydantic` для реализации.
+    Request model for the POST /ask endpoint.
+    Implement using `pydantic`.
   properties:
     query -> str: |
-      Текст вопроса пользователя. Значение по умолчанию — пустая строка.
+      The user's question text. Defaults to an empty string.
     top -> int | None: |
-      Количество чанков для контекста. Если не указано — используется дефолт из AskResource.
-      Значение по умолчанию — None.
+      Number of context chunks. Falls back to AskResource default when omitted.
+      Defaults to None.
 
 "AskResponse()":
   location: models.py
   annotations: |
-    Модель ответа для POST /ask.
-    Использовать `pydantic` для реализации.
+    Response model for the POST /ask endpoint.
+    Implement using `pydantic`.
   properties:
     answer -> str: |
-      Сгенерированный ответ. Значение по умолчанию — пустая строка.
+      Generated answer. Defaults to an empty string.
     sources -> list: |
-      Список файлов-источников. Значение по умолчанию — пустой список.
+      List of source files. Defaults to an empty list.
 
 "RESTResource::AskResource(index: Index, llm_provider: OpenaiProvider | AnthropicProvider, top: int = 10)":
   location: ask.py
   annotations: |
-    REST ресурс POST /ask — генерация ответа на основе RAG.
+    REST resource for the POST /ask endpoint. Generates RAG-based answers.
 
-    `index`: экземпляр `Index`.
-    `llm_provider`: сконфигурированный LLM-провайдер (`OpenaiProvider` или `AnthropicProvider`).
-    `top`: количество чанков для контекста. По умолчанию 10.
+    `index`: an `Index` instance.
+    `llm_provider`: a configured LLM provider (`OpenaiProvider` or `AnthropicProvider`).
+    `top`: number of context chunks. Defaults to 10.
 
-    Использовать практику `asking` для выполнения RAG pipeline.
-    Использовать практику `pydantic` для конвертации данных.
-    Использовать практику `hexagonal` для понимания роли адаптера.
+    Apply `asking` to execute the RAG pipeline.
+    Apply `pydantic` for data conversion.
+    Apply `hexagonal` to understand the adapter architectural role.
   properties:
     url_rule -> str: |
       "/ask"
   methods:
     "post(request: AskRequest) -> response:AskResponse": |
-      Обработка POST /ask.
+      Handle POST /ask requests.
 
-      `request`: pydantic модель запроса с полями query и top.
-      `response`: pydantic модель ответа с полями answer и sources.
+      `request`: pydantic request model with query and top fields.
+      `response`: pydantic response model with answer and sources fields.
 
-      Если request.top не None — передаётся как top в RAG pipeline.
-      Иначе используется дефолт из конструктора.
+      Pass request.top to the RAG pipeline when not None; otherwise fall back to the constructor default.
 
-      Использовать практику `asking` для выполнения RAG pipeline.
-      Использовать практику `pydantic` для конвертации данных.
+      Apply `asking` to execute the RAG pipeline.
+      Apply `pydantic` for data conversion.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  API адаптер вопроса — POST /ask.
+  API question adapter — POST /ask.

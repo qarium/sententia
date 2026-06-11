@@ -14,47 +14,48 @@ Imports:
 Usages:
   conventions: .goga/usages/conventions.md
   rag_prompt: |
-    Правила формирования промпта для LLM:
+    Prompt construction rules for the LLM:
 
-    1. Открытие: "Используй следующий контекст, чтобы ответить на вопрос:"
-    2. Блок контекста: тексты top релевантных чанков, объединённые двойным переводом строки,
-       обёрнутые в triple-backticks
-    3. Блок вопроса: текст query, обёрнутый в triple-backticks
-    4. Инструкция: если контекст недостаточен — ответить
-       "Недостаточно данных для ответа на данный вопрос"
+    1. Preamble: "Use the following context to answer the question:"
+    2. Context block: texts of the top-ranked relevant chunks,
+       joined by double newline, enclosed in triple-backtick fences
+    3. Query block: the query text, enclosed in triple-backtick fences
+    4. Fallback directive: if the context is insufficient, respond with
+       "Insufficient data to answer this question"
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for code and test authoring standards.
 
-  Клетка объединяет поиск релевантных чанков и генерацию ответа через LLM (RAG pipeline).
-  Использовать практику `searching` для поиска релевантных чанков.
-  Использовать практику `llm_generating` для генерации ответа.
-  Использовать практику `rag_prompt` для формирования промпта.
+  The cell implements a RAG pipeline: retrieve relevant chunks from the Index
+  and generate an LLM response.
+  Apply the `searching` practice for chunk retrieval.
+  Apply the `llm_generating` practice for LLM answer generation.
+  Apply the `rag_prompt` practice for prompt construction.
 
 ---
 
 "ask(query: str, index: Index, llm_provider: Provider, top: int = 10) -> answer:dict":
   location: rag.py
   annotations: |
-    Полный RAG pipeline: поиск чанков → формирование промпта → вызов LLM.
+    End-to-end RAG pipeline: chunk retrieval → prompt assembly → LLM invocation.
 
-    `query`: текст вопроса пользователя.
-    `index`: экземпляр Index для поиска релевантных чанков.
-    `llm_provider`: сконфигурированный LLM-провайдер (`Provider`).
-    `top`: количество чанков для контекста. По умолчанию 10.
-    `answer`: {"answer": str, "sources": list[str]} — сгенерированный ответ
-              и список уникальных файлов-источников.
+    `query`: the user question text.
+    `index`: the Index instance for retrieving relevant chunks.
+    `llm_provider`: the configured LLM provider (`Provider`).
+    `top`: the number of context chunks to retrieve. Defaults to 10.
+    `answer`: {"answer": str, "sources": list[str]} — the LLM-generated response
+              and the list of unique source file paths.
 
-    Алгоритм:
-      1. Найти релевантные чанки по практике `searching`
-      2. Объединить тексты чанков через двойной перевод строки
-      3. Сформировать промпт по практике `rag_prompt`
-      4. Сгенерировать ответ по практике `llm_generating`
-      5. Извлечь уникальные пути файлов-источников из найденных чанков (сохраняя порядок)
+    Algorithm:
+      1. Retrieve relevant chunks using the `searching` practice
+      2. Concatenate chunk texts with double-newline separators
+      3. Assemble the prompt using the `rag_prompt` practice
+      4. Generate the response using the `llm_generating` practice
+      5. Extract unique source file paths from retrieved chunks, preserving insertion order
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  RAG pipeline — поиск релевантных чанков и генерация ответа через LLM.
+  RAG pipeline — retrieves relevant chunks and generates answers via LLM.

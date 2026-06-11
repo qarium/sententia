@@ -1,27 +1,27 @@
-# Запуск приложения
+# Running the Application
 
-SententiaApp — контейнер без доменных зависимостей. Сборка компонентов выполняется в корневой ячейке (main).
-Режимы работы взаимоисключающие: либо REST ресурсы (FastAPI), либо MCP tools (MCP Server).
+SententiaApp is a domain-agnostic container. The root cell (main) handles component composition.
+Operating modes are mutually exclusive: either REST resources via FastAPI, or MCP tools via MCP Server.
 
-## Регистрация REST ресурсов
+## Registering REST Resources
 
-Каждый ресурс предоставляет url_rule через своё свойство.
-Для регистрации передайте ресурс в add_rest_resource:
+Each resource exposes a `url_rule` through its property.
+Register a resource by passing it to `add_rest_resource`:
 
   app = SententiaApp()
   app.add_rest_resource(resource)
 
-## Регистрация MCP tools
+## Registering MCP Tools
 
-Для регистрации передайте tool в add_mcp_tool:
+Register a tool by passing it to `add_mcp_tool`:
 
   app = SententiaApp()
   app.add_mcp_tool(tool)
 
-## Запуск сервера
+## Starting the Server
 
-Режим определяется зарегистрированными обработчиками:
-- tools → MCP Server (Streamable HTTP)
+The server mode depends on the registered handlers:
+- tools → MCP Server (Streamable HTTP transport)
 - resources → FastAPI (uvicorn)
 
   app.run(host="0.0.0.0", port=8000)

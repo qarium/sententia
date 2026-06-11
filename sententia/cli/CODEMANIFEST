@@ -2,65 +2,65 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for coding and testing standards.
 
 ---
 
 "ParseCliResult()":
   location: cli.py
   annotations: |
-    Модель данных результата парсинга CLI аргументов.
-    Содержит все распарсенные значения и путь к env-файлу.
+    Data model representing the parsed CLI arguments.
+    Holds all parsed values and the env file path.
 
-    Использовать `conventions` для правил написания кода и тестов.
+    Apply `conventions` for coding and testing standards.
   properties:
     "data_dir -> str": |
-      Путь к директории с Markdown-файлами.
+      Path to the Markdown files directory.
     "env_file -> str | None": |
-      Путь к env-файлу. None — использовать по умолчанию.
+      Path to the env file. When None, the system uses the default value.
     "index_path -> str | None": |
-      Путь к файлу FAISS индекса. None — индекс в памяти.
+      Path to the FAISS index file. When None, the system keeps the index in memory.
     "llm_protocol -> str": |
-      Тип LLM провайдера: "openai", "anthropic", "ollama".
+      LLM provider type: "openai", "anthropic", or "ollama".
     "llm_url -> str": |
-      URL API endpoint LLM провайдера.
+      LLM provider API endpoint URL.
     "llm_model -> str": |
-      Идентификатор модели LLM.
+      LLM model identifier.
     "llm_token -> str | None": |
-      API-ключ. None — получить из ENV или env-файла.
+      API key. When None, the system reads the key from ENV or the env file.
     "mcp -> bool | None": |
-      Флаг режима MCP Server. None — не указан (используется значение из config).
+      MCP Server mode flag. When None, the system falls back to the config value.
     "host -> str | None": |
-      Адрес привязки сервера. None — не указан (используется значение из config).
+      Server bind address. When None, the system falls back to the config value.
     "port -> int | None": |
-      Порт сервера. None — не указан (используется значение из config).
+      Server port. When None, the system falls back to the config value.
 
 "parse_cli_args(argv: list[str] | None = None) -> result:ParseCliResult":
   location: cli.py
   annotations: |
-    Парсинг CLI аргументов.
+    Parse CLI arguments into a structured result.
 
-    `argv`: список аргументов. None — использовать sys.argv.
+    `argv`: argument list. When None, the function reads sys.argv.
 
-    Позиционные аргументы:
-      data_dir — путь к директории с Markdown-файлами
+    Positional arguments:
+      data_dir — path to the Markdown files directory
 
-    Опции:
-      --env-file — путь к env-файлу конфигурации
-      --index-path — путь к файлу FAISS индекса
-      --llm-protocol — тип LLM провайдера (openai, anthropic, ollama). Обязателен.
-      --llm-url — URL API endpoint LLM. Обязателен.
-      --llm-model — идентификатор модели. Обязателен.
-      --llm-token — API-ключ
-      --mcp — флаг запуска в режиме MCP Server
-      --host — адрес привязки сервера
-      --port — порт сервера
+    Options:
+      --env-file — path to the env configuration file
+      --index-path — path to the FAISS index file
+      --llm-protocol — LLM provider type (openai, anthropic, ollama). Required.
+      --llm-url — LLM API endpoint URL. Required.
+      --llm-model — model identifier. Required.
+      --llm-token — API key
+      --mcp — enable MCP Server mode
+      --host — server bind address
+      --port — server port
 
-    Использовать `conventions` для правил написания кода и тестов.
+    Apply `conventions` for coding and testing standards.
 
 ---
 
 Author: Goga
 CreatedAt: 08/06/26
 Description: |
-  Парсинг CLI аргументов. Модель результата и функция парсинга.
+  CLI argument parsing. Result data model and parse function.

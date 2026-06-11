@@ -2,40 +2,40 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for code and test writing rules.
 
-  Клетка отвечает за доступ к Markdown-файлам из проиндексированной директории:
-  листинг файлов и чтение их содержимого.
+  This cell provides access to Markdown files within an indexed directory:
+  file listing and content retrieval.
 
 ---
 
 "Storage(directory_path: str)":
   location: storage.py
   annotations: |
-    Хранилище файлов. Фиксирует корневую директорию при создании.
+    File storage. Captures the root directory on instantiation.
 
-    `directory_path`: абсолютный путь к корневой директории с Markdown-файлами.
+    `directory_path`: absolute path to the root directory containing Markdown files.
 
   methods:
     "list_files() -> files:list": |
-      Рекурсивный обход директории. Возвращает список относительных путей
-      всех .md файлов внутри directory_path.
+      Recursively traverses the directory tree. Returns a list of relative paths
+      for all .md files within directory_path.
 
-      `files`: список относительных путей (например ["docs/auth.md", "guide.md"]).
+      `files`: list of relative paths (e.g. ["docs/auth.md", "guide.md"]).
 
     "read_file(file_path: str) -> content:dict": |
-      Чтение содержимого файла по относительному пути внутри проиндексированной директории.
+      Reads file content by relative path within the indexed directory.
 
-      `file_path`: относительный путь к файлу внутри директории (например "docs/auth.md").
+      `file_path`: relative path to the target file (e.g. "docs/auth.md").
 
-      `content`: {"text": str, "source": str} — содержимое файла и его полный путь.
+      `content`: {"text": str, "source": str} — file text content and its absolute path.
 
-      Если файл не найден — выбрасывает FileNotFoundError.
-      Путь не должен выходить за пределы корневой директории (защита от path traversal).
+      Raises FileNotFoundError if the file does not exist.
+      The path must not escape the root directory boundary (path traversal protection).
 
 ---
 
 Author: Goga
 CreatedAt: 07/05/26
 Description: |
-  Чтение содержимого Markdown-файлов по пути.
+  Reads Markdown file contents by path.

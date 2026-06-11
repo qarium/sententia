@@ -2,38 +2,37 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for code and test authoring standards.
 
-  Базовый интерфейс LLM-провайдера.
-  Мутируется конкретными реализациями (OpenAI, Anthropic).
+  Base LLM provider interface. Concrete implementations (OpenAI, Anthropic) mutate this type.
 
 ---
 
 "Provider(url: str, model: str, token: str | None = None)":
   location: provider.py
   annotations: |
-    Базовый интерфейс LLM-провайдера.
+    Base LLM provider interface.
 
-    `url`: базовый URL API endpoint провайдера (без версии в url path).
-    `model`: идентификатор модели (например "gpt-4", "claude-3-sonnet", "llama3").
-    `token`: API-ключ авторизации. Опциональный — для Ollama не требуется.
+    `url`: base API endpoint URL of the provider (exclude version from the URL path).
+    `model`: model identifier (e.g. "gpt-4", "claude-3-sonnet", "llama3").
+    `token`: API authorization key. Optional — Ollama does not require authentication.
   properties:
     url -> str: |
-      Базовый URL API endpoint провайдера (без версии в url path).
+      Base API endpoint URL of the provider (exclude version from the URL path).
     model -> str: |
-      Идентификатор модели.
+      Model identifier.
     token -> str | None: |
-      API-ключ авторизации. Опциональный.
+      API authorization key. Optional.
   methods:
     "generate(prompt: str) -> answer:str": |
-      Генерация ответа на основе промпта.
+      The generate method produces a response from the LLM based on the provided prompt.
 
-      `prompt`: полный текст промпта включая системную инструкцию и контекст.
-      `answer`: текст сгенерированного ответа от LLM.
+      `prompt`: full prompt text including system instruction and context.
+      `answer`: generated response text returned by the LLM.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  Базовый интерфейс LLM-провайдера.
+  Base LLM provider interface.

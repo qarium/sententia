@@ -1,11 +1,11 @@
-# OpenaiProvider — создание провайдера
+# OpenaiProvider — Creating a Provider
 
-Создайте экземпляр OpenaiProvider с конфигурацией.
+Create an OpenaiProvider instance with configuration.
 
-Параметры:
-- url: str — URL API endpoint
-- model: str — идентификатор модели
-- token: str | None — API-ключ (необязательный)
+Parameters:
+- url: str — API endpoint URL
+- model: str — model identifier
+- token: str | None — API key (optional)
 
-Пример:
+Example:
   provider = OpenaiProvider(url="https://api.openai.com", model="gpt-4", token="sk-...")

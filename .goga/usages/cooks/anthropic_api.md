@@ -1,6 +1,6 @@
-# Anthropic API — генерация текста через Claude-модели
+# Anthropic API — Text Generation via Claude Models
 
-## Вызов через httpx
+## Invoking the API via httpx
 
 ```python
 import httpx
@@ -22,10 +22,10 @@ response.raise_for_status()
 answer = response.json()["content"][0]["text"]
 ```
 
-## Параметры
+## Parameters
 
-- Endpoint: `POST {url}/messages`
-- Headers: `x-api-key: {token}`, `anthropic-version: 2023-06-01`, `Content-Type: application/json`
-- Body: `model`, `messages`, `max_tokens` (обязательный!), `system` — отдельным полем
-- Ответ: `content[0].text` (content — массив блоков)
-- token обязателен
+- **Endpoint:** `POST {url}/messages` — the Messages API endpoint
+- **Headers:** `x-api-key: {token}`, `anthropic-version: 2023-06-01`, `Content-Type: application/json`
+- **Body:** `model`, `messages`, `max_tokens` (required), `system` — passed as a top-level field
+- **Response:** `content[0].text` — `content` is an array of content blocks
+- `token` is required for authentication

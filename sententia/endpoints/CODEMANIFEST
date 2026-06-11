@@ -2,72 +2,72 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Использовать `conventions` для правил написания кода и тестов.
+  Apply `conventions` for code and testing standards.
 
-  Базовый интерфейс endpoints.
-  `RESTResource` определяет контракт REST-ресурса с методами get/post/put/delete.
-  `MCPTool` определяет контракт MCP инструмента.
-  Мутируются конкретными реализациями в sententia/api и sententia/mcp.
+  Base endpoint interfaces.
+  `RESTResource` defines the REST resource contract with get/post/put/delete methods.
+  `MCPTool` defines the MCP tool contract.
+  Specialized by concrete implementations in sententia/api and sententia/mcp.
 
 ---
 
 "RESTResource()":
   location: rest.py
   annotations: |
-    Базовый тип REST-ресурса. Определяет контракт HTTP-обработчика.
-    Мутируется конкретными ресурсами.
+    Abstract base class for REST resources. Defines the HTTP handler contract.
+    Specialized by concrete resource implementations.
 
-    Требования:
-    - Все методы по умолчанию выбрасывают NotImplementedError("Method Not Allowed")
-    - Свойство url_rule — абстрактное, мутированный ресурс обязан его определить
-    - Мутированный ресурс переопределяет только нужные HTTP-методы с конкретными параметрами
+    Requirements:
+    - All methods default to raising NotImplementedError("Method Not Allowed")
+    - Property url_rule is abstract — the specializing resource must define it
+    - The specializing resource overrides only the HTTP methods it supports with concrete parameters
   properties:
     url_rule -> str: |
-      Абстрактное свойство. Шаблон URL маршрута.
-      Мутированный ресурс обязан определить это свойство конкретным значением.
+      Abstract property. URL route pattern.
+      The specializing resource must define this property with a concrete value.
   methods:
     "get() -> response:Any": |
-      Обработка GET-запроса. Заглушка — выбрасывает NotImplementedError("Method Not Allowed").
-      Мутированный ресурс переопределяет с конкретными параметрами и типом возврата.
-      Сигнатура аргументов определяется мутированным типом.
+      Handles HTTP GET requests. Default raises NotImplementedError("Method Not Allowed").
+      The specializing resource overrides with concrete parameters and return type.
+      Argument signature is determined by the specializing type.
     "post() -> response:Any": |
-      Обработка POST-запроса. Заглушка — выбрасывает NotImplementedError("Method Not Allowed").
-      Мутированный ресурс переопределяет с конкретными параметрами и типом возврата.
-      Сигнатура аргументов определяется мутированным типом.
+      Handles HTTP POST requests. Default raises NotImplementedError("Method Not Allowed").
+      The specializing resource overrides with concrete parameters and return type.
+      Argument signature is determined by the specializing type.
     "put() -> response:Any": |
-      Обработка PUT-запроса. Заглушка — выбрасывает NotImplementedError("Method Not Allowed").
-      Мутированный ресурс переопределяет с конкретными параметрами и типом возврата.
-      Сигнатура аргументов определяется мутированным типом.
+      Handles HTTP PUT requests. Default raises NotImplementedError("Method Not Allowed").
+      The specializing resource overrides with concrete parameters and return type.
+      Argument signature is determined by the specializing type.
     "delete() -> response:Any": |
-      Обработка DELETE-запроса. Заглушка — выбрасывает NotImplementedError("Method Not Allowed").
-      Мутированный ресурс переопределяет с конкретными параметрами и типом возврата.
-      Сигнатура аргументов определяется мутированным типом.
+      Handles HTTP DELETE requests. Default raises NotImplementedError("Method Not Allowed").
+      The specializing resource overrides with concrete parameters and return type.
+      Argument signature is determined by the specializing type.
 
 "MCPTool()":
   location: mcp.py
   annotations: |
-    Базовый тип MCP инструмента. Определяет контракт для внешних MCP-клиентов.
-    Мутируется конкретными инструментами.
+    Abstract base class for MCP tools. Defines the contract for external MCP clients.
+    Specialized by concrete tool implementations.
 
-    Требования:
-    - Свойства name и description — абстрактные, мутированный инструмент обязан их определить
-    - Метод execute — абстрактный, мутированный инструмент обязан его переопределить с конкретными параметрами
+    Requirements:
+    - Properties name and description are abstract — the specializing tool must define them
+    - Method execute is abstract — the specializing tool must override it with concrete parameters
   properties:
     name -> str: |
-      Абстрактное свойство. Имя инструмента для регистрации в MCP-сервере.
-      Мутированный инструмент обязан определить это свойство конкретным значением.
+      Abstract property. Tool name for MCP server registration.
+      The specializing tool must define this property with a concrete value.
     description -> str: |
-      Абстрактное свойство. Человекочитаемое описание инструмента для MCP-клиентов.
-      Мутированный инструмент обязан определить это свойство конкретным значением.
+      Abstract property. Human-readable tool description for MCP clients.
+      The specializing tool must define this property with a concrete value.
   methods:
     "execute() -> result:Any": |
-      Выполнение инструмента. Заглушка — выбрасывает NotImplementedError.
-      Мутированный инструмент переопределяет с конкретными параметрами и типом возврата.
-      Сигнатура аргументов и тип возвращаемого значения определяются мутированным типом.
+      Executes the tool. Default raises NotImplementedError.
+      The specializing tool overrides with concrete parameters and return type.
+      Argument signature and return type are determined by the specializing type.
 
 ---
 
 Author: Goga
 CreatedAt: 16/05/26
 Description: |
-  Базовый интерфейс endpoints: RESTResource для HTTP-обработчиков, MCPTool для MCP инструментов.
+  Base endpoint interfaces: RESTResource for HTTP handlers, MCPTool for MCP tools.
