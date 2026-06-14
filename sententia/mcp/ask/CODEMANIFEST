@@ -21,9 +21,9 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Apply `conventions` for all code and test authoring rules.
-
   This cell implements an MCP tool for question-answering using RAG.
+
+  Apply `conventions` for coding and testing standards.
   Apply the `hexagonal` practice to understand the adapter role in this cell.
   Apply the `asking` practice to execute the RAG pipeline.
   Apply the `llm_generating` practice for LLM provider interaction patterns.

@@ -14,9 +14,9 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Apply `conventions` for coding and testing standards.
-
   MCP tool providing semantic search over the knowledge base.
+
+  Apply `conventions` for coding and testing standards.
   Apply the `hexagonal` practice to understand the adapter role.
   Apply the `searching` practice to perform search and interpret result format.
 
@@ -43,7 +43,6 @@ Annotations: |
     `index`: an `Index` instance.
 
     Apply the `searching` practice for search operations.
-    Apply the `hexagonal` practice to understand the adapter role.
   properties:
     name -> str: |
       "search"
@@ -56,7 +55,7 @@ Annotations: |
       `query`: the search query text.
       `top`: the maximum number of results to return.
 
-      `results`: a list of `SearchToolResult` entries sorted by descending relevance.
+      `results`: a list of `SearchToolResult` entries sorted by descending score.
 
       Apply the `searching` practice to execute search.
 

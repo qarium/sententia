@@ -14,9 +14,10 @@ Usages:
   mcp: .goga/usages/cooks/mcp.md
 
 Annotations: |
-  Apply `conventions` to enforce code and test authoring rules.
+  This cell acts as the MCP facade.
+  It re-exports the MCP tool types from their respective subcells.
 
-  This cell acts as the MCP facade. It re-exports the MCP tool types `SearchTool`, `AskTool`, `FilesTool` from their respective subcells.
+  Apply `conventions` for coding and testing standards.
   Apply `mcp` to register tools via the MCP SDK.
 
 ---

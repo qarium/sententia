@@ -2,12 +2,12 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Apply `conventions` for code and testing standards.
-
   Base endpoint interfaces.
+
   `RESTResource` defines the REST resource contract with get/post/put/delete methods.
   `MCPTool` defines the MCP tool contract.
-  Specialized by concrete implementations in sententia/api and sententia/mcp.
+
+  Apply `conventions` for coding and testing standards.
 
 ---
 

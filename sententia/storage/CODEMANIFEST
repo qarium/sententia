@@ -2,10 +2,10 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Apply `conventions` for code and test writing rules.
-
   This cell provides access to Markdown files within an indexed directory:
   file listing and content retrieval.
+
+  Apply `conventions` for coding and testing standards.
 
 ---
 

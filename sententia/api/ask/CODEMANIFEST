@@ -21,9 +21,9 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Apply `conventions` for code and test writing standards.
-
   The POST /ask adapter is responsible for generating answers via RAG.
+
+  Apply `conventions` for coding and testing standards.
   Apply `pydantic` to define request and response data models.
   Apply `hexagonal` to clarify the adapter role within the architecture.
   Apply `asking` to execute the RAG pipeline.

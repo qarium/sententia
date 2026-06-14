@@ -24,10 +24,10 @@ Usages:
        "Insufficient data to answer this question"
 
 Annotations: |
-  Apply `conventions` for code and test authoring standards.
-
   The cell implements a RAG pipeline: retrieve relevant chunks from the Index
   and generate an LLM response.
+
+  Apply `conventions` for coding and testing standards.
   Apply the `searching` practice for chunk retrieval.
   Apply the `llm_generating` practice for LLM answer generation.
   Apply the `rag_prompt` practice for prompt construction.

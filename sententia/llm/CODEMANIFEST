@@ -10,10 +10,10 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Apply `conventions` for code and test authoring standards.
-
   The llm cell facade. Re-exports providers for consumers.
   Provider initialization: openai/ollama → `OpenaiProvider`, anthropic → `AnthropicProvider`.
+
+  Apply `conventions` for coding and testing standards.
 
 ---
 

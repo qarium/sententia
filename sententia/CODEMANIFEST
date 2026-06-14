@@ -45,7 +45,7 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Apply `conventions` for all code and test standards.
+  Apply `conventions` for coding and testing standards.
 
   This is the root cell of the Sententia service.
   This cell owns the application entry point — the main routine.

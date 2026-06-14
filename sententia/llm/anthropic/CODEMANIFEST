@@ -8,9 +8,9 @@ Usages:
   anthropic_api: .goga/usages/cooks/anthropic_api.md
 
 Annotations: |
-  Apply `conventions` for code and test standards.
-
   Anthropic Claude LLM provider.
+
+  Apply `conventions` for coding and testing standards.
   Follow `anthropic_api` for Anthropic API integration.
 
 ---
@@ -22,7 +22,7 @@ Annotations: |
 
     `url`: base URL of the API endpoint.
     `model`: model identifier string.
-    `token`: API key for Anthropic authentication. This parameter is required and must not be None.
+    `token`: API key for Anthropic authentication. Required; must not be None.
   methods:
     "generate(prompt: str) -> answer:str": |
       Generate text via the Anthropic Messages API (POST {url}/v1/messages).

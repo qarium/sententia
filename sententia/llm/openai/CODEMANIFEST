@@ -9,9 +9,9 @@ Usages:
   ollama_api: .goga/usages/cooks/ollama_api.md
 
 Annotations: |
-  Apply `conventions` as the standard for writing code and tests.
-
-  The OpenaiProvider entity acts as an LLM provider for OpenAI and Ollama (compatible API).
+  The OpenaiProvider entity acts as an LLM provider for OpenAI.
+  
+  Apply `conventions` for coding and testing standards.
   Apply `openai_api` practice when calling the OpenAI API.
   Apply `ollama_api` practice when calling Ollama (same implementation path, no authentication header).
 
@@ -20,7 +20,7 @@ Annotations: |
 "Provider::OpenaiProvider(url: str, model: str, token: str | None = None)":
   location: provider.py
   annotations: |
-    LLM provider for OpenAI and Ollama (compatible API). This entity mutates the `Provider` base type.
+    LLM provider for OpenAI and Ollama (compatible API).
 
     `url`: the base URL of the API endpoint.
     `model`: the identifier of the target model.

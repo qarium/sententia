@@ -14,11 +14,11 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Apply `conventions` for coding and testing standards.
-
   Adapter for POST /search — retrieves relevant documents.
-  Apply `pydantic` to define request and response models.
-  Apply `hexagonal` to understand the adapter's architectural role.
+
+  Apply `conventions` for coding and testing standards.
+  Apply `pydantic` to define request and response data models.
+  Apply `hexagonal` to clarify the adapter role within the architecture.
   Apply `searching` to perform search and interpret result format.
 
 ---

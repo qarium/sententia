@@ -11,13 +11,11 @@ Imports:
 
 Usages:
   conventions: .goga/usages/conventions.md
-  fastapi: .goga/usages/cooks/fastapi.md
 
 Annotations: |
-  Apply `conventions` for coding and testing standards.
-
   API cell facade. Re-export REST resources.
-  Register routes using `fastapi`.
+
+  Apply `conventions` for coding and testing standards.
 
 ---
 

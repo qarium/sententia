@@ -2,9 +2,10 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Apply `conventions` for code and test authoring standards.
+  Base LLM provider interface.
+  Concrete implementations (OpenAI, Anthropic and etc) mutate this type.
 
-  Base LLM provider interface. Concrete implementations (OpenAI, Anthropic) mutate this type.
+  Apply `conventions` for coding and testing standards.
 
 ---
 
@@ -18,11 +19,11 @@ Annotations: |
     `token`: API authorization key. Optional — Ollama does not require authentication.
   properties:
     url -> str: |
-      Base API endpoint URL of the provider (exclude version from the URL path).
+      Mirrors the "url" constructor parameter.
     model -> str: |
-      Model identifier.
+      Mirrors the "model" constructor parameter.
     token -> str | None: |
-      API authorization key. Optional.
+      Mirrors the "token" constructor parameter.
   methods:
     "generate(prompt: str) -> answer:str": |
       The generate method produces a response from the LLM based on the provided prompt.

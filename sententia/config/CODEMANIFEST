@@ -3,8 +3,8 @@ Usages:
   pydantic: .goga/usages/cooks/pydantic.md
 
 Annotations: |
-  The agent must apply `conventions` rules when authoring code and tests for this cell.
-  The agent must apply `pydantic` patterns when implementing data models in this cell.
+  Apply `conventions` for coding and testing standards.
+  Apply `pydantic` patterns when implementing data models in this cell.
 
 ---
 

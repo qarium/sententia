@@ -12,19 +12,22 @@ Usages:
   text_splitting: .goga/usages/cooks/text_splitting.md
 
 Annotations: |
-  Apply `conventions` for all code and test authoring rules.
-
   This cell provides Markdown file indexing and semantic fragment retrieval.
   It supports two operational modes:
   - Persistent: when index_path is set, the index is persisted to and loaded from disk.
   - In-memory: when index_path is None, the index is rebuilt on every instantiation and never persisted.
 
+  Apply `conventions` for coding and testing standards.
   Apply the `faiss` practice for vector store operations.
   Apply the `sentence_transformers` practice for embedding generation.
   Apply the `text_splitting` practice for text chunking.
 
-  Indexing pipeline: retrieve files via `reading` → sanitize → chunk → embed → index into FAISS.
-  Normalize all vectors before insertion into FAISS.
+  Indexing pipeline:
+  1. Retrieve files via `reading`.
+  2. Perform Markdown sanitization on raw content.
+  3. Split sanitized text into overlapping chunks.
+  4. Generate embeddings and normalize all vectors.
+  5. Insert normalized vectors into FAISS IndexFlatIP.
 
 ---
 
@@ -36,19 +39,16 @@ Annotations: |
     - Persistent (index_path provided): checks for an existing index on disk.
       If the file exists, restores it via load. Otherwise, builds the index from `storage` and persists via save.
     - In-memory (index_path is None): builds the index from `storage` on every instantiation. The index resides solely in memory.
-      The save and load methods raise an error when invoked in this mode.
+      In this mode, save and load must fail with ValueError.
 
     `storage`: a `Storage` instance providing access to Markdown files.
-    index_path: filesystem path for the FAISS index file. When None, activates in-memory mode.
+    index_path: filesystem path for the FAISS index file and associated source metadata. When None, activates in-memory mode.
       Passing an empty string is invalid and raises ValueError.
     default_top: default number of search results returned by search.
 
     The embedding model is an implementation detail. Chunks are prefixed with "passage: " and queries with "query: "
     as required by the E5 model.
 
-    Apply the `faiss` practice for vector store operations.
-    Apply the `sentence_transformers` practice for embedding generation.
-    Apply the `text_splitting` practice for text chunking.
     Apply the `reading` practice for file access.
   methods:
     "index_directory() -> index_info:dict": |
@@ -56,7 +56,7 @@ Annotations: |
 
       Pipeline:
       1. Enumerate files and read each file's content.
-      2. Strip Markdown markup (code blocks, images, links, headings).
+      2. Perform Markdown sanitization (strip code blocks, images, links, headings).
       3. Split the sanitized text into overlapping chunks.
       4. Prepend the "passage: " prefix to every chunk (E5 model requirement).
       5. Generate embeddings and normalize the resulting vectors.
@@ -65,14 +65,7 @@ Annotations: |
       `index_info`: dict {"files": int, "chunks": int, "dimensions": int} reporting
       the number of indexed files, total chunks, and embedding dimensionality.
 
-      Requirements:
-      - All vectors must be normalized before FAISS insertion.
-      - When no files are present, create an empty index whose dimensionality is derived from a probe embedding.
-
-      Apply the `reading` practice for file access.
-      Apply the `faiss` practice for index construction and population.
-      Apply the `sentence_transformers` practice for embedding generation.
-      Apply the `text_splitting` practice for text splitting.
+      When no files are present, create an empty index whose dimensionality is derived from a probe embedding.
 
     "search(query: str, top: int | None = None) -> results:list": |
       Encode the query and retrieve the top-N most relevant chunks from FAISS.
@@ -84,23 +77,16 @@ Annotations: |
       `results`: list of dicts {"text": str, "source": str, "score": float},
                  sorted by relevance score in descending order.
 
-      Apply the `faiss` practice for similarity search.
-      Apply the `sentence_transformers` practice for query encoding.
-
     "save() -> void:none": |
       Persist the FAISS index and associated metadata to disk at index_path.
-      Raises an error when index_path is None.
-
-      Apply the `faiss` practice for index serialization.
+      Constraint: must fail with ValueError when index_path is None (in-memory mode).
 
     "load() -> loaded:bool": |
       Restore the FAISS index and metadata from disk at index_path.
-      Raises an error when index_path is None.
+      Constraint: must fail with ValueError when index_path is None (in-memory mode).
 
       `loaded`: True on successful restore, False when the file is missing
                 or the format is corrupted.
-
-      Apply the `faiss` practice for index deserialization.
 
 ---
 

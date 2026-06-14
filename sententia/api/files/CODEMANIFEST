@@ -14,12 +14,12 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Reference `conventions` for code and test authoring rules.
-
   GET /files/<path> adapter — retrieves file contents.
-  Reference `pydantic` practice for response model definitions.
-  Reference `hexagonal` practice to understand adapter boundaries.
-  Reference `reading` practice for file read operations.
+
+  Apply `conventions` for coding and testing standards.
+  Apply `pydantic` to define request and response data models.
+  Apply `hexagonal` to clarify the adapter role within the architecture.
+  Apply `reading` for file read operations.
 
 ---
 
@@ -27,7 +27,7 @@ Annotations: |
   location: models.py
   annotations: |
     Response model for GET /files/<path>.
-    Reference `pydantic` practice for model implementation.
+    Apply `pydantic` practice for model implementation.
   properties:
     text -> str: |
       File content string. Default value: empty string.
@@ -41,9 +41,9 @@ Annotations: |
 
     `storage`: an instance of `Storage` used for file read operations.
 
-    Reference `reading` practice when reading files through `storage`.
-    Reference `pydantic` practice when constructing response models.
-    Reference `hexagonal` practice to understand adapter boundaries and responsibilities.
+    Apply `reading` for reading files through `storage`.
+    Apply `pydantic` for constructing response models.
+    Apply `hexagonal` for adapter boundaries and responsibilities.
   properties:
     url_rule -> str: |
       "/files/{path:path}"
@@ -55,8 +55,9 @@ Annotations: |
       `response`: a pydantic response model populated with text and source fields.
 
       Return HTTP 404 when the file is not found.
-      Reference `reading` practice when reading file contents.
-      Reference `pydantic` practice when constructing the response model.
+
+      Apply `reading` for reading file contents.
+      Apply `pydantic` for constructing the response model.
 
 ---
 

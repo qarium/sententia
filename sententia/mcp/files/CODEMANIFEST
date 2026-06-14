@@ -14,9 +14,9 @@ Usages:
   hexagonal: .goga/usages/cooks/hexagonal.md
 
 Annotations: |
-  Use `conventions` for coding and testing rules.
-
   MCP tool for reading file content.
+
+  Apply `conventions` for coding and testing standards.
   Use the `hexagonal` practice to understand the adapter role.
   Use the `reading` practice for file reading operations.
 
@@ -39,9 +39,6 @@ Annotations: |
     MCP tool for reading file content.
 
     `storage`: A `Storage` instance used for file reading.
-
-    Use the `reading` practice for file reading operations.
-    Use the `hexagonal` practice to understand the adapter role.
   properties:
     name -> str: |
       "files"
@@ -54,8 +51,8 @@ Annotations: |
       `path`: A relative path to the target file.
       `result`: A `FilesToolResult` containing text and source fields.
 
-      If the file is not found, return a tool error.
-      Use the `reading` practice for file reading operations.
+      If the file is not found, raise FileNotFoundError.
+      If access is denied, raise PermissionError.
 
 ---
 
