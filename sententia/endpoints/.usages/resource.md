@@ -18,8 +18,10 @@ class SearchResource(RESTResource):
 
 ## Registration in FastAPI
 
+A resource is registered on the `FastAPI` application directly, so the route appears in `app.routes` as a flat `APIRoute` with `.path` and `.methods`:
+
 ```python
-router.add_api_route(
+app.add_api_route(
     resource.url_rule,
     resource.post,  # bound method
     methods=["POST"],

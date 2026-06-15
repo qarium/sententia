@@ -8,28 +8,40 @@ from fastapi import FastAPI
 app = FastAPI(title="Knowage API")
 ```
 
-## APIRouter and route registration
+## Route registration on the application
 
-Bind a class instance as a route handler via a bound method. The endpoint object must expose: `url_rule` (str property), `method` (str property), and `handle` (callable method).
+Register a route directly on the `FastAPI` instance when the caller wants each route to appear in `app.routes` as a flat `APIRoute` with `.path` and `.methods`. Prefer this form when registering handlers bound to class instances.
+
+```python
+# endpoint — a class instance with a str property `url_rule` and a bound method `handle`
+app.add_api_route(
+    endpoint.url_rule,           # "/search"
+    endpoint.handle,             # bound method
+    methods=["POST"],
+)
+```
+
+Direct registration via `app.add_api_route(...)` keeps `app.routes` flat across the supported `fastapi>=0.100` range (including 0.136.1 and 0.137.0).
+
+## Router composition with APIRouter
+
+Group routes into an `APIRouter` and attach the whole group to the application. Use this form when routes are assembled in a separate module and composed into the app as a unit.
 
 ```python
 from fastapi import APIRouter
 
 router = APIRouter()
 
-# endpoint — a class instance with properties url_rule, method and method handle
 router.add_api_route(
     endpoint.url_rule,           # "/search"
     endpoint.handle,             # bound method
     methods=[endpoint.method],   # ["POST"]
 )
-```
 
-Connect the router to the application:
-
-```python
 app.include_router(router)
 ```
+
+In FastAPI 0.137+ (Starlette 1.x), `app.include_router(router)` keeps the attached router in `app.routes` as a lazy `_IncludedRouter` wrapper. Such entries expose neither `.path` nor `.methods` until request matching unfolds them. Do not read `app.routes` expecting a flat list of `Route`/`APIRoute` when routes are attached via `include_router` — use direct registration via `app.add_api_route(...)` instead.
 
 ## POST with body (Pydantic model)
 

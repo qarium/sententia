@@ -3,7 +3,7 @@ from __future__ import annotations
 import inspect
 
 import uvicorn
-from fastapi import APIRouter, FastAPI
+from fastapi import FastAPI
 
 from ..endpoints import MCPTool, RESTResource
 
@@ -35,18 +35,15 @@ class SententiaApp:
 
     def add_rest_resource(self, resource: RESTResource) -> None:
         """Register a REST resource's route on the FastAPI application."""
-        router = APIRouter()
-
         for method_name in ("get", "post", "put", "delete"):
             for cls in type(resource).__mro__:
                 if cls is RESTResource:
                     break
                 if method_name in cls.__dict__:
                     handler = getattr(resource, method_name)
-                    router.add_api_route(resource.url_rule, handler, methods=[method_name.upper()])
+                    self._app.add_api_route(resource.url_rule, handler, methods=[method_name.upper()])
                     break
 
-        self._app.include_router(router)
         self._resources.append(resource)
 
     def add_mcp_tool(self, tool: MCPTool) -> None:
