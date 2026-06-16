@@ -18,7 +18,7 @@ Answer generation (RAG).
 
 Request (AskRequest):
 ```json
-{"query": "question text"}
+{"query": "question text", "top": 10}
 ```
 
 Response (AskResponse):
