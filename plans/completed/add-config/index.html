@@ -1,0 +1,1393 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="FastAPI-based search and RAG engine for local Markdown files.">
+      
+      
+      
+        <link rel="canonical" href="https://qarium.github.io/sententia/plans/completed/add-config/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>План: add-config - Sententia</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <style>
+    /* Dark navbar — override palette in both themes */
+    [data-md-color-scheme=default][data-md-color-primary=custom],
+    [data-md-color-scheme=slate][data-md-color-primary=custom] {
+      --md-primary-fg-color: #0a0a13;
+      --md-primary-fg-color--light: #0a0a13cc;
+      --md-primary-bg-color: #ffffff;
+    }
+
+    .md-header__button.md-logo img,
+    .md-header__button.md-logo svg {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    /* Search form — visible on dark header */
+    .md-search__overlay {
+      background-color: transparent !important;
+    }
+    [data-md-toggle=search]:checked~.md-header .md-search__overlay {
+      background-color: #0000008a !important;
+    }
+    .md-search__inner {
+      background-color: transparent !important;
+    }
+    .md-search__form {
+      background-color: #3a3a3a !important;
+      border-radius: 0.5rem;
+    }
+    .md-search__form:hover {
+      background-color: #4a4a4a !important;
+    }
+    .md-search__input {
+      color: #e0e0e0 !important;
+    }
+    .md-search__input::placeholder {
+      color: #999999 !important;
+    }
+    .md-search__icon {
+      color: #999999 !important;
+    }
+    .md-search__form:hover .md-search__icon,
+    .md-search__input:focus-visible ~ .md-search__icon {
+      color: #e0e0e0 !important;
+    }
+
+    /* Links in dark theme — readable on dark background */
+    [data-md-color-scheme=slate] .md-nav__link,
+    [data-md-color-scheme=slate] .md-toc__link,
+    [data-md-color-scheme=slate] article a {
+      color: #cbd5e0 !important;
+    }
+    [data-md-color-scheme=slate] .md-nav__link--passed,
+    [data-md-color-scheme=slate] .md-toc__link--passed {
+      color: #718096 !important;
+    }
+    [data-md-color-scheme=slate] .md-nav__link:hover,
+    [data-md-color-scheme=slate] .md-toc__link:hover,
+    [data-md-color-scheme=slate] article a:hover {
+      color: var(--md-accent-fg-color) !important;
+    }
+  </style>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#add-config" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Sententia" class="md-header__button md-logo" aria-label="Sententia" data-md-component="logo">
+      
+  <img src="https://avatars.githubusercontent.com/u/262344922?s=200&v=4" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Sententia
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              План: add-config
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/qarium/sententia" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../rest-api/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  REST API
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../mcp-tools/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  MCP Tools
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../storage/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Sententia" class="md-nav__button md-logo" aria-label="Sententia" data-md-component="logo">
+      
+  <img src="https://avatars.githubusercontent.com/u/262344922?s=200&v=4" alt="logo">
+
+    </a>
+    Sententia
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/qarium/sententia" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rest-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mcp-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../indexing-and-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Indexing & Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../llm-providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rag-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Цель
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Контекст
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Контекст">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Поверхность контракта
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Реэкспорты
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Контекст Usages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usages_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Импортированные Usages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Внешние зависимости
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Факты
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Анализ разрывов
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-sententiacli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Инфраструктура sententia/cli (инфраструктура)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-parsecliresult-parse_cli_args-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Реализация ParseCliResult и parse_cli_args (TDD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-sententiaconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Инфраструктура sententia/config (инфраструктура)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-sententiaconfig-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Реализация SententiaConfig (TDD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-main-mainpy-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5: Переработка main() в main.py (TDD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-6-cli-config-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 6: Интеграционные тесты для cli + config + main
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Команды валидации
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Критерии завершения
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="add-config">План: <code>add-config</code></h1>
+<h2 id="_1">Цель</h2>
+<p>Реализовать конфигурацию приложения через三层 систему приоритетов (CLI &gt; ENV &gt; env-файл &gt; дефолты) и вынести парсинг CLI в отдельные ячейки <code>sententia/cli</code> и <code>sententia/config</code>. Переработать <code>main()</code> для делегирования в новые сущности. Покрыть контрактными, логическими и интеграционными тестами.</p>
+<h2 id="_2">Контекст</h2>
+<h3 id="_3">Поверхность контракта</h3>
+<p><strong>Сущность: <code>ParseCliResult()</code></strong>
+- Тип: class (Entity)
+- Объявленный <code>location</code>: <code>cli.py</code> (в <code>sententia/cli/</code>)
+- Обязанность фасада: должна быть импортируема из <code>sententia.cli</code>
+- Свойства:
+  - <code>data_dir -&gt; str</code> — путь к директории с Markdown-файлами
+  - <code>env_file -&gt; str | None</code> — путь к env-файлу. None — использовать по умолчанию
+  - <code>index_path -&gt; str | None</code> — путь к файлу FAISS индекса. None — индекс в памяти
+  - <code>llm_protocol -&gt; str</code> — тип LLM провайдера: "openai", "anthropic", "ollama"
+  - <code>llm_url -&gt; str</code> — URL API endpoint LLM провайдера
+  - <code>llm_model -&gt; str</code> — идентификатор модели LLM
+  - <code>llm_token -&gt; str | None</code> — API-ключ. None — получить из ENV или env-файла
+  - <code>mcp -&gt; bool</code> — флаг режима MCP Server. По умолчанию False
+  - <code>host -&gt; str</code> — адрес привязки сервера. По умолчанию "0.0.0.0"
+  - <code>port -&gt; int</code> — порт сервера. По умолчанию 8000
+- Семантические требования: Immutable data holder для результата CLI парсинга
+- Импортированные зависимости: нет
+- Контекст аннотаций: Использовать <code>conventions</code> для правил написания кода и тестов</p>
+<p><strong>Сущность: <code>parse_cli_args(argv: list[str] | None = None) -&gt; result:ParseCliResult</code></strong>
+- Тип: function (Routine)
+- Объявленный <code>location</code>: <code>cli.py</code> (в <code>sententia/cli/</code>)
+- Обязанность фасада: должна быть импортируема из <code>sententia.cli</code>
+- Семантические требования:
+  - Парсинг CLI аргументов через argparse
+  - Позиционный аргумент data_dir
+  - Обязательные опции: --llm-protocol (choices), --llm-url, --llm-model
+  - Опциональные: --env-file, --index-path, --llm-token, --mcp (flag), --host, --port
+  - argv=None → использовать sys.argv
+  - prog="sententia"
+- Импортированные зависимости: нет
+- Контекст аннотаций: Использовать <code>conventions</code> для правил написания кода и тестов</p>
+<p><strong>Сущность: <code>SententiaConfig(env_file: str | None = None, cli_overrides: dict[str, Any] | None = None)</code></strong>
+- Тип: class (Entity)
+- Объявленный <code>location</code>: <code>config.py</code> (в <code>sententia/config/</code>)
+- Обязанность фасада: должна быть импортируема из <code>sententia.config</code>
+- Свойства:
+  - <code>data_dir -&gt; str</code> — путь к директории с Markdown-файлами
+  - <code>index_path -&gt; str | None</code> — путь к файлу FAISS индекса. None — индекс в памяти
+  - <code>llm_protocol -&gt; str</code> — тип LLM провайдера
+  - <code>llm_url -&gt; str</code> — URL API endpoint LLM провайдера
+  - <code>llm_model -&gt; str</code> — идентификатор модели LLM
+  - <code>llm_token -&gt; str | None</code> — API-ключ. None — токен не нужен (Ollama)
+  - <code>mcp -&gt; bool</code> — флаг режима MCP Server. По умолчанию False
+  - <code>host -&gt; str</code> — адрес привязки сервера. По умолчанию "0.0.0.0"
+  - <code>port -&gt; int</code> — порт сервера. По умолчанию 8000
+- Семантические требования:
+  - Загружает значения из ENV с префиксом SENTENTIA_ и из env-файла
+  - Приоритет: cli_overrides &gt; ENV &gt; env-файл &gt; дефолты
+  - env_file=None → используется ".env" по умолчанию
+  - cli_overrides=None → нет перекрытий, только ENV + env-file
+- Импортированные зависимости: нет (внутренне использует pydantic-settings)
+- Контекст аннотаций: Использовать <code>pydantic</code> для работы с моделью. Использовать <code>conventions</code> для правил написания кода и тестов</p>
+<p><strong>Сущность: <code>main(argv: list[str] | None = None) -&gt; void:None</code></strong>
+- Тип: function (Routine)
+- Объявленный <code>location</code>: <code>__main__.py</code> (в <code>sententia/</code>)
+- Обязанность фасада: вызывается как <code>python -m sententia</code>
+- Семантические требования:
+  - Точка входа и сборки приложения
+  - Координирует: parse_cli_args → SententiaConfig → Storage → Index → LLM Provider → Resources/Tools → SententiaApp.run
+  - Матчинг протокола: openai/ollama → OpenaiProvider, anthropic → AnthropicProvider, else → ValueError
+  - Режим mcp=True: MCP tools + MCP Server; mcp=False: REST resources + FastAPI
+  - AskResource/AskTool передаётся top=10
+- Импортированные зависимости: <code>ParseCliResult</code>, <code>parse_cli_args</code> из sententia/cli; <code>SententiaConfig</code> из sententia/config
+- Контекст аннотаций: Использовать <code>configuration</code> для создания конфигурации. Использовать <code>cli</code> для парсинга CLI. Использовать <code>running</code> для запуска приложения.</p>
+<h3 id="_4">Реэкспорты</h3>
+<p>Нет реэкспортов в CODEMANIFEST ячеек cli и config.</p>
+<h3 id="usages">Контекст Usages</h3>
+<ul>
+<li><strong><code>conventions</code></strong> (<code>sententia/cli</code> и <code>sententia/config</code>): правила написания кода, тестов, форматирования. Python 3.10+, pydantic, pytest, ruff, kw_only=True, Google-style docstrings</li>
+<li><strong><code>pydantic</code></strong> (<code>sententia/config</code>): паттерны работы с Pydantic v2 — BaseModel, ConfigDict, Field, сериализация. BaseSettings для ENV/env-file. model_validator для cli_overrides</li>
+</ul>
+<h3 id="usages_1">Импортированные Usages</h3>
+<ul>
+<li><strong><code>cli</code></strong> из <code>sententia/cli</code>: инструкция по парсингу CLI аргументов. Путь: <code>sententia/cli/.usages/cli.md</code></li>
+<li><strong><code>configuration</code></strong> из <code>sententia/config</code>: инструкция по созданию SententiaConfig. Путь: <code>sententia/config/.usages/configuration.md</code></li>
+<li><strong><code>app</code></strong> из <code>sententia/app</code>: параметры приложения через SententiaConfig. Путь: <code>sententia/app/.usages/app.md</code></li>
+<li><strong><code>running</code></strong> из <code>sententia/app</code>: запуск приложения и регистрация resources/tools. Путь: <code>sententia/app/.usages/running.md</code></li>
+</ul>
+<h3 id="_5">Внешние зависимости</h3>
+<ul>
+<li><code>pydantic</code> (Pydantic v2) — BaseModel, ConfigDict, Field</li>
+<li><code>pydantic-settings</code> — BaseSettings, SettingsConfigDict</li>
+<li><code>argparse</code> (stdlib) — CLI парсинг</li>
+<li><code>pytest</code> — тестирование</li>
+<li><code>ruff</code> — линтинг</li>
+</ul>
+<h2 id="_6">Факты</h2>
+<ul>
+<li>Ячейки <code>sententia/cli</code> и <code>sententia/config</code> не содержат кода — только CODEMANIFEST и <code>.usages/</code></li>
+<li>Существующий <code>__main__.py</code> содержит <code>build_parser()</code> и <code>main()</code> — оба будут переработаны</li>
+<li><code>build_parser()</code> удаляется, логика парсинга переходит в <code>sententia/cli/cli.py</code></li>
+<li><code>main()</code> переписывается для делегирования в <code>parse_cli_args</code> и <code>SententiaConfig</code></li>
+<li>Существующие тесты в <code>tests/test_main.py</code> импортируют <code>build_parser</code> — потребуется обновление</li>
+<li>Фасад sententia root <code>__init__.py</code> не нуждается в изменении (не реэкспортирует cli/config)</li>
+<li><code>ParseCliResult</code> может быть Pydantic BaseModel или dataclass — cookbook допускает оба варианта</li>
+<li><code>None</code> значения из <code>ParseCliResult</code> (<code>env_file</code>, <code>index_path</code>, <code>llm_token</code>) передаются как <code>None</code> без преобразования</li>
+</ul>
+<h2 id="_7">Анализ разрывов</h2>
+<ul>
+<li><strong>Отсутствующие сущности</strong>: <code>ParseCliResult</code>, <code>parse_cli_args</code> (cli.py), <code>SententiaConfig</code> (config.py) — не реализованы</li>
+<li><strong>Отсутствующие фасады</strong>: <code>sententia/cli/__init__.py</code> и <code>sententia/config/__init__.py</code> — не существуют</li>
+<li><strong>Несоответствия API</strong>: <code>main()</code> не принимает <code>argv</code>, не делегирует в <code>parse_cli_args</code>/<code>SententiaConfig</code></li>
+<li><strong>Существующий код для переиспользования</strong>: <code>build_parser()</code> — основа для <code>parse_cli_args()</code>, логика main — основа для обновлённого <code>main()</code></li>
+<li><strong>Разрывы в тестовом покрытии</strong>: нет тестов для cli/config ячеек, существующие тесты main нужно переписать</li>
+<li><strong>Отсутствующие директории тестов</strong>: <code>tests/cli/</code>, <code>tests/config/</code> — не существуют</li>
+</ul>
+<hr />
+<h2 id="tasks">Tasks</h2>
+<h3 id="task-1-sententiacli">Task 1: Инфраструктура sententia/cli (инфраструктура)</h3>
+<p>Создать структуру ячейки <code>sententia/cli</code>: фасад <code>__init__.py</code> с реэкспортом <code>ParseCliResult</code> и <code>parse_cli_args</code>. Файл реализации <code>cli.py</code> с заглушками для <code>ParseCliResult</code> и <code>parse_cli_args</code>.</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] Создать файл <code>sententia/cli/__init__.py</code> с <code>__all__</code>, содержащим <code>ParseCliResult</code> и <code>parse_cli_args</code></li>
+<li>[x] Создать файл <code>sententia/cli/cli.py</code> с заглушками классов/функций (pass/NotImplementedError)</li>
+<li>[x] Проверить доступность фасада: <code>python -c "from sententia.cli import ParseCliResult, parse_cli_args"</code></li>
+<li>[x] Линт: <code>ruff check sententia/cli/</code> — исправить форматирование при необходимости</li>
+</ul>
+<h3 id="task-2-parsecliresult-parse_cli_args-tdd">Task 2: Реализация ParseCliResult и parse_cli_args (TDD)</h3>
+<p>Реализовать <code>ParseCliResult</code> (data model) и <code>parse_cli_args</code> (argparse Routine) в <code>sententia/cli/cli.py</code>.</p>
+<p>Сущности контракта:
+- <code>ParseCliResult()</code> — Entity с 10 свойствами, все с дефолтами (кроме обязательных data_dir, llm_protocol, llm_url, llm_model)
+- <code>parse_cli_args(argv: list[str] | None = None) -&gt; result:ParseCliResult</code> — Routine для парсинга CLI</p>
+<p>Алгоритм <code>parse_cli_args</code>:
+1. IF argv is None: argv = sys.argv[1:]
+2. ArgumentParser(prog="sententia") с позиционным data_dir и 8 опциями
+3. args = parser.parse_args(argv)
+4. RETURN ParseCliResult(data_dir=..., env_file=..., index_path=..., llm_protocol=..., llm_url=..., llm_model=..., llm_token=..., mcp=..., host=..., port=...)</p>
+<p>Аннотации сущностей из CODEMANIFEST (sententia/cli):</p>
+<p><strong>ParseCliResult</strong>: Модель данных результата парсинга CLI аргументов. Содержит все распарсенные значения и путь к env-файлу. Использовать <code>conventions</code> для правил написания кода и тестов.</p>
+<p><strong>parse_cli_args</strong>: Парсинг CLI аргументов. <code>argv</code>: список аргументов. None — использовать sys.argv. Позиционные: data_dir — путь к директории с Markdown-файлами. Опции: --env-file — путь к env-файлу конфигурации, --index-path — путь к файлу FAISS индекса, --llm-protocol — тип LLM провайдера (openai, anthropic, ollama). Обязателен, --llm-url — URL API endpoint LLM. Обязателен, --llm-model — идентификатор модели. Обязателен, --llm-token — API-ключ, --mcp — флаг запуска в режиме MCP Server, --host — адрес привязки сервера, --port — порт сервера. Использовать <code>conventions</code> для правил написания кода и тестов.</p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: Python 3.10+, kw_only=True для моделей, Google-style docstrings, pytest для тестов</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] <strong>ШАГ 0</strong>: Объявить работу над Task 2 — реализация ParseCliResult и parse_cli_args</li>
+<li>[x] <strong>Контрактные тесты</strong>: создать <code>tests/cli/__init__.py</code> и <code>tests/cli/test_cli.py</code>. Проверить: (1) <code>ParseCliResult</code> импортируем из <code>sententia.cli</code>, (2) <code>parse_cli_args</code> импортируем из <code>sententia.cli</code>, (3) сигнатура <code>parse_cli_args(argv=None)</code>, (4) <code>ParseCliResult</code> имеет 10 свойств с правильными типами (data_dir: str, env_file: str|None, index_path: str|None, llm_protocol: str, llm_url: str, llm_model: str, llm_token: str|None, mcp: bool, host: str, port: int)</li>
+<li>[x] <strong>Код</strong>: реализовать <code>ParseCliResult</code> как dataclass или Pydantic BaseModel с kw_only=True и 10 свойствами</li>
+<li>[x] <strong>Код</strong>: реализовать <code>parse_cli_args</code> через argparse с позиционным data_dir и 8 опциями (--env-file, --index-path, --llm-protocol required choices=["openai","anthropic","ollama"], --llm-url required, --llm-model required, --llm-token, --mcp store_true, --host default="0.0.0.0", --port type=int default=8000)</li>
+<li>[x] <strong>Код</strong>: обновить фасад <code>sententia/cli/__init__.py</code> — реэкспортировать <code>ParseCliResult</code> и <code>parse_cli_args</code></li>
+<li>[x] <strong>Верификация интерфейсов</strong>: запустить контрактные тесты — <code>pytest tests/cli/test_cli.py -v</code> — все должны пройти</li>
+<li>[x] <strong>Логические тесты</strong> (позитивные):</li>
+<li><code>test_parse_cli_args_minimal_required_args</code>: передать <code>["data_dir", "--llm-protocol", "openai", "--llm-url", "http://localhost:11434", "--llm-model", "gpt-4"]</code> → проверить все 10 свойств (дефолты: env_file=None, index_path=None, llm_token=None, mcp=False, host="0.0.0.0", port=8000)</li>
+<li><code>test_parse_cli_args_all_options</code>: передать все опции включая <code>--env-file .env.prod</code>, <code>--mcp</code>, <code>--port 9000</code> → проверить все значения</li>
+<li>[x] <strong>Логические тесты</strong> (негативные):</li>
+<li><code>test_parse_cli_args_missing_required_protocol</code>: без --llm-protocol → SystemExit</li>
+<li><code>test_parse_cli_args_invalid_protocol</code>: --llm-protocol invalid → SystemExit</li>
+<li>[x] <strong>Логические тесты</strong> (краевые):</li>
+<li><code>test_parse_cli_args_none_argv</code>: mock sys.argv, вызвать parse_cli_args(None) → использует sys.argv[1:]</li>
+<li>[x] <strong>Отладка</strong>: запустить <code>pytest tests/cli/test_cli.py -x</code> — исправлять код, пока все тесты не пройдут</li>
+<li>[x] <strong>Перепроверка контрактов</strong>: проверить что ParseCliResult имеет 10 свойств, parse_cli_args имеет сигнатуру (argv: list[str]|None=None) -&gt; ParseCliResult, оба доступны из sententia.cli</li>
+<li>[x] <strong>Линт</strong>: <code>ruff check sententia/cli/ tests/cli/</code> — исправить форматирование</li>
+</ul>
+<h3 id="task-3-sententiaconfig">Task 3: Инфраструктура sententia/config (инфраструктура)</h3>
+<p>Создать структуру ячейки <code>sententia/config</code>: фасад <code>__init__.py</code> с реэкспортом <code>SententiaConfig</code>. Файл реализации <code>config.py</code> с заглушкой.</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] Создать файл <code>sententia/config/__init__.py</code> с <code>__all__</code>, содержащим <code>SententiaConfig</code></li>
+<li>[x] Создать файл <code>sententia/config/config.py</code> с заглушкой класса (pass)</li>
+<li>[x] Проверить доступность фасада: <code>python -c "from sententia.config import SententiaConfig"</code></li>
+<li>[x] Линт: <code>ruff check sententia/config/</code> — исправить форматирование при необходимости</li>
+</ul>
+<h3 id="task-4-sententiaconfig-tdd">Task 4: Реализация SententiaConfig (TDD)</h3>
+<p>Реализовать <code>SententiaConfig</code> в <code>sententia/config/config.py</code> — Pydantic BaseSettings с ENV/env-file поддержкой и cli_overrides приоритетом.</p>
+<p>Сущность контракта:
+- <code>SententiaConfig(env_file: str | None = None, cli_overrides: dict[str, Any] | None = None)</code> — Entity с 9 свойствами</p>
+<p>Алгоритм:</p>
+<pre><code>Pydantic BaseSettings с model_config:
+  env_prefix = &quot;SENTENTIA_&quot;
+  env_file = env_file или &quot;.env&quot;
+  env_file_encoding = &quot;utf-8&quot;
+  extra = &quot;ignore&quot;
+
+model_validator(mode=&quot;before&quot;):
+  apply cli_overrides поверх загруженных ENV/env-file значений
+
+Свойства и дефолты:
+  data_dir: str = &quot;&quot;
+  index_path: str | None = None
+  llm_protocol: str = &quot;&quot;
+  llm_url: str = &quot;&quot;
+  llm_model: str = &quot;&quot;
+  llm_token: str | None = None
+  mcp: bool = False
+  host: str = &quot;0.0.0.0&quot;
+  port: int = 8000
+</code></pre>
+<p>Аннотации сущности из CODEMANIFEST (sententia/config):</p>
+<p><strong>SententiaConfig</strong>: Модель конфигурации приложения. Загружает значения из ENV переменных с префиксом SENTENTIA_ и из env-файла. Приоритет источников: <code>cli_overrides</code> &gt; ENV &gt; env-файл &gt; дефолты. <code>env_file</code>: путь к env-файлу. Если None — используется ".env" по умолчанию. <code>cli_overrides</code>: словарь значений из CLI для перекрытия ENV/env-файла. Значения могут быть любого типа (str, int, bool). Использовать <code>pydantic</code> для работы с моделью. Использовать <code>conventions</code> для правил написания кода и тестов.</p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: Python 3.10+, kw_only=True, Google-style docstrings, pytest, monkeypatch/tmp_path для тестов
+- <code>pydantic</code> (путь: <code>.goga/usages/cooks/pydantic.md</code>): BaseSettings + SettingsConfigDict для ENV/env-file. Приоритет источников (от высокого к низкому): аргументы конструктора &gt; ENV переменные &gt; env-файл &gt; дефолты. model_validator(mode="before") для дополнительных перекрытий через kwargs. Шаблон:</p>
+<pre><code class="language-python">from pydantic import model_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class AppConfig(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix=&quot;APP_&quot;, env_file=&quot;.env&quot;)
+
+    @model_validator(mode=&quot;before&quot;)
+    @classmethod
+    def apply_overrides(cls, values: dict) -&gt; dict:
+        overrides = values.pop(&quot;cli_overrides&quot;, None) or {}
+        values.update(overrides)
+        return values
+</code></pre>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] <strong>ШАГ 0</strong>: Объявить работу над Task 4 — реализация SententiaConfig</li>
+<li>[x] <strong>Контрактные тесты</strong>: создать <code>tests/config/__init__.py</code> и <code>tests/config/test_config.py</code>. Проверить: (1) <code>SententiaConfig</code> импортируем из <code>sententia.config</code>, (2) конструктор принимает <code>env_file: str|None=None</code> и <code>cli_overrides: dict[str,Any]|None=None</code>, (3) 9 свойств с правильными типами (data_dir: str, index_path: str|None, llm_protocol: str, llm_url: str, llm_model: str, llm_token: str|None, mcp: bool, host: str, port: int)</li>
+<li>[x] <strong>Код</strong>: реализовать <code>SententiaConfig</code> как pydantic-settings <code>BaseSettings</code> с <code>SettingsConfigDict(env_prefix="SENTENTIA_", env_file=env_file или ".env", env_file_encoding="utf-8", extra="ignore")</code> и <code>model_validator(mode="before")</code> для cli_overrides</li>
+<li>[x] <strong>Код</strong>: реализовать 9 свойств с дефолтами: data_dir=""", index_path=None, llm_protocol="", llm_url="", llm_model="", llm_token=None, mcp=False, host="0.0.0.0", port=8000</li>
+<li>[x] <strong>Код</strong>: обновить фасад <code>sententia/config/__init__.py</code> — реэкспортировать <code>SententiaConfig</code></li>
+<li>[x] <strong>Верификация интерфейсов</strong>: запустить контрактные тесты — <code>pytest tests/config/test_config.py -v</code> — все должны пройти</li>
+<li>[x] <strong>Логические тесты</strong> (позитивные):</li>
+<li><code>test_config_defaults</code>: в чистом окружении (monkeypatch.delenv все SENTENTIA_*) → SententiaConfig() → проверить все 9 дефолтов</li>
+<li><code>test_config_from_env_vars</code>: monkeypatch.setenv("SENTENTIA_LLM_PROTOCOL", "anthropic"), setenv("SENTENTIA_LLM_URL", "https://api.anthropic.com"), setenv("SENTENTIA_LLM_MODEL", "claude-3") → SententiaConfig() → проверить что ENV-значения загружены</li>
+<li><code>test_config_cli_overrides_take_priority</code>: monkeypatch.setenv("SENTENTIA_LLM_PROTOCOL", "anthropic"), setenv("SENTENTIA_HOST", "0.0.0.0") → SententiaConfig(cli_overrides={"llm_protocol": "ollama", "host": "127.0.0.1"}) → проверить cli_overrides &gt; ENV</li>
+<li><code>test_config_from_env_file</code>: tmp_path / ".env" с SENTENTIA_LLM_TOKEN=sk-test-file → SententiaConfig(env_file=str(env_path)) → проверить загрузку из файла</li>
+<li><code>test_config_full_priority_chain</code>: ENV: SENTENTIA_HOST=10.0.0.1, SENTENTIA_PORT=9000; env-file: SENTENTIA_HOST=10.0.0.2, SENTENTIA_LLM_TOKEN=sk-file; cli_overrides: {"host": "127.0.0.1"} → host="127.0.0.1", port=9000, llm_token="sk-file"</li>
+<li>[x] <strong>Логические тесты</strong> (краевые):</li>
+<li><code>test_config_none_cli_overrides</code>: SententiaConfig(cli_overrides=None) → defaults</li>
+<li><code>test_config_invalid_cli_overrides_type</code>: SententiaConfig(cli_overrides={"port": "abc"}) → ValidationError</li>
+<li>[x] <strong>Отладка</strong>: запустить <code>pytest tests/config/test_config.py -x</code> — исправлять код, пока все тесты не пройдут</li>
+<li>[x] <strong>Перепроверка контрактов</strong>: проверить что SententiaConfig имеет 9 свойств, конструктор принимает env_file и cli_overrides, приоритет cli_overrides &gt; ENV &gt; env-file &gt; defaults соблюдён</li>
+<li>[x] <strong>Линт</strong>: <code>ruff check sententia/config/ tests/config/</code> — исправить форматирование</li>
+</ul>
+<h3 id="task-5-main-mainpy-tdd">Task 5: Переработка main() в <strong>main</strong>.py (TDD)</h3>
+<p>Переработать <code>main()</code> в <code>sententia/__main__.py</code> для делегирования в <code>parse_cli_args</code> и <code>SententiaConfig</code>. Удалить <code>build_parser()</code>. Обновить тесты.</p>
+<p>Сущность контракта:
+- <code>main(argv: list[str] | None = None) -&gt; void:None</code> — Routine</p>
+<p>Глобальные аннотации CODEMANIFEST sententia (каскадируют в эту задачу):
+- Использовать практику <code>running</code> для понимания запуска приложения
+- Использовать практику <code>app</code> из sententia/app для понимания параметров приложения
+- Использовать практику <code>configuration</code> из sententia/config для понимания создания конфигурации
+- Использовать практику <code>cli</code> для понимания парсинга CLI аргументов
+- Использовать <code>conventions</code> для правил написания кода и тестов</p>
+<p>Аннотации main routine из CODEMANIFEST:
+- Использовать практику <code>configuration</code> из sententia/config для создания конфигурации
+- Использовать практику <code>cli</code> для парсинга CLI аргументов
+- Использовать практику <code>running</code> для создания, регистрации и запуска приложения</p>
+<p>Алгоритм main:</p>
+<pre><code>1. result = parse_cli_args(argv) → ParseCliResult
+2. cli_overrides = {&quot;data_dir&quot;: result.data_dir, &quot;index_path&quot;: result.index_path, ...}
+3. config = SententiaConfig(env_file=result.env_file, cli_overrides=cli_overrides)
+4. storage = Storage(config.data_dir)
+5. index = Index(storage, config.index_path)
+6. IF config.llm_protocol in (&quot;openai&quot;, &quot;ollama&quot;): llm = OpenaiProvider(...)
+   ELIF config.llm_protocol == &quot;anthropic&quot;: llm = AnthropicProvider(...)
+   ELSE: raise ValueError(f&quot;Unknown LLM protocol: {config.llm_protocol}&quot;)
+7. IF config.mcp: MCP tools → SententiaApp → add_mcp_tool × 3 → run
+   ELSE: REST resources → SententiaApp → add_rest_resource × 3 → run
+8. app.run(host=config.host, port=config.port)
+</code></pre>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>configuration</code> из sententia/config (путь: <code>sententia/config/.usages/configuration.md</code>): создание SententiaConfig — <code>config = SententiaConfig(env_file=result.env_file, cli_overrides={...})</code>, приоритет cli_overrides &gt; ENV &gt; env-файл &gt; дефолты
+- <code>cli</code> из sententia/cli (путь: <code>sententia/cli/.usages/cli.md</code>): <code>parse_cli_args(argv)</code> → ParseCliResult, argv=None → sys.argv
+- <code>running</code> из sententia/app (путь: <code>sententia/app/.usages/running.md</code>): регистрация — <code>app.add_rest_resource(resource)</code> или <code>app.add_mcp_tool(tool)</code>, запуск — <code>app.run(host="0.0.0.0", port=8000)</code>. Режим определяется зарегистрированными обработчиками
+- <code>app</code> из sententia/app (путь: <code>sententia/app/.usages/app.md</code>): параметры приложения через SententiaConfig</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] <strong>ШАГ 0</strong>: Объявить работу над Task 5 — переработка main()</li>
+<li>[x] <strong>Контрактные тесты</strong>: обновить <code>tests/test_main.py</code>. Проверить: (1) <code>main</code> импортируем из <code>sententia.__main__</code>, (2) сигнатура main(argv: list[str]|None=None) -&gt; None, (3) <code>build_parser</code> больше НЕ импортируем (удалён)</li>
+<li>[x] <strong>Код</strong>: удалить <code>build_parser()</code> из <code>__main__.py</code></li>
+<li>[x] <strong>Код</strong>: удалить <code>sententia/app/.usages/configuration.md</code> — заменён на <code>app.md</code></li>
+<li>[x] <strong>Код</strong>: переписать <code>main(argv)</code> — делегировать в <code>parse_cli_args(argv)</code>, сформировать <code>cli_overrides</code> из ParseCliResult, создать <code>SententiaConfig(env_file=result.env_file, cli_overrides=cli_overrides)</code>, использовать config.<em> вместо args.</em> для создания Storage/Index/LLM</li>
+<li>[x] <strong>Код</strong>: добавить матчинг llm_protocol с ValueError для неизвестного протокола</li>
+<li>[x] <strong>Верификация интерфейсов</strong>: запустить контрактные тесты — <code>pytest tests/test_main.py::TestMainContract -v</code> — все должны пройти</li>
+<li>[x] <strong>Логические тесты</strong> (позитивные):</li>
+<li><code>test_main_rest_mode</code>: mock всех зависимостей, main(["data", "--llm-protocol", "openai", "--llm-url", "http://localhost", "--llm-model", "gpt-4"]) → SententiaApp.add_rest_resource.call_count == 3, add_mcp_tool.call_count == 0, run(host="0.0.0.0", port=8000)</li>
+<li><code>test_main_mcp_mode</code>: mock + "--mcp" → add_mcp_tool.call_count == 3, add_rest_resource.call_count == 0</li>
+<li><code>test_main_with_env_file</code>: mock + "--env-file" /tmp/custom.env → SententiaConfig called with env_file="/tmp/.../custom.env"</li>
+<li>[x] <strong>Логические тесты</strong> (негативные):</li>
+<li><code>test_main_unknown_protocol_raises_error</code>: mock parse_cli_args с llm_protocol="invalid" → ValueError("Unknown LLM protocol")</li>
+<li>[x] <strong>Логические тесты</strong> (краевые):</li>
+<li><code>test_main_with_index_path_none</code>: mock + без --index-path → Index(storage, None)</li>
+<li><code>test_main_with_llm_token_none</code>: mock + без --llm-token → LLM provider called with token=None</li>
+<li>[x] <strong>Отладка</strong>: запустить <code>pytest tests/test_main.py -x</code> — исправлять код, пока все тесты не пройдут</li>
+<li>[x] <strong>Перепроверка контрактов</strong>: main принимает argv, делегирует в parse_cli_args и SententiaConfig, использует config.* для создания компонентов, ValueError для неизвестного протокола</li>
+<li>[x] <strong>Линт</strong>: <code>ruff check sententia/__main__.py tests/test_main.py</code> — исправить форматирование</li>
+</ul>
+<h3 id="task-6-cli-config-main">Task 6: Интеграционные тесты для cli + config + main</h3>
+<p>Проверить сквозные сценарии взаимодействия parse_cli_args → SententiaConfig → main.</p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: структура тестов — интеграционные тесты в <code>tests/</code></p>
+<ul>
+<li>[x] Создать/обновить <code>tests/test_main_integration.py</code> (если нужно) или дополнить <code>tests/test_main.py</code></li>
+<li>[x] Протестировать полный путь REST: parse_cli_args → cli_overrides → SententiaConfig → Storage → Index → OpenaiProvider → Resources → SententiaApp.run</li>
+<li>[x] Протестировать полный путь MCP: parse_cli_args → cli_overrides → SententiaConfig → Storage → Index → OpenaiProvider → Tools → SententiaApp.run</li>
+<li>[x] Протестировать передачу --env-file через весь стек: parse_cli_args → SententiaConfig(env_file=...)</li>
+<li>[x] Протестировать приоритет конфигурации: ENV + cli_overrides → правильный результат</li>
+<li>[x] Запустить валидацию: <code>pytest tests/ -x</code></li>
+</ul>
+<hr />
+<h2 id="_8">Команды валидации</h2>
+<ul>
+<li><code>pytest tests/cli/ -v</code>: Тесты sententia/cli ячейки</li>
+<li><code>pytest tests/config/ -v</code>: Тесты sententia/config ячейки</li>
+<li><code>pytest tests/test_main.py -v</code>: Тесты main routine</li>
+<li><code>pytest tests/ -x</code>: Запустить все тесты</li>
+<li><code>ruff check sententia/</code>: Проверка линта</li>
+<li><code>python -c "from sententia.cli import ParseCliResult, parse_cli_args"</code>: Фасад cli</li>
+<li><code>python -c "from sententia.config import SententiaConfig"</code>: Фасад config</li>
+<li><code>python -c "from sententia.__main__ import main"</code>: Фасад main</li>
+</ul>
+<hr />
+<h2 id="_9">Критерии завершения</h2>
+<ul>
+<li>[x] Каждая сущность контракта реализована в правильном <code>location</code> (cli.py, config.py, <strong>main</strong>.py)</li>
+<li>[x] Каждая сущность контракта доступна из фасада (sententia.cli, sententia.config)</li>
+<li>[x] Свойства и методы соответствуют объявленному API</li>
+<li>[x] Описания отражены в поведении (приоритет cli_overrides &gt; ENV &gt; env-file &gt; defaults)</li>
+<li>[x] Зависимости контракта соблюдены (main → parse_cli_args → SententiaConfig)</li>
+<li>[x] Каждая задача кодирования следовала рабочему процессу TDD (контрактные тесты → код → верификация → логические тесты → отладка → перепроверка → линт)</li>
+<li>[x] Контрактные тесты и логические тесты покрывают фасад, API и поведение в рамках каждой задачи кодирования</li>
+<li>[x] Интеграционные тесты существуют для сквозных сценариев cli → config → main</li>
+<li>[x] Ни одна граница пакета не была расширена</li>
+<li>[x] Файлы <code>CODEMANIFEST</code> не были изменены (контракт только для чтения)</li>
+<li>[x] Все команды валидации проходят</li>
+<li>[x] Каждая запись Usages упомянута как минимум в одной задаче</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
